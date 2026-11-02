@@ -1,0 +1,512 @@
+{
+  "experiment": "B1 3-domain-type cross-domain coverage (adds real weather)",
+  "target_coverage": 0.9,
+  "domain_types": [
+    "environmental",
+    "meteorology",
+    "transportation"
+  ],
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "type": "environmental",
+      "per_seed": [
+        {
+          "seed": 0,
+          "coverage": 0.9067,
+          "width": 123.088,
+          "point_mae": 25.1781,
+          "coverage_under_dropout": {
+            "drop_30": 0.9067,
+            "drop_50": 0.8933
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 1,
+          "coverage": 0.9193,
+          "width": 127.834,
+          "point_mae": 26.444,
+          "coverage_under_dropout": {
+            "drop_30": 0.914,
+            "drop_50": 0.9233
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 2,
+          "coverage": 0.9173,
+          "width": 128.121,
+          "point_mae": 28.0114,
+          "coverage_under_dropout": {
+            "drop_30": 0.9207,
+            "drop_50": 0.9213
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 3,
+          "coverage": 0.918,
+          "width": 123.145,
+          "point_mae": 25.9323,
+          "coverage_under_dropout": {
+            "drop_30": 0.916,
+            "drop_50": 0.918
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 4,
+          "coverage": 0.9113,
+          "width": 126.257,
+          "point_mae": 27.7991,
+          "coverage_under_dropout": {
+            "drop_30": 0.9047,
+            "drop_50": 0.9193
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 5,
+          "coverage": 0.904,
+          "width": 130.224,
+          "point_mae": 26.3177,
+          "coverage_under_dropout": {
+            "drop_30": 0.9093,
+            "drop_50": 0.9047
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 6,
+          "coverage": 0.9233,
+          "width": 119.876,
+          "point_mae": 24.5271,
+          "coverage_under_dropout": {
+            "drop_30": 0.92,
+            "drop_50": 0.9287
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 7,
+          "coverage": 0.91,
+          "width": 128.713,
+          "point_mae": 28.7727,
+          "coverage_under_dropout": {
+            "drop_30": 0.9027,
+            "drop_50": 0.9073
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 8,
+          "coverage": 0.9133,
+          "width": 131.488,
+          "point_mae": 27.915,
+          "coverage_under_dropout": {
+            "drop_30": 0.9113,
+            "drop_50": 0.9133
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        },
+        {
+          "seed": 9,
+          "coverage": 0.9153,
+          "width": 131.237,
+          "point_mae": 26.9469,
+          "coverage_under_dropout": {
+            "drop_30": 0.912,
+            "drop_50": 0.9133
+          },
+          "nn_coverage": 0.9246,
+          "nn_point_mae": 30.2498
+        }
+      ],
+      "coverage_mean_std": [
+        0.9139,
+        0.0057
+      ],
+      "point_mae_mean_std": [
+        26.7844,
+        1.2856
+      ],
+      "nn_coverage_mean_std": [
+        0.9246,
+        0.0
+      ]
+    },
+    "beijing_air_quality": {
+      "type": "environmental",
+      "per_seed": [
+        {
+          "seed": 0,
+          "coverage": 0.9273,
+          "width": 175.996,
+          "point_mae": 48.6257,
+          "coverage_under_dropout": {
+            "drop_30": 0.9283,
+            "drop_50": 0.9394
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 1,
+          "coverage": 0.9273,
+          "width": 174.787,
+          "point_mae": 48.9555,
+          "coverage_under_dropout": {
+            "drop_30": 0.9263,
+            "drop_50": 0.9232
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 2,
+          "coverage": 0.9323,
+          "width": 180.432,
+          "point_mae": 49.1521,
+          "coverage_under_dropout": {
+            "drop_30": 0.9273,
+            "drop_50": 0.9131
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 3,
+          "coverage": 0.9273,
+          "width": 180.382,
+          "point_mae": 48.2499,
+          "coverage_under_dropout": {
+            "drop_30": 0.9212,
+            "drop_50": 0.9374
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 4,
+          "coverage": 0.9242,
+          "width": 181.113,
+          "point_mae": 47.9306,
+          "coverage_under_dropout": {
+            "drop_30": 0.9404,
+            "drop_50": 0.9384
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 5,
+          "coverage": 0.9293,
+          "width": 176.244,
+          "point_mae": 49.1011,
+          "coverage_under_dropout": {
+            "drop_30": 0.9384,
+            "drop_50": 0.9232
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 6,
+          "coverage": 0.9293,
+          "width": 179.166,
+          "point_mae": 48.9353,
+          "coverage_under_dropout": {
+            "drop_30": 0.9263,
+            "drop_50": 0.9343
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 7,
+          "coverage": 0.9222,
+          "width": 188.844,
+          "point_mae": 47.4459,
+          "coverage_under_dropout": {
+            "drop_30": 0.9293,
+            "drop_50": 0.9303
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 8,
+          "coverage": 0.9273,
+          "width": 177.08,
+          "point_mae": 48.6272,
+          "coverage_under_dropout": {
+            "drop_30": 0.9253,
+            "drop_50": 0.9394
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        },
+        {
+          "seed": 9,
+          "coverage": 0.9283,
+          "width": 176.563,
+          "point_mae": 48.682,
+          "coverage_under_dropout": {
+            "drop_30": 0.9293,
+            "drop_50": 0.9293
+          },
+          "nn_coverage": 0.8689,
+          "nn_point_mae": 11.5201
+        }
+      ],
+      "coverage_mean_std": [
+        0.9275,
+        0.0026
+      ],
+      "point_mae_mean_std": [
+        48.5705,
+        0.5193
+      ],
+      "nn_coverage_mean_std": [
+        0.8689,
+        0.0
+      ]
+    },
+    "ghcn_weather": {
+      "type": "meteorology",
+      "per_seed": [
+        {
+          "seed": 0,
+          "coverage": 0.9172,
+          "width": 23.701,
+          "point_mae": 5.0064,
+          "coverage_under_dropout": {
+            "drop_30": 0.9253,
+            "drop_50": 0.9182
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 1,
+          "coverage": 0.9202,
+          "width": 22.913,
+          "point_mae": 4.8538,
+          "coverage_under_dropout": {
+            "drop_30": 0.9131,
+            "drop_50": 0.9434
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 2,
+          "coverage": 0.9212,
+          "width": 23.008,
+          "point_mae": 4.8389,
+          "coverage_under_dropout": {
+            "drop_30": 0.9364,
+            "drop_50": 0.9202
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 3,
+          "coverage": 0.9081,
+          "width": 24.22,
+          "point_mae": 5.4919,
+          "coverage_under_dropout": {
+            "drop_30": 0.8899,
+            "drop_50": 0.9212
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 4,
+          "coverage": 0.9192,
+          "width": 22.798,
+          "point_mae": 4.7745,
+          "coverage_under_dropout": {
+            "drop_30": 0.9273,
+            "drop_50": 0.9242
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 5,
+          "coverage": 0.9182,
+          "width": 23.482,
+          "point_mae": 5.0291,
+          "coverage_under_dropout": {
+            "drop_30": 0.9232,
+            "drop_50": 0.9222
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 6,
+          "coverage": 0.9152,
+          "width": 23.355,
+          "point_mae": 4.9372,
+          "coverage_under_dropout": {
+            "drop_30": 0.9242,
+            "drop_50": 0.9333
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 7,
+          "coverage": 0.9232,
+          "width": 23.348,
+          "point_mae": 4.658,
+          "coverage_under_dropout": {
+            "drop_30": 0.9121,
+            "drop_50": 0.9495
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 8,
+          "coverage": 0.9354,
+          "width": 21.573,
+          "point_mae": 4.2896,
+          "coverage_under_dropout": {
+            "drop_30": 0.9293,
+            "drop_50": 0.9293
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        },
+        {
+          "seed": 9,
+          "coverage": 0.9152,
+          "width": 24.527,
+          "point_mae": 5.2008,
+          "coverage_under_dropout": {
+            "drop_30": 0.9162,
+            "drop_50": 0.9131
+          },
+          "nn_coverage": 0.8962,
+          "nn_point_mae": 1.5627
+        }
+      ],
+      "coverage_mean_std": [
+        0.9193,
+        0.0067
+      ],
+      "point_mae_mean_std": [
+        4.908,
+        0.3037
+      ],
+      "nn_coverage_mean_std": [
+        0.8962,
+        0.0
+      ]
+    },
+    "pemsd7_traffic": {
+      "type": "transportation",
+      "per_seed": [
+        {
+          "seed": 3,
+          "coverage": 0.9185,
+          "width": 50.619,
+          "point_mae": 9.5083,
+          "coverage_under_dropout": {
+            "drop_30": 0.9209,
+            "drop_50": 0.9233
+          },
+          "nn_coverage": 0.887,
+          "nn_point_mae": 7.2647
+        },
+        {
+          "seed": 4,
+          "coverage": 0.9187,
+          "width": 48.945,
+          "point_mae": 9.8946,
+          "coverage_under_dropout": {
+            "drop_30": 0.9168,
+            "drop_50": 0.9225
+          },
+          "nn_coverage": 0.887,
+          "nn_point_mae": 7.2647
+        },
+        {
+          "seed": 5,
+          "coverage": 0.9188,
+          "width": 50.196,
+          "point_mae": 9.6305,
+          "coverage_under_dropout": {
+            "drop_30": 0.9194,
+            "drop_50": 0.9195
+          },
+          "nn_coverage": 0.887,
+          "nn_point_mae": 7.2647
+        },
+        {
+          "seed": 0,
+          "coverage": 0.9186,
+          "width": 50.637,
+          "point_mae": 9.55,
+          "coverage_under_dropout": {
+            "drop_30": 0.9179,
+            "drop_50": 0.9231
+          },
+          "nn_coverage": 0.887,
+          "nn_point_mae": 7.2647
+        },
+        {
+          "seed": 1,
+          "coverage": 0.9188,
+          "width": 50.665,
+          "point_mae": 9.5426,
+          "coverage_under_dropout": {
+            "drop_30": 0.9249,
+            "drop_50": 0.9165
+          },
+          "nn_coverage": 0.887,
+          "nn_point_mae": 7.2647
+        },
+        {
+          "seed": 2,
+          "coverage": 0.8965,
+          "width": 21.777,
+          "point_mae": 4.5294,
+          "coverage_under_dropout": {
+            "drop_30": 0.894,
+            "drop_50": 0.8992
+          },
+          "nn_coverage": 0.887,
+          "nn_point_mae": 7.2647
+        }
+      ],
+      "coverage_mean_std": [
+        0.915,
+        0.0083
+      ],
+      "point_mae_mean_std": [
+        8.7759,
+        1.9034
+      ],
+      "nn_coverage_mean_std": [
+        0.887,
+        0.0
+      ]
+    }
+  },
+  "runtime_seconds": 1777.6
+}

@@ -1,0 +1,72 @@
+{
+  "experiment": "EX-CONF (inductive conformal UQ at unseen stations)",
+  "target_coverage": 0.9,
+  "held_out_stations": [
+    3,
+    11,
+    19,
+    27,
+    33
+  ],
+  "n_seeds": 3,
+  "omnist_conformal": {
+    "coverage_unseen_mean_std": [
+      0.9154,
+      0.0062
+    ],
+    "width_unseen_mean_std": [
+      128.5067,
+      3.7322
+    ]
+  },
+  "nn_residual_baseline": {
+    "coverage_unseen_mean_std": [
+      0.9246,
+      0.0
+    ],
+    "width_unseen_mean_std": [
+      149.67,
+      0.0
+    ]
+  },
+  "coverage_under_dropout_mean": {
+    "drop_30pct": 0.9138,
+    "drop_50pct": 0.9134
+  },
+  "per_seed": [
+    {
+      "seed": 0,
+      "omnist_conformal_coverage_unseen": 0.9067,
+      "omnist_conformal_width_unseen": 123.35,
+      "nn_residual_coverage_unseen": 0.9246,
+      "nn_residual_width_unseen": 149.67,
+      "coverage_unseen_under_dropout": {
+        "drop_30pct": 0.9067,
+        "drop_50pct": 0.8947
+      }
+    },
+    {
+      "seed": 1,
+      "omnist_conformal_coverage_unseen": 0.9187,
+      "omnist_conformal_width_unseen": 132.06,
+      "nn_residual_coverage_unseen": 0.9246,
+      "nn_residual_width_unseen": 149.67,
+      "coverage_unseen_under_dropout": {
+        "drop_30pct": 0.914,
+        "drop_50pct": 0.9247
+      }
+    },
+    {
+      "seed": 2,
+      "omnist_conformal_coverage_unseen": 0.9207,
+      "omnist_conformal_width_unseen": 130.11,
+      "nn_residual_coverage_unseen": 0.9246,
+      "nn_residual_width_unseen": 149.67,
+      "coverage_unseen_under_dropout": {
+        "drop_30pct": 0.9207,
+        "drop_50pct": 0.9207
+      }
+    }
+  ],
+  "runtime_seconds": 220.7
+}

@@ -1,0 +1,31 @@
+{
+  "months": {
+    "Jan": 57.28,
+    "Mar": 24.23,
+    "Apr": 21.96,
+    "May": 30.91,
+    "Jun": 18.14,
+    "Jul": 11.27,
+    "Aug": 11.19,
+    "Sep": 15.2,
+    "Oct": 30.39,
+    "Nov": 69.8,
+    "Dec": 50.85
+  },
+  "config": {
+    "d_model": 128,
+    "k": 8,
+    "epochs": 22,
+    "seed": 42
+  },
+  "resilience": {
+    "full": 0.13052,
+    "minus_5": 0.13018,
+    "minus_5_deg_pct": -0.25,
+    "minus_10": 0.13173,
+    "minus_10_deg_pct": 0.93,
+    "minus_15": 0.12505,
+    "minus_15_deg_pct": -4.19
+  },
+  "avg_mae": 31.02
+}

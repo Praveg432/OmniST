@@ -1,0 +1,362 @@
+{
+  "experiment": "B3 ablations on coverage + inductive-MAE",
+  "target_coverage": 0.9,
+  "note": "no_gat sets n_gat_layers=0. Coordinate-MLP removal (index embedding) is NOT run because it structurally breaks inductive prediction at unseen coords; we note it.",
+  "results": {
+    "delhi_air_quality": {
+      "full": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9067,
+            "width": 123.088,
+            "inductive_mae": 25.1781
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9193,
+            "width": 127.834,
+            "inductive_mae": 26.444
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9173,
+            "width": 128.121,
+            "inductive_mae": 28.0114
+          },
+          {
+            "seed": 3,
+            "coverage": 0.918,
+            "width": 123.145,
+            "inductive_mae": 25.9323
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9113,
+            "width": 126.257,
+            "inductive_mae": 27.7991
+          }
+        ],
+        "coverage_mean": 0.9145,
+        "width_mean": 125.689,
+        "inductive_mae_mean": 26.673
+      },
+      "no_gat": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.902,
+            "width": 129.006,
+            "inductive_mae": 27.3342
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9167,
+            "width": 120.869,
+            "inductive_mae": 24.6257
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9133,
+            "width": 123.277,
+            "inductive_mae": 26.0528
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9133,
+            "width": 123.973,
+            "inductive_mae": 27.2533
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9153,
+            "width": 129.72,
+            "inductive_mae": 26.945
+          }
+        ],
+        "coverage_mean": 0.9121,
+        "width_mean": 125.369,
+        "inductive_mae_mean": 26.4422
+      },
+      "k4": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9093,
+            "width": 118.143,
+            "inductive_mae": 25.607
+          },
+          {
+            "seed": 1,
+            "coverage": 0.916,
+            "width": 126.246,
+            "inductive_mae": 26.4159
+          },
+          {
+            "seed": 2,
+            "coverage": 0.918,
+            "width": 124.005,
+            "inductive_mae": 26.498
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9167,
+            "width": 122.15,
+            "inductive_mae": 25.2996
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9087,
+            "width": 122.636,
+            "inductive_mae": 27.2193
+          }
+        ],
+        "coverage_mean": 0.9137,
+        "width_mean": 122.636,
+        "inductive_mae_mean": 26.208
+      },
+      "k16": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9127,
+            "width": 121.918,
+            "inductive_mae": 26.1668
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9127,
+            "width": 121.808,
+            "inductive_mae": 25.0344
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9153,
+            "width": 122.78,
+            "inductive_mae": 25.3153
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9173,
+            "width": 121.049,
+            "inductive_mae": 25.4244
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9047,
+            "width": 130.325,
+            "inductive_mae": 28.6794
+          }
+        ],
+        "coverage_mean": 0.9125,
+        "width_mean": 123.576,
+        "inductive_mae_mean": 26.1241
+      }
+    },
+    "ghcn_weather": {
+      "full": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9172,
+            "width": 23.701,
+            "inductive_mae": 5.0064
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9202,
+            "width": 22.913,
+            "inductive_mae": 4.8538
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9212,
+            "width": 23.008,
+            "inductive_mae": 4.8389
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9081,
+            "width": 24.22,
+            "inductive_mae": 5.4919
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9192,
+            "width": 22.798,
+            "inductive_mae": 4.7745
+          }
+        ],
+        "coverage_mean": 0.9172,
+        "width_mean": 23.328,
+        "inductive_mae_mean": 4.9931
+      },
+      "no_gat": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9152,
+            "width": 24.166,
+            "inductive_mae": 5.1547
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9333,
+            "width": 22.226,
+            "inductive_mae": 4.4222
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9343,
+            "width": 22.736,
+            "inductive_mae": 4.491
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9202,
+            "width": 24.038,
+            "inductive_mae": 5.0936
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9242,
+            "width": 23.863,
+            "inductive_mae": 4.8564
+          }
+        ],
+        "coverage_mean": 0.9254,
+        "width_mean": 23.406,
+        "inductive_mae_mean": 4.8036
+      },
+      "k4": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9333,
+            "width": 23.287,
+            "inductive_mae": 4.5681
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9273,
+            "width": 22.343,
+            "inductive_mae": 4.4795
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9091,
+            "width": 23.963,
+            "inductive_mae": 5.3633
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9182,
+            "width": 23.169,
+            "inductive_mae": 4.8954
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9121,
+            "width": 23.92,
+            "inductive_mae": 5.3184
+          }
+        ],
+        "coverage_mean": 0.92,
+        "width_mean": 23.336,
+        "inductive_mae_mean": 4.9249
+      },
+      "k16": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9232,
+            "width": 22.734,
+            "inductive_mae": 4.9355
+          },
+          {
+            "seed": 1,
+            "coverage": 0.9253,
+            "width": 23.514,
+            "inductive_mae": 4.9923
+          },
+          {
+            "seed": 2,
+            "coverage": 0.9263,
+            "width": 23.62,
+            "inductive_mae": 4.8667
+          },
+          {
+            "seed": 3,
+            "coverage": 0.9152,
+            "width": 24.298,
+            "inductive_mae": 5.242
+          },
+          {
+            "seed": 4,
+            "coverage": 0.9182,
+            "width": 22.606,
+            "inductive_mae": 4.8288
+          }
+        ],
+        "coverage_mean": 0.9216,
+        "width_mean": 23.354,
+        "inductive_mae_mean": 4.9731
+      }
+    },
+    "pemsd7_traffic": {
+      "full": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9186,
+            "width": 50.637,
+            "inductive_mae": 9.55
+          }
+        ],
+        "coverage_mean": 0.9186,
+        "width_mean": 50.637,
+        "inductive_mae_mean": 9.55
+      },
+      "no_gat": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9187,
+            "width": 50.558,
+            "inductive_mae": 9.5382
+          }
+        ],
+        "coverage_mean": 0.9187,
+        "width_mean": 50.558,
+        "inductive_mae_mean": 9.5382
+      },
+      "k4": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9189,
+            "width": 50.259,
+            "inductive_mae": 9.6253
+          }
+        ],
+        "coverage_mean": 0.9189,
+        "width_mean": 50.259,
+        "inductive_mae_mean": 9.6253
+      },
+      "k16": {
+        "per_seed": [
+          {
+            "seed": 0,
+            "coverage": 0.9187,
+            "width": 50.197,
+            "inductive_mae": 9.6316
+          }
+        ],
+        "coverage_mean": 0.9187,
+        "width_mean": 50.197,
+        "inductive_mae_mean": 9.6316
+      }
+    }
+  },
+  "runtime_seconds": 53626.9
+}

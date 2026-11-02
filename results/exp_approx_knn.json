@@ -1,0 +1,36 @@
+{
+  "experiment": "EX-KNN (scalable cKDTree k-NN vs exact: equivalence + speed)",
+  "equivalence": {
+    "N": 228,
+    "mean_abs_diff": 0.000141,
+    "rel_mean_diff": 0.000176,
+    "output_cosine_similarity": 0.999994
+  },
+  "speed_ladder_per_forward_B2": [
+    {
+      "N": 228,
+      "exact_ms": 5.3,
+      "scalable_ms": 4.5,
+      "speedup": 1.18
+    },
+    {
+      "N": 456,
+      "exact_ms": 9.6,
+      "scalable_ms": 5.1,
+      "speedup": 1.88
+    },
+    {
+      "N": 912,
+      "exact_ms": 13.2,
+      "scalable_ms": 8.8,
+      "speedup": 1.5
+    },
+    {
+      "N": 1824,
+      "exact_ms": 49.6,
+      "scalable_ms": 11.4,
+      "speedup": 4.35
+    }
+  ],
+  "verdict": "EQUIVALENT (cosine>=0.999) and scalable is faster at large N"
+}

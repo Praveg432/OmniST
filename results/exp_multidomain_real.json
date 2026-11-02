@@ -1,0 +1,208 @@
+{
+  "experiment": "EX-MULTIDOMAIN-REAL (inductive conformal + topology invariance on 3 real datasets)",
+  "target_coverage": 0.9,
+  "domains": [
+    "delhi_air_quality (CPCB)",
+    "beijing_air_quality (UCI PRSA)",
+    "pemsd7_traffic (Caltrans)"
+  ],
+  "data_provenance": {
+    "delhi": "real CPCB daily PM2.5, 37 stations",
+    "beijing": "real UCI PRSA hourly->daily PM2.5, 12 stations",
+    "traffic": "real Caltrans PeMSD7-M 5-min speed, 228 sensors; coords via MDS on released adjacency"
+  },
+  "n_seeds": 2,
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds": 2,
+      "n_seeds_succeeded": 2,
+      "omnist_coverage_unseen_mean_std": [
+        0.913,
+        0.0063
+      ],
+      "omnist_width_unseen_mean_std": [
+        125.461,
+        2.373
+      ],
+      "omnist_point_mae_unseen_mean_std": [
+        25.8111,
+        0.6329
+      ],
+      "nn_coverage_unseen_mean_std": [
+        0.9246,
+        0.0
+      ],
+      "nn_point_mae_unseen_mean_std": [
+        30.2498,
+        0.0
+      ],
+      "coverage_under_dropout_mean": {
+        "drop_30pct": 0.9103,
+        "drop_50pct": 0.9083
+      },
+      "per_seed": [
+        {
+          "seed": 0,
+          "n_train_stations": 32,
+          "n_unseen_stations": 5,
+          "omnist_coverage_unseen": 0.9067,
+          "omnist_width_unseen": 123.088,
+          "omnist_point_mae_unseen": 25.1781,
+          "nn_coverage_unseen": 0.9246,
+          "nn_width_unseen": 149.668,
+          "nn_point_mae_unseen": 30.2498,
+          "coverage_under_dropout": {
+            "drop_30pct": 0.9067,
+            "drop_50pct": 0.8933
+          },
+          "topology_mse": {
+            "drop_30pct": 0.3147,
+            "drop_50pct": 0.3089,
+            "full": 0.3162
+          }
+        },
+        {
+          "seed": 1,
+          "n_train_stations": 32,
+          "n_unseen_stations": 5,
+          "omnist_coverage_unseen": 0.9193,
+          "omnist_width_unseen": 127.834,
+          "omnist_point_mae_unseen": 26.444,
+          "nn_coverage_unseen": 0.9246,
+          "nn_width_unseen": 149.668,
+          "nn_point_mae_unseen": 30.2498,
+          "coverage_under_dropout": {
+            "drop_30pct": 0.914,
+            "drop_50pct": 0.9233
+          },
+          "topology_mse": {
+            "drop_30pct": 0.3449,
+            "drop_50pct": 0.3558,
+            "full": 0.3306
+          }
+        }
+      ]
+    },
+    "beijing_air_quality": {
+      "n_seeds": 2,
+      "n_seeds_succeeded": 2,
+      "omnist_coverage_unseen_mean_std": [
+        0.9273,
+        0.0
+      ],
+      "omnist_width_unseen_mean_std": [
+        175.3915,
+        0.6045
+      ],
+      "omnist_point_mae_unseen_mean_std": [
+        48.7906,
+        0.1649
+      ],
+      "nn_coverage_unseen_mean_std": [
+        0.8689,
+        0.0
+      ],
+      "nn_point_mae_unseen_mean_std": [
+        11.5201,
+        0.0
+      ],
+      "coverage_under_dropout_mean": {
+        "drop_30pct": 0.9273,
+        "drop_50pct": 0.9313
+      },
+      "per_seed": [
+        {
+          "seed": 0,
+          "n_train_stations": 9,
+          "n_unseen_stations": 3,
+          "omnist_coverage_unseen": 0.9273,
+          "omnist_width_unseen": 175.996,
+          "omnist_point_mae_unseen": 48.6257,
+          "nn_coverage_unseen": 0.8689,
+          "nn_width_unseen": 49.21,
+          "nn_point_mae_unseen": 11.5201,
+          "coverage_under_dropout": {
+            "drop_30pct": 0.9283,
+            "drop_50pct": 0.9394
+          },
+          "topology_mse": {
+            "drop_30pct": 1.2806,
+            "drop_50pct": 1.3062,
+            "full": 1.3051
+          }
+        },
+        {
+          "seed": 1,
+          "n_train_stations": 9,
+          "n_unseen_stations": 3,
+          "omnist_coverage_unseen": 0.9273,
+          "omnist_width_unseen": 174.787,
+          "omnist_point_mae_unseen": 48.9555,
+          "nn_coverage_unseen": 0.8689,
+          "nn_width_unseen": 49.21,
+          "nn_point_mae_unseen": 11.5201,
+          "coverage_under_dropout": {
+            "drop_30pct": 0.9263,
+            "drop_50pct": 0.9232
+          },
+          "topology_mse": {
+            "drop_30pct": 1.3321,
+            "drop_50pct": 1.3193,
+            "full": 1.3037
+          }
+        }
+      ]
+    },
+    "pemsd7_traffic": {
+      "n_seeds": 1,
+      "n_seeds_succeeded": 1,
+      "omnist_coverage_unseen_mean_std": [
+        0.9186,
+        0.0
+      ],
+      "omnist_width_unseen_mean_std": [
+        50.637,
+        0.0
+      ],
+      "omnist_point_mae_unseen_mean_std": [
+        9.55,
+        0.0
+      ],
+      "nn_coverage_unseen_mean_std": [
+        0.887,
+        0.0
+      ],
+      "nn_point_mae_unseen_mean_std": [
+        7.2647,
+        0.0
+      ],
+      "coverage_under_dropout_mean": {
+        "drop_30pct": 0.9179,
+        "drop_50pct": 0.9231
+      },
+      "per_seed": [
+        {
+          "seed": 0,
+          "n_train_stations": 223,
+          "n_unseen_stations": 5,
+          "omnist_coverage_unseen": 0.9186,
+          "omnist_width_unseen": 50.637,
+          "omnist_point_mae_unseen": 9.55,
+          "nn_coverage_unseen": 0.887,
+          "nn_width_unseen": 35.8,
+          "nn_point_mae_unseen": 7.2647,
+          "coverage_under_dropout": {
+            "drop_30pct": 0.9179,
+            "drop_50pct": 0.9231
+          },
+          "topology_mse": {
+            "drop_30pct": 1.0716,
+            "drop_50pct": 1.0586,
+            "full": 1.0647
+          }
+        }
+      ]
+    }
+  },
+  "runtime_seconds": 550.2
+}

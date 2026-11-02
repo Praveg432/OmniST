@@ -1,0 +1,196 @@
+{
+  "experiment": "B6 controlled E-STGCN vs OmniST on real data (identical conditions)",
+  "baseline_note": "ESTGCN = faithful reimplementation of the E-STGCN architecture family (Chebyshev-GCN + LSTM + POT loss, arXiv:2411.12258), not the authors' code.",
+  "target_coverage": 0.9,
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds": 5,
+      "transductive_omnist_mae_mean_std": [
+        28.5954,
+        1.1786
+      ],
+      "transductive_estgcn_mae_mean_std": [
+        33.4612,
+        1.8544
+      ],
+      "inductive_omnist_mae_mean": 26.673,
+      "inductive_omnist_coverage_mean": 0.9145,
+      "estgcn_can_predict_unseen": false,
+      "estgcn_failure_reason": "fixed training adjacency is 32x32; cannot multiply with 5 held-out nodes (no row/col for unseen stations)",
+      "per_seed": [
+        {
+          "seed": 0,
+          "transductive_seen": {
+            "omnist_mae": 26.7691,
+            "estgcn_mae": 36.7862,
+            "omnist_rmse": 40.6199,
+            "estgcn_rmse": 54.56
+          },
+          "inductive_unseen": {
+            "omnist_mae": 25.1781,
+            "omnist_coverage_at90": 0.9067,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 32x32; cannot multiply with 5 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 1,
+          "transductive_seen": {
+            "omnist_mae": 28.725,
+            "estgcn_mae": 33.6834,
+            "omnist_rmse": 42.1393,
+            "estgcn_rmse": 54.2372
+          },
+          "inductive_unseen": {
+            "omnist_mae": 26.444,
+            "omnist_coverage_at90": 0.9193,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 32x32; cannot multiply with 5 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 2,
+          "transductive_seen": {
+            "omnist_mae": 30.3313,
+            "estgcn_mae": 31.3976,
+            "omnist_rmse": 44.6015,
+            "estgcn_rmse": 50.0365
+          },
+          "inductive_unseen": {
+            "omnist_mae": 28.0114,
+            "omnist_coverage_at90": 0.9173,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 32x32; cannot multiply with 5 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 3,
+          "transductive_seen": {
+            "omnist_mae": 28.0376,
+            "estgcn_mae": 33.3233,
+            "omnist_rmse": 41.6606,
+            "estgcn_rmse": 52.5376
+          },
+          "inductive_unseen": {
+            "omnist_mae": 25.9323,
+            "omnist_coverage_at90": 0.918,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 32x32; cannot multiply with 5 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 4,
+          "transductive_seen": {
+            "omnist_mae": 29.114,
+            "estgcn_mae": 32.1155,
+            "omnist_rmse": 42.0284,
+            "estgcn_rmse": 52.0597
+          },
+          "inductive_unseen": {
+            "omnist_mae": 27.7991,
+            "omnist_coverage_at90": 0.9113,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 32x32; cannot multiply with 5 held-out nodes (no row/col for unseen stations)"
+          }
+        }
+      ],
+      "transductive_mae_paired_p": 0.0312,
+      "transductive_mae_delta": -4.8658
+    },
+    "ghcn_weather": {
+      "n_seeds": 5,
+      "transductive_omnist_mae_mean_std": [
+        5.5501,
+        0.1447
+      ],
+      "transductive_estgcn_mae_mean_std": [
+        5.2956,
+        0.2852
+      ],
+      "inductive_omnist_mae_mean": 4.9931,
+      "inductive_omnist_coverage_mean": 0.9172,
+      "estgcn_can_predict_unseen": false,
+      "estgcn_failure_reason": "fixed training adjacency is 27x27; cannot multiply with 3 held-out nodes (no row/col for unseen stations)",
+      "per_seed": [
+        {
+          "seed": 0,
+          "transductive_seen": {
+            "omnist_mae": 5.6347,
+            "estgcn_mae": 5.6086,
+            "omnist_rmse": 7.01,
+            "estgcn_rmse": 6.9645
+          },
+          "inductive_unseen": {
+            "omnist_mae": 5.0064,
+            "omnist_coverage_at90": 0.9172,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 27x27; cannot multiply with 3 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 1,
+          "transductive_seen": {
+            "omnist_mae": 5.449,
+            "estgcn_mae": 5.5417,
+            "omnist_rmse": 6.7829,
+            "estgcn_rmse": 6.9037
+          },
+          "inductive_unseen": {
+            "omnist_mae": 4.8538,
+            "omnist_coverage_at90": 0.9202,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 27x27; cannot multiply with 3 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 2,
+          "transductive_seen": {
+            "omnist_mae": 5.4391,
+            "estgcn_mae": 5.2587,
+            "omnist_rmse": 6.7664,
+            "estgcn_rmse": 6.5115
+          },
+          "inductive_unseen": {
+            "omnist_mae": 4.8389,
+            "omnist_coverage_at90": 0.9212,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 27x27; cannot multiply with 3 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 3,
+          "transductive_seen": {
+            "omnist_mae": 5.7968,
+            "estgcn_mae": 5.2695,
+            "omnist_rmse": 7.1484,
+            "estgcn_rmse": 6.5299
+          },
+          "inductive_unseen": {
+            "omnist_mae": 5.4919,
+            "omnist_coverage_at90": 0.9081,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 27x27; cannot multiply with 3 held-out nodes (no row/col for unseen stations)"
+          }
+        },
+        {
+          "seed": 4,
+          "transductive_seen": {
+            "omnist_mae": 5.4311,
+            "estgcn_mae": 4.7994,
+            "omnist_rmse": 6.7556,
+            "estgcn_rmse": 5.9211
+          },
+          "inductive_unseen": {
+            "omnist_mae": 4.7745,
+            "omnist_coverage_at90": 0.9192,
+            "estgcn_can_predict": false,
+            "estgcn_failure_reason": "fixed training adjacency is 27x27; cannot multiply with 3 held-out nodes (no row/col for unseen stations)"
+          }
+        }
+      ],
+      "transductive_mae_paired_p": 0.1443,
+      "transductive_mae_delta": 0.2546
+    }
+  },
+  "runtime_seconds": 1649.9
+}

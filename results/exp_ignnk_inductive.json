@@ -1,0 +1,196 @@
+{
+  "experiment": "B9 IGNNK (learned inductive kriging) vs OmniST at unseen sensors",
+  "baseline_note": "IGNNK = faithful reimplementation (3-layer diffusion GCN, random-subgraph + node-masking reconstruction), arXiv:2006.07527, not the authors' code.",
+  "target_coverage": 0.9,
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds": 5,
+      "omnist_inductive_mae": [
+        26.673,
+        1.0858
+      ],
+      "omnist_coverage": [
+        0.9145,
+        0.0048
+      ],
+      "omnist_width": [
+        125.69,
+        2.1918
+      ],
+      "ignnk_inductive_mae": [
+        33.9976,
+        1.2698
+      ],
+      "ignnk_coverage": [
+        0.8905,
+        0.0087
+      ],
+      "ignnk_width": [
+        154.382,
+        6.4047
+      ],
+      "per_seed": [
+        {
+          "seed": 0,
+          "omnist": {
+            "inductive_mae": 25.1781,
+            "coverage": 0.9067,
+            "width": 123.09
+          },
+          "ignnk": {
+            "inductive_mae": 31.8317,
+            "coverage": 0.89,
+            "width": 144.69
+          }
+        },
+        {
+          "seed": 1,
+          "omnist": {
+            "inductive_mae": 26.444,
+            "coverage": 0.9193,
+            "width": 127.83
+          },
+          "ignnk": {
+            "inductive_mae": 35.4507,
+            "coverage": 0.8906,
+            "width": 160.1
+          }
+        },
+        {
+          "seed": 2,
+          "omnist": {
+            "inductive_mae": 28.0114,
+            "coverage": 0.9173,
+            "width": 128.12
+          },
+          "ignnk": {
+            "inductive_mae": 33.3984,
+            "coverage": 0.9028,
+            "width": 159.64
+          }
+        },
+        {
+          "seed": 3,
+          "omnist": {
+            "inductive_mae": 25.9323,
+            "coverage": 0.918,
+            "width": 123.15
+          },
+          "ignnk": {
+            "inductive_mae": 34.7934,
+            "coverage": 0.8933,
+            "width": 158.74
+          }
+        },
+        {
+          "seed": 4,
+          "omnist": {
+            "inductive_mae": 27.7991,
+            "coverage": 0.9113,
+            "width": 126.26
+          },
+          "ignnk": {
+            "inductive_mae": 34.514,
+            "coverage": 0.8756,
+            "width": 148.74
+          }
+        }
+      ]
+    },
+    "ghcn_weather": {
+      "n_seeds": 5,
+      "omnist_inductive_mae": [
+        4.9931,
+        0.2607
+      ],
+      "omnist_coverage": [
+        0.9172,
+        0.0047
+      ],
+      "omnist_width": [
+        23.328,
+        0.5457
+      ],
+      "ignnk_inductive_mae": [
+        5.9151,
+        0.4854
+      ],
+      "ignnk_coverage": [
+        0.9474,
+        0.0326
+      ],
+      "ignnk_width": [
+        27.798,
+        1.588
+      ],
+      "per_seed": [
+        {
+          "seed": 0,
+          "omnist": {
+            "inductive_mae": 5.0064,
+            "coverage": 0.9172,
+            "width": 23.7
+          },
+          "ignnk": {
+            "inductive_mae": 6.6815,
+            "coverage": 0.887,
+            "width": 26.42
+          }
+        },
+        {
+          "seed": 1,
+          "omnist": {
+            "inductive_mae": 4.8538,
+            "coverage": 0.9202,
+            "width": 22.91
+          },
+          "ignnk": {
+            "inductive_mae": 5.8862,
+            "coverage": 0.9509,
+            "width": 26.75
+          }
+        },
+        {
+          "seed": 2,
+          "omnist": {
+            "inductive_mae": 4.8389,
+            "coverage": 0.9212,
+            "width": 23.01
+          },
+          "ignnk": {
+            "inductive_mae": 5.8254,
+            "coverage": 0.9694,
+            "width": 29.66
+          }
+        },
+        {
+          "seed": 3,
+          "omnist": {
+            "inductive_mae": 5.4919,
+            "coverage": 0.9081,
+            "width": 24.22
+          },
+          "ignnk": {
+            "inductive_mae": 6.0225,
+            "coverage": 0.9481,
+            "width": 26.35
+          }
+        },
+        {
+          "seed": 4,
+          "omnist": {
+            "inductive_mae": 4.7745,
+            "coverage": 0.9192,
+            "width": 22.8
+          },
+          "ignnk": {
+            "inductive_mae": 5.1599,
+            "coverage": 0.9815,
+            "width": 29.81
+          }
+        }
+      ]
+    }
+  },
+  "runtime_seconds": 1066.2
+}

@@ -1,0 +1,67 @@
+{
+  "experiment": "EX-TEMPORAL (online-conformal fix for temporal-drift under-coverage)",
+  "data": "real CPCB Delhi PM2.5 (37 stations), OmniST model",
+  "target_coverage": 0.9,
+  "protocol": "calibrate on first half of test year; run online over second half (drift regime)",
+  "n_seeds": 3,
+  "methods": {
+    "static_split_cp": {
+      "coverage_mean_std": [
+        0.758,
+        0.0123
+      ],
+      "late_window_coverage_mean_std": [
+        0.498,
+        0.0331
+      ],
+      "mean_interval_width_mean_std": [
+        95.4474,
+        5.5754
+      ]
+    },
+    "rolling": {
+      "coverage_mean_std": [
+        0.8402,
+        0.0037
+      ],
+      "late_window_coverage_mean_std": [
+        0.799,
+        0.0112
+      ],
+      "mean_interval_width_mean_std": [
+        127.3775,
+        3.4783
+      ]
+    },
+    "aci": {
+      "coverage_mean_std": [
+        0.8466,
+        0.002
+      ],
+      "late_window_coverage_mean_std": [
+        0.9051,
+        0.006
+      ],
+      "mean_interval_width_mean_std": [
+        139.036,
+        0.7896
+      ]
+    },
+    "rolling_aci": {
+      "coverage_mean_std": [
+        0.8904,
+        0.0007
+      ],
+      "late_window_coverage_mean_std": [
+        0.9622,
+        0.0033
+      ],
+      "mean_interval_width_mean_std": [
+        170.1462,
+        1.8361
+      ]
+    }
+  },
+  "prior_opt4_static_coverage": 0.7525,
+  "runtime_seconds": 215.5
+}

@@ -1,0 +1,97 @@
+{
+  "experiment": "B4 calibration diagnostics (post-hoc on B1 residual cache)",
+  "targets": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ],
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds_cached": 10,
+      "calibration_curve": {
+        "target_50": 0.5145,
+        "target_60": 0.6171,
+        "target_70": 0.7197,
+        "target_80": 0.822,
+        "target_90": 0.9139,
+        "target_95": 0.958
+      },
+      "sharpness_width90": {
+        "mean": 126.998,
+        "min": 119.876,
+        "max": 131.488
+      },
+      "size_stratified_coverage_at90": {
+        "low": 1.0,
+        "mid": 1.0,
+        "high": 0.7416
+      }
+    },
+    "beijing_air_quality": {
+      "n_seeds_cached": 10,
+      "calibration_curve": {
+        "target_50": 0.4701,
+        "target_60": 0.571,
+        "target_70": 0.6735,
+        "target_80": 0.8005,
+        "target_90": 0.9275,
+        "target_95": 0.9685
+      },
+      "sharpness_width90": {
+        "mean": 179.061,
+        "min": 174.787,
+        "max": 188.844
+      },
+      "size_stratified_coverage_at90": {
+        "low": 1.0,
+        "mid": 1.0,
+        "high": 0.7824
+      }
+    },
+    "ghcn_weather": {
+      "n_seeds_cached": 10,
+      "calibration_curve": {
+        "target_50": 0.5798,
+        "target_60": 0.6828,
+        "target_70": 0.7727,
+        "target_80": 0.8445,
+        "target_90": 0.9193,
+        "target_95": 0.9603
+      },
+      "sharpness_width90": {
+        "mean": 23.293,
+        "min": 21.573,
+        "max": 24.527
+      },
+      "size_stratified_coverage_at90": {
+        "low": 1.0,
+        "mid": 1.0,
+        "high": 0.7579
+      }
+    },
+    "pemsd7_traffic": {
+      "n_seeds_cached": 3,
+      "calibration_curve": {
+        "target_50": 0.4537,
+        "target_60": 0.5444,
+        "target_70": 0.6514,
+        "target_80": 0.7731,
+        "target_90": 0.9112,
+        "target_95": 0.9627
+      },
+      "sharpness_width90": {
+        "mean": 41.039,
+        "min": 21.815,
+        "max": 50.665
+      },
+      "size_stratified_coverage_at90": {
+        "low": 1.0,
+        "mid": 1.0,
+        "high": 0.7337
+      }
+    }
+  }
+}

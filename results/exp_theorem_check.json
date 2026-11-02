@@ -1,0 +1,45 @@
+{
+  "experiment": "B5 locality/invariance proposition verification",
+  "P1_exact_far_change_invariance": {
+    "k": 8,
+    "n_nodes": 30,
+    "n_far_dropped": 10,
+    "far_change_max_abs_diff": 8.940696716308594e-08,
+    "P1_exact_invariance_holds": true,
+    "control_near_change_max_abs_diff": 0.00688,
+    "control_near_change_perturbs": true,
+    "note": "far-change uses the model's Haversine k-NN metric to define 'outside the neighborhood'. Exact invariance confirms the per-node computation references no global N."
+  },
+  "P2_preserved_coverage": {
+    "target": 0.9,
+    "slack": 0.03,
+    "all_domains_within_band": true,
+    "by_domain": {
+      "delhi_air_quality": {
+        "full": 0.9139,
+        "drop_30": 0.9117,
+        "drop_50": 0.9142,
+        "within_band": true
+      },
+      "beijing_air_quality": {
+        "full": 0.9275,
+        "drop_30": 0.9292,
+        "drop_50": 0.9308,
+        "within_band": true
+      },
+      "ghcn_weather": {
+        "full": 0.9193,
+        "drop_30": 0.9197,
+        "drop_50": 0.9275,
+        "within_band": true
+      },
+      "pemsd7_traffic": {
+        "full": 0.9112,
+        "drop_30": 0.9122,
+        "drop_50": 0.9126,
+        "within_band": true
+      }
+    }
+  },
+  "verdict": "SUPPORTED"
+}

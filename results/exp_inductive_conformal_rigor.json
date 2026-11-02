@@ -1,0 +1,80 @@
+{
+  "experiment": "EX-CONF-RIGOR (multi-domain / multi-case inductive conformal)",
+  "n_seeds": 3,
+  "coverage_targets": [
+    0.8,
+    0.9,
+    0.95
+  ],
+  "domains": {
+    "delhi_airquality": {
+      "n_train_stations_approx": 37,
+      "feature": "PM2.5",
+      "cases": {
+        "holdout_5": {
+          "coverage_by_target": {
+            "target_80": 0.8231,
+            "target_90": 0.9144,
+            "target_95": 0.9613
+          },
+          "width_by_target": {
+            "target_80": 84.19,
+            "target_90": 126.35,
+            "target_95": 184.6
+          },
+          "coverage_under_dropout_at_90": {
+            "drop_30": 0.9138,
+            "drop_50": 0.9127,
+            "drop_60": 0.9178
+          }
+        },
+        "holdout_8": {
+          "coverage_by_target": {
+            "target_80": 0.8004,
+            "target_90": 0.8979,
+            "target_95": 0.9457
+          },
+          "width_by_target": {
+            "target_80": 84.69,
+            "target_90": 123.87,
+            "target_95": 175.46
+          },
+          "coverage_under_dropout_at_90": {
+            "drop_30": 0.8947,
+            "drop_50": 0.8996,
+            "drop_60": 0.8986
+          }
+        }
+      }
+    },
+    "traffic": {
+      "n_train_sensors_approx": 92,
+      "feature": "speed",
+      "cases": {
+        "holdout_8": {
+          "coverage_by_target": {
+            "target_80": 0.8037,
+            "target_90": 0.8988,
+            "target_95": 0.9495
+          },
+          "width_by_target": {
+            "target_80": 30.73,
+            "target_90": 43.23,
+            "target_95": 54.46
+          },
+          "coverage_under_dropout_at_90": {
+            "drop_30": 0.8991,
+            "drop_50": 0.898,
+            "drop_60": 0.8966
+          }
+        }
+      }
+    }
+  },
+  "rigor_summary": {
+    "coverage_checks_within_3pts": "9/9",
+    "pass_fraction": 1.0,
+    "verdict": "ROBUST across domains/targets/held-out-sizes"
+  },
+  "runtime_seconds": 725.0
+}

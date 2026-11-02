@@ -1,0 +1,54 @@
+{
+  "experiment": "B7 large-N real inductive coverage (PeMS-BAY, 325 real sensors)",
+  "n_sensors": 325,
+  "n_held_out": 7,
+  "target_coverage": 0.9,
+  "knn_mode": "scalable",
+  "n_seeds": 3,
+  "coverage_mean_std": [
+    0.9207,
+    0.0
+  ],
+  "nn_coverage_mean": 0.8698,
+  "point_mae_mean": 5.1641,
+  "coverage_under_dropout_mean": {
+    "drop_30": 0.9206,
+    "drop_50": 0.922
+  },
+  "per_seed": [
+    {
+      "seed": 0,
+      "coverage": 0.9208,
+      "point_mae": 5.1715,
+      "coverage_under_dropout": {
+        "drop_30": 0.9207,
+        "drop_50": 0.9209
+      },
+      "nn_coverage": 0.8698,
+      "train_seconds": 116.9
+    },
+    {
+      "seed": 1,
+      "coverage": 0.9207,
+      "point_mae": 5.1548,
+      "coverage_under_dropout": {
+        "drop_30": 0.9199,
+        "drop_50": 0.9231
+      },
+      "nn_coverage": 0.8698,
+      "train_seconds": 203.6
+    },
+    {
+      "seed": 2,
+      "coverage": 0.9207,
+      "point_mae": 5.1659,
+      "coverage_under_dropout": {
+        "drop_30": 0.9213,
+        "drop_50": 0.9221
+      },
+      "nn_coverage": 0.8698,
+      "train_seconds": 212.1
+    }
+  ],
+  "runtime_seconds": 597.4
+}

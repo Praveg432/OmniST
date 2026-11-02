@@ -1,0 +1,122 @@
+{
+  "experiment": "B2 baseline breadth vs OmniST (inductive conformal at unseen nodes)",
+  "target_coverage": 0.9,
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "OmniST_conformal": {
+        "coverage": 0.9139,
+        "width": 126.998,
+        "point_mae": 26.7844
+      },
+      "baselines": {
+        "NN": {
+          "coverage": 0.9246,
+          "width": 149.668,
+          "point_mae": 30.2498
+        },
+        "IDW": {
+          "coverage": 0.871,
+          "width": 93.459,
+          "point_mae": 22.8662
+        },
+        "meanK": {
+          "coverage": 0.8131,
+          "width": 85.399,
+          "point_mae": 23.3481
+        },
+        "GP": {
+          "coverage": 0.8448,
+          "width": 92.398,
+          "point_mae": 22.2198
+        }
+      }
+    },
+    "beijing_air_quality": {
+      "OmniST_conformal": {
+        "coverage": 0.9275,
+        "width": 179.061,
+        "point_mae": 48.5705
+      },
+      "baselines": {
+        "NN": {
+          "coverage": 0.8689,
+          "width": 49.21,
+          "point_mae": 11.5201
+        },
+        "IDW": {
+          "coverage": 0.8179,
+          "width": 41.432,
+          "point_mae": 11.3485
+        },
+        "meanK": {
+          "coverage": 0.7887,
+          "width": 45.773,
+          "point_mae": 13.512
+        },
+        "GP": {
+          "coverage": 0.7887,
+          "width": 48.715,
+          "point_mae": 14.2432
+        }
+      }
+    },
+    "ghcn_weather": {
+      "OmniST_conformal": {
+        "coverage": 0.9193,
+        "width": 23.293,
+        "point_mae": 4.908
+      },
+      "baselines": {
+        "NN": {
+          "coverage": 0.8962,
+          "width": 6.68,
+          "point_mae": 1.5627
+        },
+        "IDW": {
+          "coverage": 0.9271,
+          "width": 15.299,
+          "point_mae": 3.4615
+        },
+        "meanK": {
+          "coverage": 0.9454,
+          "width": 22.016,
+          "point_mae": 4.9663
+        },
+        "GP": {
+          "coverage": 0.8925,
+          "width": 17.305,
+          "point_mae": 4.6711
+        }
+      }
+    },
+    "pemsd7_traffic": {
+      "OmniST_conformal": {
+        "coverage": 0.9112,
+        "width": 41.039,
+        "point_mae": 7.8804
+      },
+      "baselines": {
+        "NN": {
+          "coverage": 0.887,
+          "width": 35.8,
+          "point_mae": 7.2647
+        },
+        "IDW": {
+          "coverage": 0.9053,
+          "width": 41.996,
+          "point_mae": 7.9992
+        },
+        "meanK": {
+          "coverage": 0.9056,
+          "width": 42.54,
+          "point_mae": 7.0475
+        },
+        "GP": {
+          "coverage": 0.9219,
+          "width": 41.316,
+          "point_mae": 7.7872
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "experiment": "B8 fixed-topology crash-under-dropout head-to-head (demonstrated)",
+  "baseline_note": "ESTGCN = faithful reimplementation of the E-STGCN architecture family (Chebyshev-GCN + LSTM + POT, arXiv:2411.12258), not the authors' code. The fair-mode adjacency recompute is deliberately disabled to show the static-adjacency limitation.",
+  "scenario": "sensors drop OFFLINE at inference (30%/50%); fixed N_train adjacency cannot message-pass over the reduced node set; OmniST runs on the same set and holds coverage.",
+  "target_coverage": 0.9,
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds": 3,
+      "estgcn_runs_under_drop30": false,
+      "estgcn_runs_under_drop50": false,
+      "estgcn_failure_example": "RuntimeError: fixed adjacency is 32x32 but 16 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 16].",
+      "omnist_coverage_drop30_mean": 0.9138,
+      "omnist_coverage_drop50_mean": 0.9126,
+      "per_seed": [
+        {
+          "seed": 0,
+          "n_train": 32,
+          "omnist_inductive_mae": 25.1781,
+          "per_dropout": {
+            "drop_30": {
+              "sensors_remaining": 22,
+              "sensors_trained_on": 32,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 32x32 but 22 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 22].",
+              "omnist_coverage_at90": 0.9067
+            },
+            "drop_50": {
+              "sensors_remaining": 16,
+              "sensors_trained_on": 32,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 32x32 but 16 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 16].",
+              "omnist_coverage_at90": 0.8933
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "n_train": 32,
+          "omnist_inductive_mae": 26.444,
+          "per_dropout": {
+            "drop_30": {
+              "sensors_remaining": 22,
+              "sensors_trained_on": 32,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 32x32 but 22 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 22].",
+              "omnist_coverage_at90": 0.914
+            },
+            "drop_50": {
+              "sensors_remaining": 16,
+              "sensors_trained_on": 32,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 32x32 but 16 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 16].",
+              "omnist_coverage_at90": 0.9233
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "n_train": 32,
+          "omnist_inductive_mae": 28.0114,
+          "per_dropout": {
+            "drop_30": {
+              "sensors_remaining": 22,
+              "sensors_trained_on": 32,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 32x32 but 22 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 22].",
+              "omnist_coverage_at90": 0.9207
+            },
+            "drop_50": {
+              "sensors_remaining": 16,
+              "sensors_trained_on": 32,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 32x32 but 16 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 32] but got: [1, 16].",
+              "omnist_coverage_at90": 0.9213
+            }
+          }
+        }
+      ]
+    },
+    "ghcn_weather": {
+      "n_seeds": 3,
+      "estgcn_runs_under_drop30": false,
+      "estgcn_runs_under_drop50": false,
+      "estgcn_failure_example": "RuntimeError: fixed adjacency is 27x27 but 13 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 13].",
+      "omnist_coverage_drop30_mean": 0.9249,
+      "omnist_coverage_drop50_mean": 0.9273,
+      "per_seed": [
+        {
+          "seed": 0,
+          "n_train": 27,
+          "omnist_inductive_mae": 5.0064,
+          "per_dropout": {
+            "drop_30": {
+              "sensors_remaining": 18,
+              "sensors_trained_on": 27,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 27x27 but 18 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 18].",
+              "omnist_coverage_at90": 0.9253
+            },
+            "drop_50": {
+              "sensors_remaining": 13,
+              "sensors_trained_on": 27,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 27x27 but 13 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 13].",
+              "omnist_coverage_at90": 0.9182
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "n_train": 27,
+          "omnist_inductive_mae": 4.8538,
+          "per_dropout": {
+            "drop_30": {
+              "sensors_remaining": 18,
+              "sensors_trained_on": 27,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 27x27 but 18 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 18].",
+              "omnist_coverage_at90": 0.9131
+            },
+            "drop_50": {
+              "sensors_remaining": 13,
+              "sensors_trained_on": 27,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 27x27 but 13 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 13].",
+              "omnist_coverage_at90": 0.9434
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "n_train": 27,
+          "omnist_inductive_mae": 4.8389,
+          "per_dropout": {
+            "drop_30": {
+              "sensors_remaining": 18,
+              "sensors_trained_on": 27,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 27x27 but 18 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 18].",
+              "omnist_coverage_at90": 0.9364
+            },
+            "drop_50": {
+              "sensors_remaining": 13,
+              "sensors_trained_on": 27,
+              "estgcn_runs": false,
+              "estgcn_failure": "RuntimeError: fixed adjacency is 27x27 but 13 sensors remain after dropout -> Expected size for first two dimensions of batch2 tensor to be: [1, 27] but got: [1, 13].",
+              "omnist_coverage_at90": 0.9202
+            }
+          }
+        }
+      ]
+    }
+  },
+  "runtime_seconds": 936.9
+}

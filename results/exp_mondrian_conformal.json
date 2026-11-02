@@ -1,0 +1,317 @@
+{
+  "experiment": "EX-MONDRIAN (group-conditional conformal vs marginal, 3 real datasets)",
+  "alpha": 0.1,
+  "n_groups": 3,
+  "target_coverage": 0.9,
+  "grouping_feature": "distance to nearest training node (unseen-node difficulty proxy)",
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds": 3,
+      "marginal_worst_group_coverage_mean": 0.9072,
+      "mondrian_worst_group_coverage_mean": 0.9056,
+      "marginal_overall_coverage_mean": 0.9144,
+      "mondrian_overall_coverage_mean": 0.914,
+      "per_seed": [
+        {
+          "seed": 0,
+          "marginal": {
+            "overall_coverage": 0.9067,
+            "width": 123.088,
+            "per_group_coverage": {
+              "group_0": 0.9067,
+              "group_1": 0.92,
+              "group_2": 0.9
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.9073,
+            "mean_width": 122.385,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.905,
+                "mean_width": 117.988,
+                "n": 600
+              },
+              "group_1": {
+                "coverage": 0.9233,
+                "mean_width": 126.23,
+                "n": 300
+              },
+              "group_2": {
+                "coverage": 0.9017,
+                "mean_width": 124.861,
+                "n": 600
+              }
+            },
+            "worst_group_coverage": 0.9017,
+            "best_group_coverage": 0.9233
+          }
+        },
+        {
+          "seed": 1,
+          "marginal": {
+            "overall_coverage": 0.9193,
+            "width": 127.834,
+            "per_group_coverage": {
+              "group_0": 0.9117,
+              "group_1": 0.93,
+              "group_2": 0.9217
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.9187,
+            "mean_width": 126.475,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9083,
+                "mean_width": 123.984,
+                "n": 600
+              },
+              "group_1": {
+                "coverage": 0.9333,
+                "mean_width": 130.444,
+                "n": 300
+              },
+              "group_2": {
+                "coverage": 0.9217,
+                "mean_width": 126.982,
+                "n": 600
+              }
+            },
+            "worst_group_coverage": 0.9083,
+            "best_group_coverage": 0.9333
+          }
+        },
+        {
+          "seed": 2,
+          "marginal": {
+            "overall_coverage": 0.9173,
+            "width": 128.121,
+            "per_group_coverage": {
+              "group_0": 0.9183,
+              "group_1": 0.93,
+              "group_2": 0.91
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.916,
+            "mean_width": 128.164,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9067,
+                "mean_width": 120.488,
+                "n": 600
+              },
+              "group_1": {
+                "coverage": 0.93,
+                "mean_width": 130.328,
+                "n": 300
+              },
+              "group_2": {
+                "coverage": 0.9183,
+                "mean_width": 134.759,
+                "n": 600
+              }
+            },
+            "worst_group_coverage": 0.9067,
+            "best_group_coverage": 0.93
+          }
+        }
+      ]
+    },
+    "beijing_air_quality": {
+      "n_seeds": 3,
+      "marginal_worst_group_coverage_mean": 0.9,
+      "mondrian_worst_group_coverage_mean": 0.9172,
+      "marginal_overall_coverage_mean": 0.929,
+      "mondrian_overall_coverage_mean": 0.928,
+      "per_seed": [
+        {
+          "seed": 0,
+          "marginal": {
+            "overall_coverage": 0.9273,
+            "width": 175.996,
+            "per_group_coverage": {
+              "group_0": 0.9,
+              "group_1": 0.9364,
+              "group_2": 0.9455
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.9293,
+            "mean_width": 180.426,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9212,
+                "mean_width": 201.952,
+                "n": 330
+              },
+              "group_1": {
+                "coverage": 0.9394,
+                "mean_width": 178.978,
+                "n": 330
+              },
+              "group_2": {
+                "coverage": 0.9273,
+                "mean_width": 160.349,
+                "n": 330
+              }
+            },
+            "worst_group_coverage": 0.9212,
+            "best_group_coverage": 0.9394
+          }
+        },
+        {
+          "seed": 1,
+          "marginal": {
+            "overall_coverage": 0.9273,
+            "width": 174.787,
+            "per_group_coverage": {
+              "group_0": 0.9,
+              "group_1": 0.9394,
+              "group_2": 0.9424
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.9283,
+            "mean_width": 180.708,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9182,
+                "mean_width": 201.708,
+                "n": 330
+              },
+              "group_1": {
+                "coverage": 0.9424,
+                "mean_width": 180.327,
+                "n": 330
+              },
+              "group_2": {
+                "coverage": 0.9242,
+                "mean_width": 160.089,
+                "n": 330
+              }
+            },
+            "worst_group_coverage": 0.9182,
+            "best_group_coverage": 0.9424
+          }
+        },
+        {
+          "seed": 2,
+          "marginal": {
+            "overall_coverage": 0.9323,
+            "width": 180.432,
+            "per_group_coverage": {
+              "group_0": 0.9,
+              "group_1": 0.9424,
+              "group_2": 0.9545
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.9263,
+            "mean_width": 182.744,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9242,
+                "mean_width": 204.012,
+                "n": 330
+              },
+              "group_1": {
+                "coverage": 0.9424,
+                "mean_width": 180.53,
+                "n": 330
+              },
+              "group_2": {
+                "coverage": 0.9121,
+                "mean_width": 163.69,
+                "n": 330
+              }
+            },
+            "worst_group_coverage": 0.9121,
+            "best_group_coverage": 0.9424
+          }
+        }
+      ]
+    },
+    "pemsd7_traffic": {
+      "n_seeds": 2,
+      "marginal_worst_group_coverage_mean": 0.8025,
+      "mondrian_worst_group_coverage_mean": 0.8567,
+      "marginal_overall_coverage_mean": 0.8891,
+      "mondrian_overall_coverage_mean": 0.8989,
+      "per_seed": [
+        {
+          "seed": 0,
+          "marginal": {
+            "overall_coverage": 0.8892,
+            "width": 42.109,
+            "per_group_coverage": {
+              "group_0": 0.9364,
+              "group_1": 0.9678,
+              "group_2": 0.8027
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.8989,
+            "mean_width": 40.238,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9143,
+                "mean_width": 32.211,
+                "n": 4968
+              },
+              "group_1": {
+                "coverage": 0.9525,
+                "mean_width": 33.737,
+                "n": 2484
+              },
+              "group_2": {
+                "coverage": 0.8567,
+                "mean_width": 51.516,
+                "n": 4968
+              }
+            },
+            "worst_group_coverage": 0.8567,
+            "best_group_coverage": 0.9525
+          }
+        },
+        {
+          "seed": 1,
+          "marginal": {
+            "overall_coverage": 0.889,
+            "width": 42.157,
+            "per_group_coverage": {
+              "group_0": 0.9364,
+              "group_1": 0.9678,
+              "group_2": 0.8023
+            }
+          },
+          "mondrian": {
+            "overall_coverage": 0.8989,
+            "mean_width": 40.237,
+            "per_group": {
+              "group_0": {
+                "coverage": 0.9143,
+                "mean_width": 32.201,
+                "n": 4968
+              },
+              "group_1": {
+                "coverage": 0.9525,
+                "mean_width": 33.821,
+                "n": 2484
+              },
+              "group_2": {
+                "coverage": 0.8567,
+                "mean_width": 51.481,
+                "n": 4968
+              }
+            },
+            "worst_group_coverage": 0.8567,
+            "best_group_coverage": 0.9525
+          }
+        }
+      ]
+    }
+  },
+  "runtime_seconds": 1998.0
+}

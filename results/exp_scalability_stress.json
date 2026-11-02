@@ -1,0 +1,30 @@
+{
+  "experiment": "EX-SCALE (scalability stress via jittered real-sensor replication)",
+  "honest_note": "N>228 are jittered DUPLICATES of real PeMSD7-M sensors (scalability stress only; NOT new real data).",
+  "interpretation": {
+    "runtime_claim": "VALID -- train time grows super-linearly with N (exact k-NN is O(N^2)), motivating approximate k-NN for thousands of nodes. This is the usable result.",
+    "coverage_claim": "NOT a clean test -- naive node duplication BREAKS calibration/test exchangeability: near-identical duplicate sensors give correlated, lower-variance calibration residuals than the structurally-distinct held-out points, so the quantile is too tight and coverage under-covers at N>228 (0.90 at N=228 -> ~0.81 at N=456). Verified NOT an under-training artifact (N=456 still 0.808 at 20 epochs vs 8). The real multi-domain coverage evidence remains exp_multidomain_real.json (228 real traffic sensors, 0.919). Do NOT cite the N>228 coverage as a guarantee result."
+  },
+  "target_coverage": 0.9,
+  "ladder": [
+    {
+      "N": 228,
+      "coverage_unseen_at90": 0.9043,
+      "train_seconds": 168.8,
+      "infer_seconds": 0.76
+    },
+    {
+      "N": 456,
+      "coverage_unseen_at90": 0.8175,
+      "train_seconds": 436.7,
+      "infer_seconds": 0.74
+    },
+    {
+      "N": 912,
+      "coverage_unseen_at90": 0.7377,
+      "train_seconds": 1105.9,
+      "infer_seconds": 0.74
+    }
+  ],
+  "runtime_seconds": 1760.7
+}

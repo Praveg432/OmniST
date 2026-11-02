@@ -1,0 +1,68 @@
+{
+  "opt1": {
+    "experiment": "OPT1_multiseed_monthly",
+    "seeds": 5,
+    "mae_mean": 28.193,
+    "mae_std": 0.888,
+    "per_seed_mae": [
+      28.31,
+      28.428,
+      28.811,
+      26.478,
+      28.937
+    ]
+  },
+  "opt3": {
+    "experiment": "OPT3_dropout_augmentation",
+    "seeds": 3,
+    "held_out": [
+      3,
+      11,
+      19,
+      27,
+      33
+    ],
+    "inductive_point_mae": {
+      "baseline_training": [
+        26.73,
+        1.204
+      ],
+      "nodedropout_augmented": [
+        27.123,
+        1.067
+      ],
+      "nearest_neighbor": [
+        30.25,
+        0.0
+      ]
+    },
+    "augmented_beats_nn": true,
+    "augmentation_improves_over_baseline": false
+  },
+  "opt4": {
+    "experiment": "OPT4_online_conformal",
+    "seeds": 3,
+    "target_coverage": 0.9,
+    "static_split_cp_coverage_mean": 0.7525,
+    "adaptive_aci_coverage_mean": 0.7464
+  },
+  "opt2": {
+    "experiment": "OPT2_scale_test",
+    "n_sensors": 200,
+    "seeds": 1,
+    "coverage_unseen_mean": 0.8993,
+    "per_seed": [
+      {
+        "seed": 0,
+        "n_sensors": 200,
+        "coverage_unseen_at90": 0.8993,
+        "coverage_under_dropout": {
+          "drop_30": 0.8993,
+          "drop_50": 0.8993
+        },
+        "train_seconds": 2927.1
+      }
+    ]
+  },
+  "total_runtime_seconds": 3571.7
+}

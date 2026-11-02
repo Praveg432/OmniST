@@ -1,0 +1,303 @@
+{
+  "experiment": "EX-REAL-RIGOR (multi-seed + multi-target + conditional-coverage on 3 REAL datasets)",
+  "coverage_targets": [
+    0.8,
+    0.9,
+    0.95
+  ],
+  "quick": false,
+  "results_by_domain": {
+    "delhi_air_quality": {
+      "n_seeds": 5,
+      "coverage_mean_std_by_target": {
+        "target_80": [
+          0.8237,
+          0.0114
+        ],
+        "target_90": [
+          0.9145,
+          0.0048
+        ],
+        "target_95": [
+          0.958,
+          0.0054
+        ]
+      },
+      "per_seed": [
+        {
+          "seed": 0,
+          "coverage_by_target": {
+            "target_80": 0.808,
+            "target_90": 0.9067,
+            "target_95": 0.9573
+          },
+          "width_by_target": {
+            "target_80": 79.566,
+            "target_90": 123.088,
+            "target_95": 183.107
+          },
+          "per_node_coverage_at90": {
+            "min": 0.89,
+            "mean": 0.9067,
+            "max": 0.92
+          }
+        },
+        {
+          "seed": 1,
+          "coverage_by_target": {
+            "target_80": 0.84,
+            "target_90": 0.9193,
+            "target_95": 0.9593
+          },
+          "width_by_target": {
+            "target_80": 85.718,
+            "target_90": 127.834,
+            "target_95": 176.919
+          },
+          "per_node_coverage_at90": {
+            "min": 0.8833,
+            "mean": 0.9193,
+            "max": 0.9533
+          }
+        },
+        {
+          "seed": 2,
+          "coverage_by_target": {
+            "target_80": 0.8213,
+            "target_90": 0.9173,
+            "target_95": 0.9673
+          },
+          "width_by_target": {
+            "target_80": 87.28,
+            "target_90": 128.121,
+            "target_95": 193.775
+          },
+          "per_node_coverage_at90": {
+            "min": 0.8967,
+            "mean": 0.9173,
+            "max": 0.9333
+          }
+        },
+        {
+          "seed": 3,
+          "coverage_by_target": {
+            "target_80": 0.8327,
+            "target_90": 0.918,
+            "target_95": 0.9547
+          },
+          "width_by_target": {
+            "target_80": 83.001,
+            "target_90": 123.145,
+            "target_95": 179.673
+          },
+          "per_node_coverage_at90": {
+            "min": 0.8867,
+            "mean": 0.918,
+            "max": 0.94
+          }
+        },
+        {
+          "seed": 4,
+          "coverage_by_target": {
+            "target_80": 0.8167,
+            "target_90": 0.9113,
+            "target_95": 0.9513
+          },
+          "width_by_target": {
+            "target_80": 87.252,
+            "target_90": 126.257,
+            "target_95": 177.23
+          },
+          "per_node_coverage_at90": {
+            "min": 0.8667,
+            "mean": 0.9113,
+            "max": 0.9467
+          }
+        }
+      ]
+    },
+    "beijing_air_quality": {
+      "n_seeds": 5,
+      "coverage_mean_std_by_target": {
+        "target_80": [
+          0.801,
+          0.0033
+        ],
+        "target_90": [
+          0.9277,
+          0.0026
+        ],
+        "target_95": [
+          0.9683,
+          0.0008
+        ]
+      },
+      "per_seed": [
+        {
+          "seed": 0,
+          "coverage_by_target": {
+            "target_80": 0.804,
+            "target_90": 0.9273,
+            "target_95": 0.9687
+          },
+          "width_by_target": {
+            "target_80": 135.162,
+            "target_90": 175.996,
+            "target_95": 287.938
+          },
+          "per_node_coverage_at90": {
+            "min": 0.9,
+            "mean": 0.9273,
+            "max": 0.9455
+          }
+        },
+        {
+          "seed": 1,
+          "coverage_by_target": {
+            "target_80": 0.797,
+            "target_90": 0.9273,
+            "target_95": 0.9687
+          },
+          "width_by_target": {
+            "target_80": 135.837,
+            "target_90": 174.787,
+            "target_95": 289.003
+          },
+          "per_node_coverage_at90": {
+            "min": 0.9,
+            "mean": 0.9273,
+            "max": 0.9424
+          }
+        },
+        {
+          "seed": 2,
+          "coverage_by_target": {
+            "target_80": 0.797,
+            "target_90": 0.9323,
+            "target_95": 0.9667
+          },
+          "width_by_target": {
+            "target_80": 137.087,
+            "target_90": 180.432,
+            "target_95": 280.045
+          },
+          "per_node_coverage_at90": {
+            "min": 0.9,
+            "mean": 0.9323,
+            "max": 0.9545
+          }
+        },
+        {
+          "seed": 3,
+          "coverage_by_target": {
+            "target_80": 0.803,
+            "target_90": 0.9273,
+            "target_95": 0.9687
+          },
+          "width_by_target": {
+            "target_80": 133.49,
+            "target_90": 180.382,
+            "target_95": 292.369
+          },
+          "per_node_coverage_at90": {
+            "min": 0.9,
+            "mean": 0.9273,
+            "max": 0.9424
+          }
+        },
+        {
+          "seed": 4,
+          "coverage_by_target": {
+            "target_80": 0.804,
+            "target_90": 0.9242,
+            "target_95": 0.9687
+          },
+          "width_by_target": {
+            "target_80": 133.628,
+            "target_90": 181.113,
+            "target_95": 289.1
+          },
+          "per_node_coverage_at90": {
+            "min": 0.8939,
+            "mean": 0.9242,
+            "max": 0.9424
+          }
+        }
+      ]
+    },
+    "pemsd7_traffic": {
+      "n_seeds": 3,
+      "coverage_mean_std_by_target": {
+        "target_80": [
+          0.773,
+          0.0021
+        ],
+        "target_90": [
+          0.9112,
+          0.0106
+        ],
+        "target_95": [
+          0.9628,
+          0.006
+        ]
+      },
+      "per_seed": [
+        {
+          "seed": 0,
+          "coverage_by_target": {
+            "target_80": 0.7748,
+            "target_90": 0.9186,
+            "target_95": 0.967
+          },
+          "width_by_target": {
+            "target_80": 24.306,
+            "target_90": 50.637,
+            "target_95": 68.01
+          },
+          "per_node_coverage_at90": {
+            "min": 0.7283,
+            "mean": 0.9186,
+            "max": 0.9803
+          }
+        },
+        {
+          "seed": 1,
+          "coverage_by_target": {
+            "target_80": 0.7742,
+            "target_90": 0.9188,
+            "target_95": 0.967
+          },
+          "width_by_target": {
+            "target_80": 24.284,
+            "target_90": 50.665,
+            "target_95": 68.011
+          },
+          "per_node_coverage_at90": {
+            "min": 0.7283,
+            "mean": 0.9188,
+            "max": 0.9803
+          }
+        },
+        {
+          "seed": 2,
+          "coverage_by_target": {
+            "target_80": 0.7701,
+            "target_90": 0.8963,
+            "target_95": 0.9543
+          },
+          "width_by_target": {
+            "target_80": 11.804,
+            "target_90": 21.815,
+            "target_95": 33.69
+          },
+          "per_node_coverage_at90": {
+            "min": 0.7524,
+            "mean": 0.8963,
+            "max": 0.9477
+          }
+        }
+      ]
+    }
+  },
+  "runtime_seconds": 1396.5
+}
