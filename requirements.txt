@@ -1,0 +1,9 @@
+# OmniST — pinned dependencies (verified environment: Python 3.14.3, Apple MPS)
+# Install: python3 -m pip install -r requirements.txt
+torch==2.13.0
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.9.0
+matplotlib==3.10.9
+pytest==9.0.3
