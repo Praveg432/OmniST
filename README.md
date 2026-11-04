@@ -101,8 +101,23 @@ with a partial Mondrian fix for conditional coverage.
 
 ## Citation
 
-See `paper/` for the manuscript. Repository: <https://github.com/Praveg432/OmniST>. A BibTeX entry
-will be added here on arXiv posting.
+Paper: <https://arxiv.org/abs/2611.04256> (arXiv:2611.04256 [cs.LG]). LaTeX source is in `paper/`.
+Repository: <https://github.com/Praveg432/OmniST>.
+
+If you use this code or build on the method, please cite:
+
+```bibtex
+@misc{vashishtha2026omnist,
+  title         = {OmniST: Topology-Invariant Spatiotemporal Forecasting with Guaranteed-Coverage
+                   Uncertainty at Unseen Sensor Locations},
+  author        = {Vashishtha, Praveg},
+  year          = {2026},
+  eprint        = {2611.04256},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url           = {https://arxiv.org/abs/2611.04256}
+}
+```
 
 ## License
 
