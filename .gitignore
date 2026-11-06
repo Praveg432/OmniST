@@ -72,3 +72,7 @@ paper/jsen-submission/ieeecolor.cls
 paper/jsen-submission/jsen.sty
 paper/jsen-submission/LOGO-jsen-web.eps
 paper/jsen-submission/IEEEtran.bst
+
+# Generated upload package (contains IEEE-owned template files); rebuild with paper/make_jsen_upload.py
+paper/jsen-upload/
+paper/OmniST-JSEN-upload.zip

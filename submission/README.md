@@ -35,6 +35,10 @@ reference.
 ## Remaining steps
 
 - [x] Official template downloaded and manuscript ported (`paper/jsen-submission/`).
+- [ ] **Upload the LaTeX package.** The portal wants source: run `python3 paper/make_jsen_upload.py`
+      to build `paper/OmniST-JSEN-upload.zip` (10 flat files: manuscript, `.bbl`, `.bib`, three figures, IEEE
+      class/style/logo). It was test-compiled from an empty folder. The zip and folder are not in git,
+      because they contain IEEE's template files.
 - [ ] **Rebuild the final PDF with pdfLaTeX or Overleaf.** The PDF in the repo was made with a preview
       build (XeTeX, Times replaced by a clone, journal logo left blank) because this machine has no
       pdfLaTeX. Upload `paper/jsen-submission/` together with the IEEE template files from
