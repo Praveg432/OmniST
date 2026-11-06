@@ -2,6 +2,14 @@
 
 Reference implementation and full experiment suite for the OmniST paper.
 
+**Author:** Praveg Vashishtha  
+**Affiliation:** Department of Computer Science and Engineering, IIT Patna | Senior SDE, SBS India  
+**Contact:** praveg_pa2503mth259@iitp.ac.in | omvashishtha432@gmail.com  
+**LinkedIn:** [pravegvashishtha](https://www.linkedin.com/in/pravegvashishtha/)  
+**Paper:** [arXiv:2611.04256](https://arxiv.org/abs/2611.04256)  
+**Code:** [github.com/Praveg432/OmniST](https://github.com/Praveg432/OmniST)
+
+
 OmniST is a spatiotemporal forecaster whose computation has **no structural dependency on the number
 of sensors** `N`. Composed with inductive split-conformal calibration, it produces
 **distribution-free, coverage-guaranteed prediction intervals at sensor coordinates never seen during

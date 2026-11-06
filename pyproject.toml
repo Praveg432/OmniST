@@ -2,6 +2,7 @@
 name = "omnist"
 version = "1.0.0"
 description = "OmniST: Topology-Invariant Spatiotemporal Forecasting with Guaranteed-Coverage Uncertainty at Unseen Sensor Locations"
+authors = [{name = "Praveg Vashishtha"}]
 requires-python = ">=3.11"
 dependencies = [
     "torch>=2.2.0",

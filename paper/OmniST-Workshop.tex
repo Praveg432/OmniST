@@ -1,0 +1,174 @@
+% OmniST --- condensed workshop version.
+% This is a shortened version of the full preprint (arXiv:2611.04256), focused on the core
+% contribution: guaranteed-coverage inductive uncertainty under dynamic topology, plus the locality
+% proposition. Auxiliary studies (sensor-failure table, full robustness sweep, EVT/POT details,
+% temporal-drift resolution) are summarized and deferred to the full paper.
+% Default class is IEEEtran conference; many ML workshops accept this, but CHECK the workshop's
+% required style and swap \documentclass if needed (e.g. a NeurIPS/ICML workshop style file).
+
+\documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\graphicspath{{../results/figures/}{figures/}{./}}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{amsthm}
+\newtheorem{proposition}{Proposition}
+\newcommand{\repourl}{https://github.com/Praveg432/OmniST}
+
+\begin{document}
+
+\title{Coverage-Guaranteed Forecasting at Unseen Sensor Locations under Dynamic Topology}
+
+\author{\IEEEauthorblockN{Praveg Vashishtha}
+\IEEEauthorblockA{Dept.\ of Computer Science and Engineering, Indian Institute of Technology Patna, India\\
+Sopra Banking Software India\\
+praveg\_pa2503mth259@iitp.ac.in}}
+
+\maketitle
+
+\begin{abstract}
+Spatiotemporal graph convolutional networks are tied to a fixed adjacency matrix, so they cannot
+produce any output at a sensor absent from training. We present OmniST, a forecaster whose computation
+has no structural dependence on the number of sensors and which, composed with inductive split-conformal
+calibration, returns distribution-free, coverage-guaranteed prediction intervals at never-seen sensor
+locations, keeping that guarantee as sensors are added or removed. A locality property explains why: each
+node's nonconformity score is exactly invariant to non-neighbor nodes, so the guarantee is
+recalibration-free under far-field topology change. Across four real datasets and three physical domains,
+coverage stays at or above the 90\% target at unseen nodes under 30--50\% node dropout, where four
+model-free interpolators each under-cover on multiple domains, and OmniST also beats a learned
+inductive-kriging GNN. This is a condensed version of the full preprint (arXiv:2611.04256); auxiliary
+studies and the temporal-drift extension appear there.
+\end{abstract}
+
+\begin{IEEEkeywords}
+spatiotemporal forecasting, conformal prediction, inductive prediction, distribution-free uncertainty,
+dynamic graphs, sensor networks.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Sensor networks change: stations are added, fail, or go offline for maintenance. A standard
+spatiotemporal graph convolutional network (STGCN)~\cite{yu2018stgcn} stores an $N\times N$ adjacency
+matrix and binds its weights to a specific node count, so when the network changes it needs an adjacency
+update or full retraining, and at a brand-new location it cannot predict at all. Beyond prediction,
+operators need to know how much to trust a forecast at such a location, which calls for a calibrated
+interval with a validity guarantee.
+
+We present OmniST, a forecaster in which no component references a global node count. Composed with
+inductive split-conformal calibration, it produces distribution-free prediction intervals with a
+finite-sample coverage guarantee at unseen coordinates, and keeps the guarantee under node addition and
+removal. The contribution is this capability, not a point-accuracy record: on the standard
+fixed-topology benchmark OmniST matches rather than beats a comparable model.
+
+\section{Method}
+
+\subsection{Topology-invariant architecture}
+OmniST obeys one invariant: for any component $f$ and node $i$, $f(i)$ depends only on node $i$'s own
+data and a fixed-size neighborhood $\mathcal{N}_k(i)$, never on the full node set. Four stages realize
+it. (1) \emph{Coordinate tokenization}: each observation becomes a token
+$\mathbf{z}_i(t)=f_{\text{MLP}}(c_i)+f_{\text{time}}(t)+W_f\mathbf{x}_i(t)$, where a learned MLP maps a
+sensor's coordinates $c_i$ to its spatial embedding, so a never-seen coordinate yields a valid token.
+(2) \emph{$k$-NN attention}: spatial context is gathered from the $k$ geographically nearest nodes,
+selected by Haversine distance at each forward pass, with multi-head attention and a learned distance
+bias; there is no $N\times N$ matrix, so the neighbor set adapts to whichever sensors are present.
+(3) \emph{Per-node temporal processing}: a bidirectional GRU runs independently per node, so adding or
+removing a node changes no other node's representation. (4) A 2-layer MLP head maps to the forecast
+horizon.
+
+\subsection{Guaranteed-coverage inductive calibration}
+We wrap OmniST in split conformal prediction~\cite{vovk2005algorithmic,angelopoulos2023conformal}.
+With nonconformity score $s_i=|\hat{x}_i-x_i|$ and calibration set $\mathcal{C}$ of size $n$, the
+half-width is $\hat q=\mathrm{Quantile}(\{s_i\}_{i\in\mathcal{C}},\lceil(n+1)(1-\alpha)\rceil/n)$, and
+the interval is $[\hat{x}-\hat q,\hat{x}+\hat q]$. Under exchangeability this gives marginal coverage
+$\ge 1-\alpha$. The inductive subtlety is that calibration residuals come from training stations while
+the test point is an unseen station, so the two score sets must stay exchangeable~\cite{conformalinductivegnn2024}.
+OmniST's per-node construction keeps the score distribution stable across node sets, which is what the
+next result formalizes.
+
+\subsection{Locality and recalibration-free coverage}
+\begin{proposition}[Locality $\Rightarrow$ exact score invariance]
+\label{prop:locality}
+Let $s_i=g(c_i,x_i,\{(c_j,x_j):j\in\mathcal{N}_k(i;S)\},y_i)$ be OmniST's nonconformity score for node
+$i$ given the present node-set $S$, with $\mathcal{N}_k(i;S)$ its $k$ nearest other nodes by Haversine
+distance. For any $S'$ with $\mathcal{N}_k(i;S')=\mathcal{N}_k(i;S)$, in particular any addition or
+removal of nodes outside $i$'s $k$-nearest set, $s_i(S')=s_i(S)$ exactly. Hence a split-conformal
+threshold $\hat q$ calibrated on training-station scores stays valid with no recalibration for any test
+node whose $k$-nearest set is unchanged.
+\end{proposition}
+\emph{Proof sketch.} Every component is a function of a node's own data and its $k$-NN receptive field
+only: the token depends on $(c_i,x_i)$; the attention aggregates exactly $\mathcal{N}_k(i;S)$; the GRU
+and head act per node. No operation references $N$ or a node index, and there is no cross-node reduction.
+So $s_i$ is a fixed function of $(c_i,x_i,\mathcal{N}_k(i;S)\text{-data},y_i)$, and if that argument is
+unchanged, so is $s_i$. Validity of $\hat q$ then follows from standard split conformal. $\square$
+
+This is stronger than the general inductive-GNN case, where message passing makes any node change
+perturb every embedding and the calibration scores drift. We verify it directly: dropping nodes outside
+a test node's $k$-NN set changes its prediction by $<10^{-7}$ (bit-identical to float precision), whereas
+dropping a true neighbor changes it by $\sim 7\times10^{-3}$.
+
+\section{Experiments}
+We use four real datasets across three physical domains: Delhi (CPCB, 37 stations) and Beijing (UCI, 12)
+air quality, NOAA GHCN weather (30), and Caltrans PeMSD7-M traffic (228); the full paper adds PeMS-BAY
+(325) for scale. For each dataset we hold out stations, calibrate split conformal on training-station
+residuals, and measure coverage and width at the unseen stations (target 90\%).
+
+\subsection{Inductive point prediction}
+At five held-out Delhi stations, OmniST's inductive MAE is $26.7\pm1.2$~$\mu$g/m$^3$, better than
+nearest-neighbor interpolation ($30.3$, about 12\%) and than IGNNK~\cite{ignnk2020}, the canonical
+learned inductive-kriging GNN ($34.0\pm1.3$, about 21\%; our faithful reimplementation, not the authors'
+code). Point accuracy is not the headline, though: the decisive quantity is a calibrated interval at the
+unseen location, which neither baseline provides reliably (IGNNK under-covers at 0.89).
+
+\subsection{Guaranteed coverage under dynamic topology}
+Table~\ref{tab:cov} reports inductive coverage at unseen nodes on all four datasets, at full network and
+under 30--50\% training-node dropout. OmniST holds the 90\% target everywhere and keeps it under dropout.
+The nearest-neighbor baseline under-covers on three of the four. Against four model-free interpolators
+(nearest-neighbor, inverse-distance weighting, mean-of-$k$, and a kriging-style predictor), each wrapped
+in the same conformal procedure, OmniST is the only method that holds the target on all four datasets.
+
+\begin{table}[htbp]
+\caption{Inductive coverage at unseen nodes (target 90\%).}
+\label{tab:cov}
+\centering
+\begin{tabular}{llccc}
+\toprule
+\textbf{Dataset (domain)} & \textbf{OmniST} & \textbf{NN} & \textbf{drop 30\%} & \textbf{drop 50\%} \\
+\midrule
+Delhi AQ (environmental)   & 0.914 & 0.925 & 0.912 & 0.916 \\
+Beijing AQ (environmental) & 0.928 & 0.869 & 0.928 & 0.930 \\
+Weather (meteorology)      & 0.919 & 0.896 & 0.919 & 0.920 \\
+PeMSD7-M (transportation)  & 0.915 & 0.887 & 0.916 & 0.917 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On Delhi, OmniST's intervals reach 0.915 coverage at a mean width of 128.5, 14\% tighter than
+nearest-neighbor (0.925 coverage, width 149.7), which over-covers while carrying no finite-sample
+validity. Coverage stays near 0.91 after 30\% or 50\% of training stations are removed and the model is
+recalibrated on the survivors. An ablation (full paper) shows the coordinate-based construction, not the
+attention module or a particular $k$, is what earns the guarantee.
+
+\section{Related Work}
+Fixed-topology STGCNs~\cite{yu2018stgcn} and extreme-aware variants bind weights to a node count and
+cannot predict at an unseen node. Inductive kriging~\cite{ignnk2020} predicts there but without a
+validity guarantee. A recent line attaches conformal guarantees to dynamic and temporal
+graphs~\cite{conformalinductivegnn2024}, typically establishing validity as a graph's edges or labels
+evolve on a fixed node set. OmniST differs by targeting coverage at spatially unseen coordinates, under
+node addition and removal, and by showing the guarantee survives topology change across domains.
+
+\section{Limitations}
+The contribution is a capability, not a point-accuracy record; OmniST matches rather than beats a
+fixed-topology model in-distribution. The guarantee is marginal, not fully conditional. The learned
+baselines are faithful reimplementations, not the original code. The full paper reports a scale study to
+325 real sensors, a temporal-drift extension that restores coverage over time with an online conformal
+layer, and complete multi-seed statistics.
+
+\section*{Reproducibility}
+Code, data loaders, and a reproduction manifest are at \url{\repourl}. Full preprint: arXiv:2611.04256.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

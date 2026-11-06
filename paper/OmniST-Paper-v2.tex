@@ -32,7 +32,7 @@
 \maketitle
 
 \begin{abstract}
-Standard spatiotemporal graph convolutional networks require a fixed-dimensional adjacency matrix, coupling model weights to a specific sensor count $N$; they cannot produce any output at a sensor location absent from training. We present OmniST, a topology-invariant forecaster whose computational graph has \emph{zero structural dependency} on the number of input nodes, and which --- composed with inductive split-conformal calibration --- provides \emph{distribution-free, coverage-guaranteed} prediction intervals at arbitrary (including never-seen) sensor locations, and preserves that guarantee as sensors are added or removed. Topology invariance follows from three design choices: (1) coordinate-based tokenization that embeds each sensor independently via a learned spatial MLP; (2) $k$-nearest-neighbor attention computed from geographic coordinates at each forward pass; and (3) per-node temporal processing via bidirectional GRU. We validate on real CPCB Delhi air quality measurements (37 stations, 2019--2023) --- the same dataset used in the published E-STGCN framework. OmniST achieves 30-day PM$_{2.5}$ forecast MAE of 31.0~$\mu$g/m$^3$ (average across 2023 months), degrades $\leq$1.1\% when 40\% of stations are removed, and produces calibrated intervals at coordinates never seen during training. Under multi-seed evaluation, OmniST's inductive point forecasts at unseen stations improve on both nearest-neighbor interpolation ($\sim$12\%, 26.7 vs 30.3~$\mu$g/m$^3$) and a learned inductive-kriging GNN (IGNNK, $\sim$21\%), and --- more importantly --- it provides what neither offers reliably: a finite-sample coverage guarantee at those unseen locations, the quantity an operator needs to trust a forecast at a new or newly-restored sensor. The inductive guarantee is validated across \emph{four real-world datasets spanning three physical domains} --- Delhi (CPCB) and Beijing (UCI) air quality, NOAA GHCN weather, and Caltrans PeMSD7-M freeway traffic --- holding $\ge 90\%$ coverage at unseen nodes under 30--50\% topology dropout on every one, while four model-free spatial-interpolation baselines each under-cover on multiple domains; coverage further holds at $325$ real sensors (full PeMS-BAY) without degradation. We further resolve the temporal-drift limitation of our earlier work: a static conformal interval under-covers over time (coverage collapsing to 0.50 late in the test year), but a rolling adaptive-conformal estimator restores target coverage ($0.89$ overall, $0.96$ in the late-drift window) at the honest cost of wider intervals. We explicitly do not pursue cross-domain foundation-model pretraining, which recent work (Damba-ST) already targets; our contribution is guaranteed inductive uncertainty under dynamic topology, now shown to hold over both space and time.
+Spatiotemporal graph convolutional networks rely on a fixed-dimensional adjacency matrix, which ties their weights to a specific sensor count $N$ and leaves them unable to produce any output at a location that was absent during training. We present OmniST, a forecaster whose computational graph has no structural dependency on the number of input nodes. Composed with inductive split-conformal calibration, it produces distribution-free, coverage-guaranteed prediction intervals at arbitrary sensor locations, including locations never seen in training, and keeps that guarantee intact as sensors are added or removed. Three design choices make this possible: coordinate-based tokenization that embeds each sensor independently through a learned spatial MLP; $k$-nearest-neighbor attention recomputed from geographic coordinates at every forward pass; and per-node temporal processing with a bidirectional GRU. Our primary accuracy benchmark is real CPCB Delhi air quality (37 stations, 2019--2023), the dataset used in the published E-STGCN framework. OmniST reaches a 30-day PM$_{2.5}$ MAE of 31.0~$\mu$g/m$^3$ averaged over 2023, loses at most 1.1\% of accuracy when 40\% of stations are removed, and returns calibrated intervals at coordinates it never trained on. Across multiple seeds its inductive point forecasts at unseen stations improve on nearest-neighbor interpolation by about 12\% (26.7 vs 30.3~$\mu$g/m$^3$) and on a learned inductive-kriging GNN (IGNNK) by about 21\%. What sets it apart from both is the finite-sample coverage guarantee at those locations, which is what an operator actually needs in order to trust a forecast at a new or recently restored sensor. We validate that guarantee on four real-world datasets across three physical domains: Delhi (CPCB) and Beijing (UCI) air quality, NOAA GHCN weather, and Caltrans PeMSD7-M freeway traffic. Coverage stays at or above 90\% at unseen nodes under 30--50\% topology dropout on all four, where four model-free spatial-interpolation baselines each under-cover on multiple domains, and it holds without degradation at 325 real sensors (full PeMS-BAY). We also address the temporal-drift weakness of our earlier work. A static conformal interval under-covers over time, collapsing to 0.50 coverage late in the test year; a rolling adaptive-conformal estimator restores the target (0.89 overall, 0.96 in the late-drift window) at the price of wider intervals. We do not pursue cross-domain foundation-model pretraining, a direction recent work such as Damba-ST already targets. The contribution is guaranteed inductive uncertainty under dynamic topology, holding over both space and time.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -43,25 +43,25 @@ Spatiotemporal forecasting, topology invariance, dynamic graph attention, induct
 \section{Introduction}
 \label{sec:introduction}
 
-\IEEEPARstart{S}{patiotemporal} graph convolutional networks (STGCNs) \cite{yu2018stgcn} model sensor networks as fixed graphs with pre-computed adjacency matrices. This design choice produces excellent forecasting accuracy but creates an implicit constraint: the model's weight dimensions are coupled to a specific number of nodes $N$.
+\IEEEPARstart{S}{patiotemporal} graph convolutional networks (STGCNs) \cite{yu2018stgcn} treat a sensor network as a fixed graph with a pre-computed adjacency matrix. The approach forecasts accurately, but it carries an implicit cost: the model's weight dimensions are bound to a particular number of nodes $N$.
 
-In this paper, we do not claim to ``solve'' a problem that existing models cannot address. Rather, we present an architectural design---OmniST---where this coupling is structurally absent. The model accepts any number of nodes at inference time because no component's computation depends on a global node count. We analyze what this design enables, what it costs, and what remains to be validated.
+We do not claim to solve a problem that existing models cannot touch. What we offer instead is a design, OmniST, in which that binding is simply absent. The model accepts any number of nodes at inference because no component's computation refers to a global node count. The rest of the paper works through what this buys, what it costs, and what still needs checking.
 
 \subsection{Motivation}
 
-Real-world sensor networks change. The Indian CPCB adds monitoring stations annually \cite{panja2026estgcn}. Traffic sensors fail. Power grid topology switches during maintenance. When this happens, STGCN-based models face a practical question: do they need retraining?
+Real sensor networks do not stay still. The Indian CPCB adds monitoring stations every year \cite{panja2026estgcn}; traffic sensors fail; a power grid reconfigures during maintenance. Each time this happens, an STGCN faces the same practical question: does it need retraining?
 
-The answer depends on implementation. A standard STGCN with a stored $N \times N$ adjacency matrix requires at minimum an adjacency update. If weights are $N$-dimensional (common in early GCN implementations), full retraining is needed. If the adjacency is recomputed dynamically (as in some modern implementations), the model can adapt---but this is a design choice, not a default.
+The answer depends on how it was built. A standard STGCN that stores an $N \times N$ adjacency matrix needs, at the very least, an adjacency update. If its weights are $N$-dimensional, as in many early GCN implementations, it needs full retraining. Some modern implementations recompute the adjacency dynamically and can adapt, but that is a deliberate engineering choice rather than something the formulation gives for free.
 
-OmniST makes the strongest version of this choice: \emph{nothing} in the architecture references a global $N$. Each node's processing path depends only on its own features, coordinates, and local neighbors.
+OmniST takes this choice to its limit. Nothing in the architecture references a global $N$: each node's processing path sees only its own features, its coordinates, and its local neighbors.
 
 \subsection{Contributions and Scope}
 
 \begin{enumerate}
-\item \textbf{Guaranteed-coverage inductive uncertainty (primary).} Composing coordinate-based inductive prediction with inductive split-conformal calibration~\cite{conformalinductivegnn2024}, OmniST emits distribution-free prediction intervals with a finite-sample coverage guarantee at \emph{unseen} sensor locations, and preserves the guarantee under node addition/removal. Fixed-topology STGCNs cannot predict at a new node at all; nearest-neighbor interpolation can, but provides no validity guarantee. OmniST fills exactly this gap. We further give a locality property (Proposition~\ref{prop:locality}): because no component references a global node count, each node's nonconformity score is \emph{exactly invariant} to the presence of non-neighbor nodes, so the coverage guarantee is recalibration-free under far topology changes --- a stronger statement than the drift-correction required for message-passing GNNs~\cite{conformalinductivegnn2024}.
-\item An \textbf{architectural design} where every component (tokenization, spatial attention, temporal processing, prediction head) operates independently of global node count, giving structural $N$-independence and resilience under sensor failure ($\leq$1.1\% degradation at 40\% removal on real data).
-\item \textbf{Rigorous multi-domain / multi-seed validation on real data.} On real CPCB Delhi data (5-seed MAE $28.2\pm0.9$~$\mu$g/m$^3$, matching E-STGCN), inductive point forecasts at unseen stations that \emph{beat} nearest-neighbor by $\sim$12\% (multi-seed), and an inductive coverage guarantee validated on \emph{four real-world datasets across three physical domains} --- Delhi and Beijing air quality, NOAA GHCN weather, and Caltrans PeMSD7-M traffic --- where coverage holds at $\ge 90\%$ at unseen nodes under 30--50\% node dropout on all four, and OmniST is the only method (vs four model-free interpolation baselines) to hold the target on every dataset. We deliberately do not claim cross-domain foundation-model pretraining~\cite{dambast2026}.
-\item \textbf{A resolution of the temporal-drift limitation.} Our earlier static conformal layer gave a purely \emph{spatial} guarantee and under-covered over time under seasonal drift. We add a principled online layer (rolling-window plus Adaptive Conformal Inference~\cite{gibbs2021aci}) that restores target coverage over time on real data (static $0.76$ overall / $0.50$ in the late-drift window $\rightarrow$ rolling-ACI $0.89$ / $0.96$), making the guarantee hold over both space and time, at the honest cost of wider intervals.
+\item \textbf{Guaranteed-coverage inductive uncertainty (primary).} By composing coordinate-based inductive prediction with inductive split-conformal calibration~\cite{conformalinductivegnn2024}, OmniST emits distribution-free prediction intervals with a finite-sample coverage guarantee at unseen sensor locations, and keeps that guarantee when nodes are added or removed. A fixed-topology STGCN cannot predict at a new node at all; nearest-neighbor interpolation can, but offers no validity guarantee. OmniST occupies precisely this gap. We also prove a locality property (Proposition~\ref{prop:locality}): since no component references a global node count, each node's nonconformity score is exactly invariant to the presence of non-neighbor nodes, so the guarantee is recalibration-free under far-field topology changes. This is stronger than the drift-correction that message-passing GNNs require~\cite{conformalinductivegnn2024}.
+\item \textbf{An $N$-independent architecture.} Every component, from tokenization and spatial attention to the temporal backbone and prediction head, operates without reference to a global node count. The result is structural $N$-independence and resilience to sensor failure, with no more than 1.1\% degradation when 40\% of stations are removed from real data.
+\item \textbf{Multi-domain, multi-seed validation on real data.} On real CPCB Delhi data the 5-seed MAE is $28.2\pm0.9$~$\mu$g/m$^3$, statistically on par with E-STGCN. Inductive point forecasts at unseen stations beat nearest-neighbor by about 12\%, and the coverage guarantee holds across four real datasets spanning three physical domains, Delhi and Beijing air quality, NOAA GHCN weather, and Caltrans PeMSD7-M traffic. Coverage stays at or above 90\% at unseen nodes under 30--50\% node dropout on all four, and among five methods, OmniST and four model-free interpolation baselines, only OmniST holds the target everywhere. Cross-domain foundation-model pretraining~\cite{dambast2026} is outside our scope.
+\item \textbf{A fix for temporal drift.} Our earlier static conformal layer gave a purely spatial guarantee that eroded over time under seasonal drift. Adding an online layer, a rolling-window quantile combined with Adaptive Conformal Inference~\cite{gibbs2021aci}, restores target coverage over time on real data (static $0.76$ overall and $0.50$ in the late-drift window, rising to $0.89$ and $0.96$ with rolling-ACI). The guarantee now holds over space and time, the trade-off being wider intervals.
 \end{enumerate}
 
 %% ====================================================================
@@ -357,13 +357,14 @@ adjacency of E-STGCN ($32{\times}32$ / $27{\times}27$) has no row/column for an 
 \label{tab:controlled}
 \end{table}
 
-Two honest takeaways. (1) On transductive point accuracy (the regime where a fixed-topology GCN is
-valid) the two are \emph{comparable}: OmniST is better on Delhi and E-STGCN is marginally better on
-weather --- neither dominates, consistent with the paper's "matches, not beats" stance. (2) In the
-inductive setting the fixed-topology baseline \emph{cannot produce a prediction at all} at an unseen
-sensor --- a concrete dimension failure we demonstrate, not merely assert --- whereas OmniST delivers
-a calibrated, coverage-guaranteed forecast. This is the capability gap the paper is about, now shown
-under identical conditions rather than against published numbers.
+The result splits cleanly in two. On transductive point accuracy, the regime where a fixed-topology
+GCN is valid, the two methods are comparable: OmniST wins on Delhi, E-STGCN edges ahead on weather,
+and neither dominates, which matches our claim of parity rather than superiority. In the inductive
+setting the picture changes entirely. The fixed-topology baseline cannot produce a prediction at an
+unseen sensor at all; this is a concrete dimension failure that we trigger and report, not an
+assertion. OmniST, by contrast, returns a calibrated, coverage-guaranteed forecast. That is the
+capability gap the paper is about, and the controlled setup shows it under identical conditions rather
+than against published numbers.
 
 \textbf{The dual failure: sensors removed at inference.} The inductive case above adds an unseen
 sensor; the operational mirror image is a trained sensor going \emph{offline}. We demonstrate this
@@ -409,15 +410,14 @@ the small differences are seed/run variation, not a discrepancy.} \\
 \label{tab:conformal}
 \end{table}
 
-Three findings. (1) \textbf{The inductive guarantee holds}: OmniST's conformal intervals achieve
-91.5\% coverage at stations never seen in training, matching the 90\% target. (2) \textbf{They are
-tighter}: 128.5 vs 149.7 mean width --- a 14\% narrower interval than nearest-neighbor, which
-over-covers (0.925) and wastes width while carrying no finite-sample validity. (3) \textbf{The
-guarantee survives topology change}: coverage at the unseen stations stays $\approx$91\% even when
-30\% or 50\% of the training stations are removed and the model is recalibrated on the survivors.
-This is the capability the architecture was built to provide --- calibrated, efficient uncertainty
-at arbitrary locations under a dynamic sensor network --- and it is absent from both fixed-topology
-STGCNs and model-free interpolation.
+Three things stand out. First, the inductive guarantee holds: OmniST's conformal intervals reach
+91.5\% coverage at stations never seen in training, right on the 90\% target. Second, they are
+tighter, with a mean width of 128.5 against nearest-neighbor's 149.7, a 14\% reduction; the baseline
+over-covers at 0.925 and pays for it in width while carrying no finite-sample validity. Third, the
+guarantee survives topology change, holding near 91\% even after 30\% or 50\% of the training stations
+are removed and the model is recalibrated on the survivors. Calibrated, efficient uncertainty at
+arbitrary locations under a changing sensor network is exactly what the architecture was built for,
+and it is what neither fixed-topology STGCNs nor model-free interpolation can offer.
 
 \subsection{Robustness: Domains, Coverage Targets, Scale, and the Temporal-Drift Limit}
 \label{sec:robustness}
@@ -457,23 +457,23 @@ at full network and under 30\%/50\% node dropout. OmniST holds the 90\% target t
 \label{fig:multidomain}
 \end{figure}
 
-OmniST's conformal intervals hold $\ge 90\%$ coverage at unseen nodes on \emph{all four} real
-datasets --- across \emph{three physical domain types} (environmental pollution, meteorology,
-transportation) --- and retain coverage under 30--50\% node dropout on every one
-(Table~\ref{tab:multidomain}, Fig.~\ref{fig:multidomain}). The nearest-neighbor baseline
-\emph{under-covers} on three of the four (Beijing 0.869, weather 0.896, traffic 0.887), confirming
-the guarantee is a property of the conformal construction, not of a specific dataset or domain. Point
-MAE is honestly mixed (OmniST wins on Delhi, model-free interpolation wins on the denser networks);
-the contribution is the \emph{guarantee} at unseen nodes under topology change, not point dominance.
+OmniST's conformal intervals hold at least 90\% coverage at unseen nodes on all four datasets, across
+the three physical domain types, and retain that coverage under 30--50\% node dropout
+(Table~\ref{tab:multidomain}, Fig.~\ref{fig:multidomain}). The nearest-neighbor baseline under-covers
+on three of the four (Beijing 0.869, weather 0.896, traffic 0.887), which tells us the guarantee comes
+from the conformal construction rather than from any particular dataset. Point MAE, for its part, is
+mixed: OmniST wins on Delhi while model-free interpolation wins on the denser networks. That is fine,
+because the claim here is about the guarantee at unseen nodes under topology change, not point
+dominance.
 
-\textbf{Baseline breadth.} Against four model-free spatial interpolators (nearest-neighbor,
-inverse-distance weighting, mean-of-$k$-nearest, and a Gaussian-kernel/kriging-style predictor), each
-wrapped in the same split-conformal procedure, OmniST is the \emph{only} method that holds $\ge 90\%$
-coverage on all four datasets (Table~\ref{tab:baselines}). Every interpolator under-covers on
-multiple domains (e.g. on Beijing all four fall to $0.79$--$0.87$). The interpolators are often
-\emph{tighter} and occasionally better on point MAE --- but precisely because they under-cover: a
-narrower interval that misses the target is not a valid one. This is the width-versus-validity
-trade-off, and it is the quantity that matters operationally.
+\textbf{Baseline breadth.} We also compare against four model-free spatial interpolators:
+nearest-neighbor, inverse-distance weighting, mean-of-$k$-nearest, and a Gaussian-kernel kriging-style
+predictor, each wrapped in the same split-conformal procedure. OmniST is the only one that holds at
+least 90\% coverage on all four datasets (Table~\ref{tab:baselines}); every interpolator under-covers
+on multiple domains, with all four falling to $0.79$--$0.87$ on Beijing. The interpolators are often
+tighter, and occasionally better on point MAE, but that is exactly because they under-cover. A
+narrower interval that misses the target is not valid. This width-versus-validity trade-off is what
+matters in deployment.
 
 \begin{table}[htbp]
 \caption{OmniST vs Model-Free Interpolation Baselines (coverage @ target 90\%, 4 real datasets)}
@@ -633,20 +633,25 @@ domains unchanged.}
 
 \subsection{What the Architecture Achieves}
 
-\begin{enumerate}
-\item \textbf{Structural $N$-independence}: Valid computation for any number of input nodes, by construction.
-\item \textbf{Inductive prediction}: Forecasts at unseen coordinates using only geographic position.
-\item \textbf{No accuracy cost}: Comparable to fixed-topology baselines on real CPCB data (Table~\ref{tab:monthly}).
-\end{enumerate}
+Three things follow from the design. The model computes validly for any number of input nodes, by
+construction. It forecasts at unseen coordinates using nothing but geographic position. And it pays no
+accuracy penalty for this flexibility: on real CPCB data it is comparable to fixed-topology baselines
+(Table~\ref{tab:monthly}).
 
-\subsection{What It Does NOT Achieve}
+\subsection{What It Does Not Achieve}
 
-\begin{enumerate}
-\item \textbf{No in-distribution point-accuracy improvement}: OmniST matches (does not beat) GCN+LSTM on standard fixed-topology point metrics. Its distinct value is at \emph{unseen} locations, where it both beats nearest-neighbor ($\sim$12\%, Table~\ref{tab:inductive}) and uniquely provides a coverage guarantee --- the contribution is this capability, not an in-distribution accuracy gain.
-\item \textbf{Scaling shown to $N{=}325$, not thousands}: inductive coverage validated at up to 325 real sensors (full PeMS-BAY, $0.921$; Section~\ref{sec:robustness}) using the scalable $k$-NN path that removes the $O(N^2)$ bottleneck; certifying coverage at \emph{thousands} of nodes awaits a larger real sensor benchmark rather than an architectural change.
-\item \textbf{No proof that GAT improves accuracy}: The spatial attention component's in-distribution accuracy contribution is negligible ($\Delta$MAE $< 0.2$). Its value is enabling inductive prediction (and thus inductive UQ), not improving in-distribution point forecasts.
-\item \textbf{Conditional / finite-horizon coverage guarantees}: our temporal fix (Section~\ref{sec:online-conformal}) restores \emph{long-run} coverage over time empirically, but ACI's guarantee is asymptotic in the stream length and marginal, not a per-step or conditional guarantee.
-\end{enumerate}
+It is worth being equally clear about the limits. OmniST does not improve in-distribution point
+accuracy; it matches, rather than beats, a GCN+LSTM on the standard fixed-topology metrics. Its value
+lives at unseen locations, where it beats nearest-neighbor by about 12\% (Table~\ref{tab:inductive})
+and, uniquely, supplies a coverage guarantee. The contribution is that capability, not a point-accuracy
+gain. On scale, we certify inductive coverage to 325 real sensors (full PeMS-BAY, $0.921$;
+Section~\ref{sec:robustness}) with a scalable $k$-NN path that removes the $O(N^2)$ bottleneck;
+reaching thousands of nodes waits on a larger real benchmark, not on any change to the architecture.
+We also make no claim that the spatial attention improves accuracy: its in-distribution contribution
+is under $0.2$~$\mu$g/m$^3$ of MAE, and what it actually enables is inductive prediction, and through
+that, inductive uncertainty. Finally, the temporal fix of Section~\ref{sec:online-conformal} restores
+long-run coverage empirically, but ACI's guarantee is asymptotic in the stream length and marginal,
+not a per-step or conditional one.
 
 \subsection{Relationship to E-STGCN}
 
@@ -677,21 +682,29 @@ We use this term to mean: the model produces valid outputs regardless of $N$. We
 \section{Conclusion}
 \label{sec:conclusion}
 
-OmniST demonstrates that a topology-invariant spatiotemporal forecasting architecture can achieve competitive accuracy on real measurement data while providing two operationally decisive capabilities: resilience under sensor failure, and \emph{calibrated, coverage-guaranteed uncertainty at unseen sensor locations under dynamic topology}. On the same CPCB Delhi dataset used in E-STGCN, the model achieves average MAE of 31.0~$\mu$g/m$^3$, maintains predictions within 1.1\% when 40\% of stations are removed, and --- composed with inductive split conformal --- produces 91.5\% prediction intervals at never-seen coordinates that are 14\% tighter than a nearest-neighbor baseline and retain their coverage when 30--50\% of training stations are removed.
+OmniST shows that a topology-invariant forecaster can stay competitive on real measurement data while
+offering two things that matter operationally: resilience when sensors fail, and calibrated,
+coverage-guaranteed uncertainty at unseen locations under a changing network. On the CPCB Delhi
+dataset used by E-STGCN it reaches an average MAE of 31.0~$\mu$g/m$^3$, stays within 1.1\% when 40\% of
+stations drop out, and, wrapped in inductive split conformal, produces 91.5\% intervals at never-seen
+coordinates that are 14\% tighter than a nearest-neighbor baseline and keep their coverage when
+30--50\% of training stations are removed.
 
-The contribution is twofold: an architecture where no component references a global node count (enabling dynamic sensor networks), and the demonstration that this structural property makes an inductive conformal \emph{guarantee} hold at unseen locations and survive topology change --- a quantity neither fixed-topology STGCNs nor model-free interpolation provide. The primary validated benefits are operational resilience and guaranteed inductive uncertainty, both without retraining.
+Two ideas carry the work. The first is an architecture in which no component references a global node
+count, which is what lets it serve dynamic sensor networks. The second is the finding that this
+structural property is enough to make an inductive conformal guarantee hold at unseen locations and
+survive topology change, something neither fixed-topology STGCNs nor model-free interpolation deliver.
+Both benefits, resilience and guaranteed inductive uncertainty, come without retraining.
 
-Under multi-seed evaluation, inductive point prediction at new locations now \emph{outperforms}
-nearest-neighbor interpolation ($\sim$12\%), and the guarantee is robust across \emph{four real
-datasets spanning three physical domains} (Delhi and Beijing air quality, NOAA GHCN weather, and
-Caltrans PeMSD7-M traffic), holding at unseen nodes under up to 50\% node dropout on every one, where
-OmniST is the only method among four model-free interpolation baselines to hold the target on all
-four. The earlier temporal-drift
-limitation is now resolved: a rolling adaptive-conformal layer restores target coverage over time
-(0.89 overall, 0.96 in the worst-drift window, versus 0.50 for static conformal), at the honest cost
-of wider intervals. We do not pursue cross-domain foundation-model pretraining, which recent work
-already targets~\cite{dambast2026}; the remaining open directions are scaling the guarantee to
-thousands of nodes (approximate $k$-NN), conditional (per-node, per-horizon) coverage, and
+Across seeds, inductive point prediction at new locations now outperforms nearest-neighbor
+interpolation by about 12\%, and the coverage guarantee holds across four real datasets and three
+physical domains (Delhi and Beijing air quality, NOAA GHCN weather, Caltrans PeMSD7-M traffic), at
+unseen nodes, under up to 50\% dropout, and uniquely among the five methods compared. The
+temporal-drift problem from our earlier work is resolved by a rolling adaptive-conformal layer that
+lifts coverage over time from 0.50 (static) to 0.89 overall and 0.96 in the worst-drift window, paying
+for it in width. Cross-domain foundation-model pretraining is left to work that already pursues
+it~\cite{dambast2026}. The open threads are scaling the guarantee to thousands of nodes with
+approximate $k$-NN, moving from marginal to conditional (per-node, per-horizon) coverage, and
 physics-aware spatial attention.
 
 \textbf{Data and code availability.} All four datasets are public: Delhi CPCB PM$_{2.5}$ from the
