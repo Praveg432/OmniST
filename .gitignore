@@ -64,3 +64,11 @@ paper/TIER1-FINALIZATION-PLAN.md
 
 # Kiro workspace config
 .kiro/
+
+# IEEE-owned template files (class, style, logo, sample images). Download them from the IEEE
+# Template Selector instead of redistributing them; see submission/README.md.
+paper/jsen-template/
+paper/jsen-submission/ieeecolor.cls
+paper/jsen-submission/jsen.sty
+paper/jsen-submission/LOGO-jsen-web.eps
+paper/jsen-submission/IEEEtran.bst

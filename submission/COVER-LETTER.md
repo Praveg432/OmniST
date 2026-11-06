@@ -1,50 +1,49 @@
 # Cover Letter
 
-[Date]
+November 6, 2026
 
 To the Editor-in-Chief,
-[Journal name — e.g. Neurocomputing / IEEE Internet of Things Journal]
+IEEE Sensors Journal
 
 Dear Editor,
 
-Please consider our manuscript, "OmniST: Topology-Invariant Spatiotemporal Forecasting with
-Guaranteed-Coverage Uncertainty at Unseen Sensor Locations," for publication in [journal name].
+Please consider our manuscript, "OmniST: Topology-Invariant Forecasting for Dynamic Sensor Networks
+With Guaranteed Coverage at Unseen Sensors," for publication as a regular paper in the IEEE Sensors
+Journal.
 
-Spatiotemporal graph convolutional networks are tied to a fixed adjacency matrix and therefore to a
-fixed set of sensors. When a sensor network changes, by a station being added, failing, or going
-offline for maintenance, these models cannot produce a prediction at a location they did not train on.
-This is a routine situation in air-quality, traffic, and weather monitoring, and it is the gap our work
-addresses.
+Operational sensor networks rarely keep the layout they were trained on. Air-quality stations are
+added each year, traffic detectors fail, and weather stations go offline for maintenance. Graph
+forecasters built on a fixed adjacency matrix cannot produce a forecast at a newly installed sensor
+and break when a trained sensor is removed. Even where a forecast exists, an operator needs to know how
+far to trust it at a location with no measurement history.
 
-We present OmniST, a forecaster whose computation has no structural dependence on the number of sensors.
-Composed with inductive split-conformal calibration, it produces distribution-free, coverage-guaranteed
-prediction intervals at sensor locations never seen during training, and it preserves that guarantee as
-sensors are added or removed. We support the design with a locality proposition (each node's
-nonconformity score is exactly invariant to non-neighbor nodes, so the guarantee is recalibration-free
-under far-field topology change) and with experiments on four real-world datasets across three physical
-domains (Delhi and Beijing air quality, NOAA GHCN weather, and Caltrans traffic, up to 325 real sensors).
+The manuscript presents OmniST, a forecaster with no structural dependence on the number of sensors.
+Combined with inductive split-conformal calibration, it returns prediction intervals with a
+finite-sample coverage guarantee at sensor locations never seen in training, and the guarantee holds
+as sensors are added or removed. We prove that each sensor's score is unaffected by topology changes
+outside its neighborhood, so no recalibration is needed in that regime. On four real sensor datasets
+(Delhi and Beijing air quality, NOAA weather, and Caltrans traffic, up to 325 sensors), coverage at
+unseen sensors stays at or above 90% under 30 to 50% sensor dropout, where model-free interpolators
+fall short and a fixed-topology baseline cannot produce an output at all.
 
-We want to be explicit about scope and attribution:
+We would like to be clear about scope:
 
-- The contribution is a capability, namely guaranteed inductive uncertainty under dynamic topology, and
-  not a point-accuracy state of the art. On the standard fixed-topology benchmark OmniST matches rather
-  than beats a comparable GCN+LSTM, and we say so throughout.
-- Our two learned comparison methods, E-STGCN and IGNNK, are faithful reimplementations of the published
-  architectures, not the authors' original code. We state this in the manuscript and in every relevant
-  table caption. The controlled comparison is run under identical data, seeds, preprocessing, and
-  training budget so that the two methods differ only in the spatial backbone.
-- Every reported number is reproducible from a committed result file in the public repository, via a
-  one-command reproduction manifest.
+- The contribution is reliable forecasting and uncertainty for changing sensor networks, not a
+  point-accuracy state of the art. On a fixed network, OmniST is on par with a comparable GCN+LSTM
+  model, and the manuscript says so.
+- The two learned baselines, E-STGCN and IGNNK, are our reimplementations of the published
+  architectures, not the authors' code. This is stated in the text and in the table captions.
+- Every number is reproducible from a committed result file in the public repository
+  (https://github.com/Praveg432/OmniST). All datasets are public.
 
-The work is original, has not been published elsewhere, and is not under review at any other venue. A
-preliminary version is available as an arXiv preprint (arXiv:2611.04256); this submission extends and
-refines that preprint, and we are happy to provide the overlap statement your policy requires. The
-authors declare no conflicts of interest. All datasets are public, and the code is openly available at
-https://github.com/Praveg432/OmniST.
+A longer version of this work is available as an arXiv preprint (arXiv:2611.04256) under a different
+title. This submission is a condensed version of that preprint, focused on sensor networks;
+supporting results that did not fit the page budget are provided as supplementary material. The
+manuscript has not been published elsewhere and is not under review at any other venue. The author
+declares no competing interests. AI-assisted tools were used in preparing the code and text, as
+disclosed in the Acknowledgment.
 
-We believe the problem is of practical importance to [journal]'s readership and that the combination of
-topology invariance with a distribution-free coverage guarantee at unseen locations is a genuinely new
-contribution to spatiotemporal forecasting. Thank you for your consideration.
+Thank you for your consideration.
 
 Sincerely,
 

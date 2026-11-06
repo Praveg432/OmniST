@@ -1,49 +1,55 @@
-# Journal Submission Package — OmniST
+# Journal Submission Package: OmniST to IEEE Sensors Journal
 
-This folder holds everything needed to submit the OmniST manuscript to a journal. The manuscript
-itself is `../paper/OmniST-Paper-v2.tex` (+ `references.bib` + the four figures).
+Target: **IEEE Sensors Journal**, regular paper, traditional (non-open-access) route.
+Author guide: https://ieee-sensors.org/ieee-sensors-journal/for-authors/
 
-## Files here
-- `COVER-LETTER.md` — editor cover letter (fill in the bracketed journal name and date).
-- `HIGHLIGHTS.md` — Elsevier-style highlights (5 bullets, each <=85 chars; verified).
-- `NOVELTY-STATEMENT.md` — statement of novelty and significance (for the editor / significance field).
+## Files
 
-## Choose the venue first — it sets the format
+| File | Purpose |
+|---|---|
+| `../paper/jsen-submission/OmniST-JSEN.tex` / `.pdf` | **Submission manuscript**, in the official IEEE Sensors Journal template (6 pages) |
+| `../paper/OmniST-Sensors.tex` / `.pdf` | Same content in plain IEEEtran (5 pages); source for the JSEN version |
+| `../paper/OmniST-Sensors-Supplement.tex` / `.pdf` | Supplementary material (3 pages): monthly table, ablation, calibration, Mondrian, cost scaling |
+| `../paper/references.bib` | Bibliography (cited entries checked against arXiv/MDPI records on 2026-11-06) |
+| `../results/figures/graphical_abstract_jsen.png` / `.pdf` | Mandatory graphical abstract (compact; sits in the template's abstract box), drawn from committed result JSONs by `../experiments/make_graphical_abstract.py` |
+| `../results/figures/graphical_abstract.png` / `.pdf` | Full three-panel version (for the portal upload or slides) |
+| `../results/figures/fig_multidomain_coverage.png`, `fig_temporal_drift.png` | The two figures used in the manuscript |
+| `COVER-LETTER.md` | Cover letter for IEEE Sensors Journal |
+| `HIGHLIGHTS.md`, `NOVELTY-STATEMENT.md` | Not required by IEEE; kept for reuse |
 
-The manuscript is currently in `IEEEtran` (IEEE journal class).
+The arXiv version (`../paper/OmniST-Paper-v2.tex`) is unchanged in content and remains the long-form
+reference.
 
-### Option A — IEEE journal (least work)
-Targets: IEEE Internet of Things Journal, IEEE Trans. Intelligent Transportation Systems,
-IEEE Trans. Neural Networks and Learning Systems (a stretch), IEEE Sensors Journal.
-- Format: no change needed; the `.tex` already uses `\documentclass[journal]{IEEEtran}`.
-- Submit: manuscript PDF + source; cover letter; (highlights optional).
-- Check the specific journal's scope and page/overlength policy before submitting.
+## Journal rules that shaped this version
 
-### Option B — Neurocomputing (Elsevier)
-- Format change required: switch to `\documentclass[review]{elsarticle}`, move the author block to
-  the elsarticle `\author`/`\affiliation` macros, and use `\begin{abstract}...\end{abstract}` +
-  `\begin{keyword}...\end{keyword}` (elsarticle style). The body text, tables, equations, and
-  bibliography carry over unchanged (elsarticle supports BibTeX; switch `\bibliographystyle` to a
-  numeric Elsevier style such as `elsarticle-num`).
-- Required extras: the Highlights file (here) and a declaration of interest statement (none).
-- CRediT author statement: single author, so "Praveg Vashishtha: conceptualization, methodology,
-  software, validation, writing."
+- **8 free pages.** Pages beyond 8 carry a mandatory charge of $175 each. The manuscript is 6 pages in
+  the Sensors Journal template, which leaves room for revisions.
+- **Voluntary page charge** of $110/page may be requested after acceptance. It is voluntary; decline it
+  to keep the submission no-fee.
+- **Abstract:** 150 to 250 words, one paragraph, no displayed math or tables. Current: 211 words.
+- **Graphical abstract:** mandatory.
+- **Template:** the journal-specific Sensors Journal template from the IEEE Template Selector.
+- **Keywords:** pick one category from the journal's keyword list in the submission portal.
+- **No parallel submission.** Duplicate submission leads to rejection and a one-year ban.
 
-Recommendation: if minimizing effort and risk, submit to an IEEE venue (Option A) — zero reformatting.
-If targeting Neurocomputing specifically, I can produce the elsarticle version on request.
+## Remaining steps
 
-## arXiv overlap (both options)
-A preprint exists at arXiv:2611.04256. Most IEEE and Elsevier journals permit preprints; state in the
-cover letter (already drafted) that this submission extends the preprint, and cite it. Do not submit to
-two venues at once.
+- [x] Official template downloaded and manuscript ported (`paper/jsen-submission/`).
+- [ ] **Rebuild the final PDF with pdfLaTeX or Overleaf.** The PDF in the repo was made with a preview
+      build (XeTeX, Times replaced by a clone, journal logo left blank) because this machine has no
+      pdfLaTeX. Upload `paper/jsen-submission/` together with the IEEE template files from
+      `paper/jsen-template/` to Overleaf and compile with pdfLaTeX; that PDF is the one to submit.
+      Check that it is still at most 8 pages and that the header logo appears.
+- [x] AI-use statement confirmed. [x] Funding statement confirmed (no specific grant).
+- [ ] **Author bio:** IEEE prints a short bio; a photo can be added at the final-files stage.
+- [ ] **Keyword category** in the portal: the closest fit is sensor networks / sensor data processing.
+- [ ] **Suggested reviewers** (optional, can speed up review): researchers in conformal prediction or
+      spatiotemporal sensor forecasting at other institutions, with no collaboration ties.
+- [ ] **Submit** through the IEEE Author Portal with the manuscript PDF and source, supplementary
+      material, graphical abstract, and cover letter.
 
-## Pre-submission checklist
-- [ ] Pick venue; if Elsevier, convert to elsarticle (ask and I will do it).
-- [ ] Fill journal name + date in the cover letter.
-- [ ] One `pdflatex` + `bibtex` + `pdflatex` x2 pass (or Overleaf) to produce the PDF and `.bbl`.
-- [ ] Confirm all four figures render and citations resolve.
-- [ ] Verify the `nonexchcptgnn2025` full author list in `references.bib` (currently "Wang, Zhang,
-      and others"; confirmed submitter Tuo Wang, KDD 2025 — fill the complete list).
-- [ ] Confirm the repository is public and the URL in the paper resolves.
-- [ ] Suggested reviewers (optional field): consider authors active in conformal prediction and
-      spatiotemporal GNNs; avoid anyone with a conflict.
+## arXiv overlap
+
+The preprint (arXiv:2611.04256) is cited in the cover letter as a longer version under a different
+title. IEEE permits prior posting on arXiv. Do not submit this work to any other venue while it is
+under review.
