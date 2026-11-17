@@ -1,0 +1,117 @@
+{
+ "delhi_air_quality": {
+  "n": 37,
+  "lat": [
+   28.471,
+   28.823
+  ],
+  "lon": [
+   76.934,
+   77.316
+  ],
+  "legacy_input_lat": [
+   -0.6,
+   1.1
+  ],
+  "legacy_input_lon": [
+   -0.6,
+   0.7
+  ],
+  "legacy_max_abs": 1.1,
+  "legacy_within_station_spread_lat": 0.438,
+  "legacy_within_station_spread_lon": 0.282,
+  "normalized_max_abs": 2.88
+ },
+ "beijing_air_quality": {
+  "n": 12,
+  "lat": [
+   39.878,
+   40.328
+  ],
+  "lon": [
+   116.184,
+   116.655
+  ],
+  "legacy_input_lat": [
+   56.4,
+   58.6
+  ],
+  "legacy_input_lon": [
+   130.3,
+   131.9
+  ],
+  "legacy_max_abs": 131.9,
+  "legacy_within_station_spread_lat": 0.78,
+  "legacy_within_station_spread_lon": 0.475,
+  "normalized_max_abs": 1.92
+ },
+ "ghcn_weather": {
+  "n": 30,
+  "lat": [
+   32.576,
+   44.556
+  ],
+  "lon": [
+   -119.692,
+   -110.712
+  ],
+  "legacy_input_lat": [
+   19.9,
+   79.8
+  ],
+  "legacy_input_lon": [
+   -656.0,
+   -626.0
+  ],
+  "legacy_max_abs": 656.0,
+  "legacy_within_station_spread_lat": 22.272,
+  "legacy_within_station_spread_lon": 8.739,
+  "normalized_max_abs": 1.81
+ },
+ "pemsd7_traffic": {
+  "n": 228,
+  "lat": [
+   34.0,
+   34.5
+  ],
+  "lon": [
+   -118.3,
+   -117.8
+  ],
+  "legacy_input_lat": [
+   27.0,
+   29.5
+  ],
+  "legacy_input_lon": [
+   -651.3,
+   -649.7
+  ],
+  "legacy_max_abs": 651.3,
+  "legacy_within_station_spread_lat": 0.627,
+  "legacy_within_station_spread_lon": 0.443,
+  "normalized_max_abs": 2.4
+ },
+ "pemsbay_traffic": {
+  "n": 325,
+  "lat": [
+   34.0,
+   34.5
+  ],
+  "lon": [
+   -118.3,
+   -117.8
+  ],
+  "legacy_input_lat": [
+   27.0,
+   29.5
+  ],
+  "legacy_input_lon": [
+   -651.3,
+   -649.7
+  ],
+  "legacy_max_abs": 651.3,
+  "legacy_within_station_spread_lat": 0.634,
+  "legacy_within_station_spread_lon": 0.423,
+  "normalized_max_abs": 2.16
+ }
+}

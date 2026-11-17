@@ -18,7 +18,7 @@ Source of truth: this repository (`omnist-mamba`, branch `main`). `thesis-omnist
 | Manuscript | `paper/jsen-submission/OmniST-JSEN.tex`, assembled from parts by `paper/assemble_jsen.py`; 8 pages in the preview, within the journal's 8-page guideline (no overlength charge) |
 | Supplement | `paper/OmniST-Sensors-Supplement.tex` / `.pdf`, 7 pages; tables generated from result files |
 | Upload package | `paper/OmniST-JSEN-upload.zip` (9 files, 26 references) from `paper/make_jsen_upload.py` |
-| Tests | 25 pass (`python3 -m pytest tests`) |
+| Tests | 28 pass (`python3 -m pytest tests`), including the HCP identity and the coordinate frame |
 | Number check | `python3 paper/check_numbers.py`: 164 printed numbers (tables and key prose claims) match the result files. Mutation-tested; it also caught one rounding error in the text, now fixed |
 | Preview build | `paper/build_preview.py` (Tectonic cannot embed the template's EPS logo, so the preview blanks it; the upload package keeps the original template files and the portal compiles them) |
 
@@ -57,8 +57,8 @@ Source of truth: this repository (`omnist-mamba`, branch `main`). `thesis-omnist
    `paper/OmniST-Paper-v2.tex`, `paper/OmniST.pdf`. Consider an arXiv v2 before or with resubmission.
 3. **Not evaluated**: Generalized HCP, HCP's second-moment variant, sequential whitening; other inductive
    forecasters under the forecasting task. Stated as limitations.
-4. **Thesis code** (`thesis-omnist`) still has the coordinate defect; its traffic conclusion against
-   seasonal-naive was measured with it.
+4. **Thesis code** (`thesis-omnist`) still has the coordinate defect. Full report for separate handling:
+   `docs/THESIS-COORDINATE-DEFECT.md` (locations, input ranges, measured effect, affected results, reference fix).
 5. **Per-sensor score arrays** (`results/D1`, `D1b`, `D1c`, about 47 MB) are committed so every number can be
    re-derived without retraining.
 

@@ -44,8 +44,11 @@ network, provided that sensor has its own input window.
      PeMS-BAY 0.899) but not Delhi (0.853); the pooled rule fell short on Delhi, weather and PeMS-BAY under every
      scheme (0.785 to 0.889). The same-window numbers are therefore not deployment results.
    Prior art: treating the sensor as a group is hierarchical conformal prediction (Lee, Barber, Willett;
-   arXiv:2306.06342) and its generalization (Mallick et al., arXiv:2608.15500); the paper cites them and has
-   not compared against them.
+   arXiv:2306.06342). With equal points per sensor the sensor-level rule is exactly HCP's threshold
+   (`tests/test_hcp_equivalence.py`), so the rule is not claimed as new. Generalized HCP (Mallick et al.,
+   arXiv:2608.15500) and sequential whitening were not evaluated.
+   Against seasonal-naive forecasting: OmniST is better on Delhi, Beijing and PeMSD7-M, ties on weather, and is
+   worse on PeMS-BAY (MAE 4.68 against 3.56; `experiments/D4_seasonal_comparison.py`).
 4. **Controls.** A coordinate-free GRU shared across sensors matches OmniST's accuracy at new sensors within
    about 2%, and persistence matches it on weather and PeMSD7-M. The ability to forecast at a new sensor comes
    from sharing parameters across sensors; coordinates and attention show no measured benefit.
@@ -62,11 +65,14 @@ protocol).
 
 ```bash
 python3 -m pip install -r requirements.txt
-python3 -m pytest tests                                   # 18 tests, incl. the locality lemma
+python3 -m pytest tests                                   # 28 tests: locality lemma, HCP identity, coordinate frame
 python3 experiments/D1_sensor_level_scores.py all         # per-sensor errors, original coordinate constants
 python3 experiments/D1_sensor_level_scores.py all norm    # same splits, coordinates normalized
 python3 experiments/D2_analyse.py                         # same-window theorem check, accuracy -> results/exp_D2_analysis.json
 python3 experiments/D3_deployable.py                      # forecast-time calibration -> results/exp_D3_deployable.json
+python3 experiments/D1c_seasonal_naive.py all             # seasonal-naive errors on the same splits -> results/D1c
+python3 experiments/D4_seasonal_comparison.py             # OmniST vs seasonal-naive -> results/exp_D4_seasonal.json
+python3 experiments/P2_coordinate_range.py                # coordinate input ranges (docs/THESIS-COORDINATE-DEFECT.md)
 python3 experiments/P0_heterogeneity_pilot.py             # pilot: per-sensor scale normalization (not in the paper)
 python3 experiments/P1_chronological_calibration.py       # pilot: same-window vs earlier-window calibration
 python3 experiments/make_figures_v2.py

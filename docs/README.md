@@ -20,4 +20,6 @@ concepts behind them. Read in order.
    numerical example.
 
 These docs are internal study/reference material. The authoritative evidence map is the top-level
-`RESULTS-INDEX.md`; the paper itself is in `paper/OmniST-Paper-v2.tex`.
+`RESULTS-INDEX.md`; the current manuscript is `paper/jsen-submission/OmniST-JSEN.tex` (see `paper/README.md`).
+These docs were written for the preprint (`paper/OmniST-Paper-v2.tex`), whose coverage-guarantee and accuracy claims
+are withdrawn. `THESIS-COORDINATE-DEFECT.md` is the defect report for the `thesis-omnist` repository.

@@ -12,7 +12,12 @@ Headline datasets are real; see `src/data_*.py` for provenance.
 |---|---|---|
 | Per-sensor errors, original coordinate constants (renamed `*_legacy` in analysis) | `results/D1/*.npz` | `experiments/D1_sensor_level_scores.py <domain>` |
 | Per-sensor errors, coordinates normalized from the training network | `results/D1b/*.npz` | `experiments/D1_sensor_level_scores.py <domain> norm` |
-| Tables II, IV, V, VI (bound, accuracy, sensor removal, drift) and supplement tables | `results/exp_D2_analysis.json` | `experiments/D2_analyse.py`, `D2_report.py`, `paper/make_supplement_tables.py` |
+| Table I (same-window bound), Table IV (accuracy), Fig. 1, supplement coverage and sensor-removal tables | `results/exp_D2_analysis.json` | `experiments/D2_analyse.py`, `D2_report.py`, `paper/make_supplement_tables.py` |
+| Table II (forecast-time calibration), supplement forecast-time table, graphical abstract right panel | `results/exp_D3_deployable.json` | `experiments/D3_deployable.py` |
+| Seasonal-naive comparison (Section IV-D (v), limitations, supplement table) | `results/D1c/*.npz`, `results/exp_D4_seasonal.json` | `experiments/D1c_seasonal_naive.py`, `D4_seasonal_comparison.py` |
+| Sensor-level rule equals HCP's threshold (Section II-C, supplement) | — | `tests/test_hcp_equivalence.py`, `src/sensor_conformal.py` |
+| Coordinate normalization fix | — | `tests/test_coordinate_frame.py`; ranges `results/exp_P2_coordinate_range.json` from `experiments/P2_coordinate_range.py` |
+| Pilots not in the paper (scale normalization, chronological calibration) | `results/exp_P0_heterogeneity_pilot.json`, `exp_P1_chronological.json` | `experiments/P0_*.py`, `P1_*.py` |
 | Table III (random disjoint sensor splits) | `results/exp_C1_<domain>.json` | `experiments/C1_rigorous_inductive_eval.py`, `C1_summarise.py` |
 | Distance from the training network (Section IV-F) | `results/exp_C2_*.json`, `exp_C2_analysis.json`, `exp_C3_*.json` | `experiments/C2_region_holdout_distance.py`, `C3_score_shift_vs_distance.py` |
 | Locality lemma (numerical check) | — | `tests/test_reference_scoring.py` |
