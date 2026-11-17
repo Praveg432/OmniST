@@ -14,8 +14,10 @@ Headline datasets are real; see `src/data_*.py` for provenance.
 | Per-sensor errors, coordinates normalized from the training network | `results/D1b/*.npz` | `experiments/D1_sensor_level_scores.py <domain> norm` |
 | Table I (same-window bound), Table IV (accuracy), Fig. 1, supplement coverage and sensor-removal tables | `results/exp_D2_analysis.json` | `experiments/D2_analyse.py`, `D2_report.py`, `paper/make_supplement_tables.py` |
 | Table II (per-sensor forecast-time coverage, Theorem 2 check), non-random farthest-sensor test, supplement Table S8 | `results/exp_D5_per_sensor.json` | `experiments/D5_per_sensor_guarantee.py` |
+| Corollary 2 (blocks of windows) and distance-third check, supplement Tables S10 and S11 | `results/exp_D5b_blocks_groups.json` | `experiments/D5b_blocks_and_groups.py` |
+| Sensors installed late (GHCN-Daily), Section IV-D, supplement Table S12 | `results/exp_D6_late.json`, `results/D6/` | `experiments/fetch_ghcn_late.py`, `experiments/D6_late_installed.py` |
 | Static / expanding / rolling forecast-time comparison (supplement), graphical abstract right panel | `results/exp_D3_deployable.json` | `experiments/D3_deployable.py` (its ACI column uses a clipped update and is superseded by D5) |
-| Seasonal-naive comparison (Section IV-D (v), limitations, supplement table) | `results/D1c/*.npz`, `results/exp_D4_seasonal.json` | `experiments/D1c_seasonal_naive.py`, `D4_seasonal_comparison.py` |
+| Seasonal-naive comparison (Section IV-C (v), limitations, supplement table) | `results/D1c/*.npz`, `results/exp_D4_seasonal.json` | `experiments/D1c_seasonal_naive.py`, `D4_seasonal_comparison.py` |
 | Sensor-level rule equals HCP's threshold (Section II-C, supplement) | — | `tests/test_hcp_equivalence.py`, `src/sensor_conformal.py` |
 | Coordinate normalization fix | — | `tests/test_coordinate_frame.py`; ranges `results/exp_P2_coordinate_range.json` from `experiments/P2_coordinate_range.py` |
 | Pilots not in the paper (scale normalization, chronological calibration) | `results/exp_P0_heterogeneity_pilot.json`, `exp_P1_chronological.json` | `experiments/P0_*.py`, `P1_*.py` |

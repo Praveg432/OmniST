@@ -117,7 +117,7 @@ for r in dep_rows:
 # ---- Prose: forecast-time worst sensors, farthest sensors, earlier protocol ----------------------
 FT = FULLTEXT
 def need(phrase):
-    if phrase not in FT:
+    if " ".join(phrase.split()) not in " ".join(FT.split()):
         failures.append(f"prose: expected phrase not found: {phrase}")
 far = {k: D5[k]["farthest_sensor"]["aci-0.1"] for k in D5}
 for printed, val, what in (
@@ -151,24 +151,82 @@ D4 = json.load(open(RES / "exp_D4_seasonal.json"))
 FULL = FULLTEXT
 bay = D4["pemsbay_traffic"]["methods"]
 claims = [
-    ("MAE 3.56 against 4.68", [(bay["seasonal"]["mae"]["mean"], "3.56"), (bay["full"]["mae"]["mean"], "4.68")]),
-    ("15.6 wide against 20.5", [(bay["seasonal"]["pooled_width"], "15.6"), (bay["full"]["pooled_width"], "20.5")]),
-    ("intervals are 31\\% wider", [(100 * (bay["full"]["pooled_width"] / bay["seasonal"]["pooled_width"] - 1), "31")]),
-    ("intervals 24\\% narrower", [(100 * (1 - bay["seasonal"]["pooled_width"] / bay["full"]["pooled_width"]), "24")]),
+    ("MAE 3.35 against 4.49", [(bay["seasonal"]["mae"]["mean"], "3.35"), (bay["full"]["mae"]["mean"], "4.49")]),
+    ("14.3 wide against 19.4", [(bay["seasonal"]["pooled_width"], "14.3"), (bay["full"]["pooled_width"], "19.4")]),
+    ("intervals are 35\\% wider", [(100 * (bay["full"]["pooled_width"] / bay["seasonal"]["pooled_width"] - 1), "35")]),
+    ("intervals 26\\% narrower", [(100 * (1 - bay["seasonal"]["pooled_width"] / bay["full"]["pooled_width"]), "26")]),
 ]
 for phrase, pairs in claims:
-    if phrase not in FULL:
+    if " ".join(phrase.split()) not in " ".join(FULL.split()):
         failures.append(f"prose: expected phrase not found: {phrase}")
         continue
     for value, printed in pairs:
         close(printed, value, f"prose '{phrase}'")
 for dom, printed in (("delhi_air_quality", "$-9.5$"), ("beijing_air_quality", "$-15.2$"),
-                     ("ghcn_weather", "$-0.24$"), ("pemsd7_traffic", "$-0.74$"), ("pemsbay_traffic", "$+1.12$")):
+                     ("ghcn_weather", "$-0.24$"), ("pemsd7_traffic", "$-0.74$"), ("pemsbay_traffic", "$+1.13$")):
     v = D4[dom]["paired_mae_vs_seasonal"]["full"]["mean"]
     if printed not in TEX:
         failures.append(f"prose: {printed} for {dom} not found")
     close(printed.replace("$", "").replace("+", ""), v, f"seasonal paired {dom}")
 
+# ---- Blocks of windows, distance groups (D5b) and sensors installed late (D6) ------------------------
+D5B = json.load(open(RES / "exp_D5b_blocks_groups.json"))
+D6 = json.load(open(RES / "exp_D6_late.json"))
+for dom in DS:
+    for g in ("aci-0.1", "aci-0.5"):
+        assert D5B[dom][g]["certificate_holds"], f"Corollary 1 violated: {dom} {g}"
+for g in D6["block_certificate_holds"].values():
+    assert g, "Corollary 1 violated in D6"
+for grp in ("late", "control"):
+    for g in ("aci-0.1", "aci-0.5"):
+        assert D6[grp][g]["bound_holds_all"], f"Theorem 2 violated in D6 {grp} {g}"
+b7, bb = D5B["pemsd7_traffic"], D5B["pemsbay_traffic"]
+blocks_claims = (
+    ("0.880", b7["aci-0.1"]["worst_block_cov_min"]), ("0.800", b7["aci-0.1"]["certified_every_block"]),
+    ("0.888", b7["aci-0.5"]["worst_block_cov_min"]), ("0.867", b7["aci-0.5"]["certified_every_block"]),
+    ("0.839", bb["aci-0.1"]["worst_block_cov_min"]), ("0.471", bb["aci-0.1"]["certified_every_block"]),
+    ("0.860", bb["aci-0.5"]["worst_block_cov_min"]), ("0.757", bb["aci-0.5"]["certified_every_block"]),
+    ("0.78", D5B["delhi_air_quality"]["aci-0.1"]["worst_block_cov_min"]),
+    ("0.88", D5B["beijing_air_quality"]["aci-0.1"]["worst_block_cov_min"]),
+    ("0.77", D5B["ghcn_weather"]["aci-0.1"]["worst_block_cov_min"]))
+for printed, val in blocks_claims:
+    close(printed, val, f"D5b block {printed}")
+need("is covered 0.880"); need("0.839 (certified 0.471)"); need("0.78 (Delhi), 0.88 (Beijing"); need("0.77 (weather)")
+need("worst week 0.84 to 0.89 on traffic")
+wk = [b7["aci-0.1"]["worst_block_cov_min"], b7["aci-0.5"]["worst_block_cov_min"],
+      bb["aci-0.1"]["worst_block_cov_min"], bb["aci-0.5"]["worst_block_cov_min"]]
+close("0.84", min(wk), "worst week min"); close("0.89", max(wk), "worst week max")
+grp7, grpb = b7["distance_groups"], bb["distance_groups"]
+close("0.946", min(v["mean_cov_group_cal"] for v in grp7.values()), "D7 group cov min")
+close("0.947", max(v["mean_cov_group_cal"] for v in grp7.values()), "D7 group cov max")
+close("0.930", min(v["mean_cov_group_cal"] for v in grpb.values()), "BAY group cov min")
+allc = [v["mean_cov_all_cal"] for v in list(grp7.values()) + list(grpb.values())]
+close("0.905", min(allc), "all-cal cov min"); close("0.919", max(allc), "all-cal cov max")
+ratio = [v["median_width_group_cal"] / v["median_width_all_cal"] - 1 for v in list(grp7.values()) + list(grpb.values())]
+close("37", 100 * min(ratio), "group width premium min"); close("59", 100 * max(ratio), "group width premium max")
+need("0.946 to 0.947"); need("0.905 to 0.919"); need("37\\% to 59\\%")
+need("19 calibration sensors per third"); need("29), against")
+Lt, Ct = D6["late"], D6["control"]
+assert D6["n_late_cases"] == 280 and D6["n_control_cases"] == 240 and D6["eval_windows"] == 42
+for printed, val, what in (
+        ("0.907", Lt["aci-0.1"]["mean_cov"], "late aci0.1 mean"), ("0.903", Lt["aci-0.5"]["mean_cov"], "late aci0.5 mean"),
+        ("0.881", Lt["aci-0.1"]["min_cov"], "late aci0.1 worst"), ("0.894", Lt["aci-0.5"]["min_cov"], "late aci0.5 worst"),
+        ("0.662", Lt["aci-0.1"]["guaranteed_cov"], "late cert 0.1"), ("0.833", Lt["aci-0.5"]["guaranteed_cov"], "late cert 0.5"),
+        ("0.909", Ct["aci-0.1"]["mean_cov"], "control aci0.1 mean"), ("0.903", Ct["aci-0.5"]["mean_cov"], "control aci0.5 mean"),
+        ("0.876", Ct["aci-0.1"]["min_cov"], "control aci0.1 worst"), ("0.891", Ct["aci-0.5"]["min_cov"], "control aci0.5 worst"),
+        ("0.909", Lt["rolling-sensor"]["mean_cov"], "late rolling sensor mean"),
+        ("0.665", Lt["rolling-sensor"]["min_cov"], "late rolling sensor worst"),
+        ("0.646", Lt["rolling-pooled"]["min_cov"], "late rolling pooled worst"),
+        ("2.5", 100 * Lt["rolling-sensor"]["share_below_0.80"], "late sensor-level <0.80"),
+        ("4.3", 100 * Lt["rolling-pooled"]["share_below_0.80"], "late pooled <0.80"),
+        ("5.83", Lt["mae"], "late MAE"), ("5.74", Ct["mae"], "control MAE"), ("4.83", Lt["persistence_mae"], "late persistence MAE"),
+        ("0.85", Lt["mean_distance_spacings"], "late distance"), ("1.08", Ct["mean_distance_spacings"], "control distance")):
+    close(printed, val, f"D6 {what}")
+for phrase in ("covers 0.907 ($\\gamma=0.1$) and\n0.903 ($\\gamma=0.5$)", "the worst late station is covered 0.881 and 0.894",
+               "(certified 0.662 and 0.833)", "(0.909 and 0.903, worst 0.876 and 0.891)",
+               "(MAE 5.83 against 5.74~\\textdegree C)", "(0.85 against 1.08 median spacings)",
+               "persistence has MAE 4.83", "every station was covered at least 0.88", "(0.646 for the pooled rule)"):
+    need(phrase)
 print(f"checked {checked} printed numbers")
 if failures:
     print(f"{len(failures)} MISMATCH(ES):")

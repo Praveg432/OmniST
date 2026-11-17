@@ -4,22 +4,24 @@
 \begin{itemize}
 \item \textbf{Each guarantee has a narrow scope.} Theorem~\ref{thm:coverage} is an average over which sensor is
 new and needs errors from the evaluated window, so it cannot be run at forecast time. Theorem~\ref{thm:aci} holds
-for each sensor at forecast time but only for its long-run average: it certifies 0.81 to 0.89 per sensor on the
-traffic networks, is weak or vacuous with the 6 to 18 windows of the daily networks, and says nothing about a
-single window. Neither gives coverage conditional on location.
-\item \textbf{Delhi is not covered at forecast time}: 0.855 to 0.877 with six evaluation windows, and no
-procedure here certifies it.
+for each sensor at forecast time but only in the long run: it certifies 0.81 to 0.89 per sensor on the traffic
+networks and is weak or vacuous with the 6 to 18 windows of the daily networks. Neither gives coverage for a single
+window or at a point location, which no distribution-free method can; block coverage is certified only for long
+blocks (worst week 0.84 to 0.89 on traffic), and group-conditional coverage by distance costs 37\% to 59\% more width
+and needs at least 9 calibration sensors per group.
+
 \item \textbf{Infinite intervals.} Per-sensor ACI issues an infinite interval in 2\% to 8\% of windows
-($\gamma=0.1$), 40\% on the 6-sensor Beijing set, and more with $\gamma=0.5$.
-\item \textbf{Few calibration sensors are expensive}: a finite same-window 90\% interval needs at least 9.
+($\gamma=0.1$), 40\% on the 6-sensor Beijing set, and more with $\gamma=0.5$. Delhi (six evaluation windows) stays at 0.855 to 0.877. A finite same-window 90\% interval needs at least 9 calibration sensors.
 \item \textbf{The learned forecaster is not the best simple one everywhere.} Seasonal-naive forecasting
-beats OmniST on PeMS-BAY (MAE 3.56 against 4.68, intervals 24\% narrower), persistence ties it on weather
-and PeMSD7-M, and coordinates and attention add no measured accuracy. The training budget was fixed.
+beats OmniST on PeMS-BAY (MAE 3.35 against 4.49, intervals 26\% narrower), persistence ties it on weather
+and PeMSD7-M, and coordinates and attention add no measured accuracy. 
+\item \textbf{The late-installation test is one network}: contiguous-US daily maximum temperature, 42 forecast-time
+windows, late stations slightly nearer the training network than the controls, and a forecaster worse than
+persistence (MAE 5.83 against 4.83~\textdegree C) whose intervals are about 22~\textdegree C wide. It shows coverage
+holds at stations that arrived late, not that the forecasts are useful.
 \item \textbf{Not evaluated}: Generalized HCP, HCP's second-moment variant, sequential whitening, and other
 inductive forecasters under the forecasting task.
-\item \textbf{Data and history.} Targets include imputed values; traffic positions are reconstructed from
-distance matrices; architecture settings come from earlier Delhi development, so (A3) holds only up to that
-history; a sensor with no history of its own is not handled; the largest network has 325 sensors.
+\item \textbf{Data and history.} Targets include imputed values; traffic positions are reconstructed from distance matrices; architecture settings come from earlier Delhi development, so (A3) holds only up to that history; a sensor with no history is not handled.
 \end{itemize}
 
 %% ====================================================================
@@ -32,23 +34,16 @@ apply to a forecaster on a changing network, with different scope. Counted in ca
 calibration covers a randomly drawn new sensor in expectation (Theorem~\ref{thm:coverage}); on five networks it
 held in every finite case, at a width cost that falls from several-fold to about 10\% as calibration sensors
 grow from 10 to 90, but it calibrates on the evaluated window. Run per sensor, adaptive conformal inference covers
-every sensor at forecast time in the long run (Theorem~\ref{thm:aci}); it lifted the worst sensor from 0.58 to
-0.89 on PeMS-BAY, certified 0.81 to 0.85 per sensor on the traffic networks, and covered the farthest sensors as
-well as the rest, at the price of occasional infinite intervals. The usual pooled recipe, by contrast, averages
-near target and leaves individual sensors badly covered. Coordinates and attention, in our implementation, add no
-measured accuracy over a shared per-sensor model. Open problems are a finite-sample guarantee at forecast time
-for short histories, coverage conditional on a sensor's location, and a comparison with Generalized HCP and
-other inductive forecasters.
-
+every sensor at forecast time in the long run and over blocks of windows (Theorem~\ref{thm:aci}); it lifted the
+worst sensor from 0.58 to 0.89 on PeMS-BAY, certified 0.81 to 0.85 per sensor on the traffic networks, and covered the
+farthest sensors and 70 stations installed after training as well as the rest, at the price of occasional infinite
+intervals.   Open problems are a finite-sample guarantee at forecast time for short histories, tighter local coverage, and a comparison with Generalized HCP.
 \section*{Data and Code Availability}
 All datasets are public: Delhi CPCB PM$_{2.5}$ from the E-STGCN repository~\cite{panja2026estgcn};
-Beijing Multi-Site Air Quality from the UCI repository~\cite{zhang2017beijingair}; western-US daily
-temperature from NOAA GHCN-Daily; PeMSD7-M traffic from~\cite{yu2018stgcn}; and PeMS-BAY traffic
-from~\cite{li2018dcrnn}. The implementation, including the model, loaders for every dataset, each
-experiment script (the per-sensor score collection, the same-window and forecast-time coverage
-analyses, and the random-split evaluation), the unit tests for Lemma~\ref{lem:locality}, a pinned environment, and an index mapping
-each reported number to its result file, is available at \url{\repourl}.
-
+Beijing Multi-Site Air Quality from the UCI repository~\cite{zhang2017beijingair}; daily temperature from NOAA
+GHCN-Daily; PeMSD7-M traffic from~\cite{yu2018stgcn}; and PeMS-BAY traffic from~\cite{li2018dcrnn}. The
+implementation, loaders, every experiment script, the unit tests for Lemma~\ref{lem:locality}, a pinned environment and
+an index mapping each reported number to its result file are at \url{\repourl}.
 \section*{Acknowledgment}
 The author declares no competing interests; the work was carried out
 independently of the author's employment at Sopra Banking Software India, which neither funded nor

@@ -41,7 +41,7 @@ Source of truth: this repository (`omnist-mamba`, branch `main`). `thesis-omnist
   per-sensor ACI raises it to 0.893 (PeMSD7-M) and 0.887 (PeMS-BAY), certified 0.845 / 0.814 at gamma 0.1, bound
   verified for all 940 sensor cases; Delhi 0.855 to 0.877 with six windows.
 - **Accuracy:** coordinate-free shared GRU within about 2% of OmniST; persistence ties on weather and PeMSD7-M;
-  seasonal-naive beats OmniST on PeMS-BAY (MAE 3.56 vs 4.68, OmniST intervals 31% wider), is worse on Delhi,
+  seasonal-naive beats OmniST on PeMS-BAY (MAE 3.35 vs 4.49, OmniST intervals 35% wider), is worse on Delhi,
   Beijing and PeMSD7-M, and ties on weather.
 - **Coordinate defect** (Delhi constants for every dataset) found, fixed, and reported; earlier-code numbers kept.
 
@@ -58,6 +58,14 @@ An earlier draft clipped the ACI working level to [0.005, 0.995], which voids th
 clipped version and has been replaced in the paper by D5's unclipped version. D3's static/expanding/rolling results
 are unaffected and remain in the supplement.
 
+
+## 3d. Response to: no single-window / location-conditional guarantee, no real late-installed sensors (added 7 Nov)
+| Gap | What was done | Result | What remains true |
+|---|---|---|---|
+| Nothing about a single window or coverage conditional on location | Stated that exact single-window or point-conditional distribution-free coverage is impossible (Vovk 2012; Lei and Wasserman 2014; Barber et al. 2021). Added Corollary 2 to Theorem 2: for every sensor and every block of k windows, \|mean e - alpha\| <= (1+2 gamma)/(gamma k). Checked on every block of every sensor case (`experiments/D5b_blocks_and_groups.py`, `results/exp_D5b_blocks_groups.json`). | Worst one-week block: PeMSD7-M 0.880 / 0.888 (certified 0.800 / 0.867), PeMS-BAY 0.839 / 0.860 (certified 0.471 / 0.757), gamma 0.1 / 0.5. Distance thirds on traffic with Theorem 1 inside each third: 0.946 to 0.947 and 0.930 against 0.905 to 0.919 when calibrating on all, at 37% to 59% more width. | Certificate is vacuous for the daily networks (k=6; worst blocks 0.77 to 0.88). Group calibration needs 9 or more sensors per group, so is traffic only. Strongly adaptive variants (DtACI) not implemented. |
+| No test on sensors actually installed late | GHCN-Daily TMAX, contiguous US: 458 established and 70 stations first reporting in 2019 to 2022; train 2014 to 2018 on established stations only; hold out 60 established plus all 70 late; evaluate 2023 to 2024. Selection rules fixed before download (`experiments/fetch_ghcn_late.py`, `experiments/D6_late_installed.py`, `results/exp_D6_late.json`). | 280 late cases, ACI: mean 0.907 / 0.903, worst 0.881 / 0.894, none below 0.80, Theorem 2 held for all, certified 0.662 / 0.833. Controls 0.909 / 0.903. Rolling sensor-level without ACI: worst late station 0.665. | One network, 42 windows. Late stations lie slightly nearer the network than controls. Forecaster is worse than persistence there (MAE 5.83 against 4.83 C); intervals about 22 C wide. |
+
+Also corrected: PeMS-BAY is subsampled to 30 minutes, so the seasonal-naive lag was 6 days, not 1. Fixed to 48 steps; PeMS-BAY seasonal-naive MAE 3.35 against OmniST 4.49 (paired +1.13 [1.00, 1.27]), OmniST intervals 35% wider. The earlier distance analysis (C2/C3) moved to the supplement.
 ## 4. Withdrawn from the earlier version
 
 12% and 21% gains over interpolation and IGNNK (different task); "no recalibration needed"; drift result 0.50 to

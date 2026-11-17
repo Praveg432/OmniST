@@ -1,0 +1,138 @@
+{
+ "delhi_air_quality": {
+  "k": 6,
+  "eval_windows": 6,
+  "aci-0.1": {
+   "worst_block_cov_min": 0.7778,
+   "worst_block_cov_mean": 0.8547,
+   "worst_block_cov_p05": 0.8111,
+   "certified_every_block": 0.0,
+   "certificate_holds": true
+  },
+  "aci-0.5": {
+   "worst_block_cov_min": 0.8,
+   "worst_block_cov_mean": 0.8768,
+   "worst_block_cov_p05": 0.8333,
+   "certified_every_block": 0.2333,
+   "certificate_holds": true
+  }
+ },
+ "beijing_air_quality": {
+  "k": 6,
+  "eval_windows": 18,
+  "aci-0.1": {
+   "worst_block_cov_min": 0.8778,
+   "worst_block_cov_mean": 0.9124,
+   "worst_block_cov_p05": 0.8889,
+   "certified_every_block": 0.0,
+   "certificate_holds": true
+  },
+  "aci-0.5": {
+   "worst_block_cov_min": 0.8556,
+   "worst_block_cov_mean": 0.8693,
+   "worst_block_cov_p05": 0.8556,
+   "certified_every_block": 0.2333,
+   "certificate_holds": true
+  }
+ },
+ "ghcn_weather": {
+  "k": 6,
+  "eval_windows": 18,
+  "aci-0.1": {
+   "worst_block_cov_min": 0.7667,
+   "worst_block_cov_mean": 0.8852,
+   "worst_block_cov_p05": 0.8,
+   "certified_every_block": 0.0,
+   "certificate_holds": true
+  },
+  "aci-0.5": {
+   "worst_block_cov_min": 0.7556,
+   "worst_block_cov_mean": 0.8331,
+   "worst_block_cov_p05": 0.7889,
+   "certified_every_block": 0.2333,
+   "certificate_holds": true
+  }
+ },
+ "pemsd7_traffic": {
+  "k": 120,
+  "eval_windows": 183,
+  "aci-0.1": {
+   "worst_block_cov_min": 0.8799,
+   "worst_block_cov_mean": 0.8925,
+   "worst_block_cov_p05": 0.8854,
+   "certified_every_block": 0.8,
+   "certificate_holds": true
+  },
+  "aci-0.5": {
+   "worst_block_cov_min": 0.8882,
+   "worst_block_cov_mean": 0.894,
+   "worst_block_cov_p05": 0.891,
+   "certified_every_block": 0.8667,
+   "certificate_holds": true
+  },
+  "distance_groups": {
+   "near": {
+    "n_cal_per_group": 19,
+    "mean_cov_group_cal": 0.9465,
+    "mean_cov_all_cal": 0.9148,
+    "median_width_group_cal": 27.6549,
+    "median_width_all_cal": 19.6968
+   },
+   "middle": {
+    "n_cal_per_group": 19,
+    "mean_cov_group_cal": 0.9466,
+    "mean_cov_all_cal": 0.9189,
+    "median_width_group_cal": 27.2658,
+    "median_width_all_cal": 19.8413
+   },
+   "far": {
+    "n_cal_per_group": 19,
+    "mean_cov_group_cal": 0.9467,
+    "mean_cov_all_cal": 0.9109,
+    "median_width_group_cal": 28.7715,
+    "median_width_all_cal": 19.7497
+   }
+  }
+ },
+ "pemsbay_traffic": {
+  "k": 28,
+  "eval_windows": 116,
+  "aci-0.1": {
+   "worst_block_cov_min": 0.8393,
+   "worst_block_cov_mean": 0.8782,
+   "worst_block_cov_p05": 0.8571,
+   "certified_every_block": 0.4714,
+   "certificate_holds": true
+  },
+  "aci-0.5": {
+   "worst_block_cov_min": 0.8601,
+   "worst_block_cov_mean": 0.8832,
+   "worst_block_cov_p05": 0.872,
+   "certified_every_block": 0.7571,
+   "certificate_holds": true
+  },
+  "distance_groups": {
+   "near": {
+    "n_cal_per_group": 29,
+    "mean_cov_group_cal": 0.9304,
+    "mean_cov_all_cal": 0.9051,
+    "median_width_group_cal": 33.0611,
+    "median_width_all_cal": 20.8264
+   },
+   "middle": {
+    "n_cal_per_group": 29,
+    "mean_cov_group_cal": 0.9298,
+    "mean_cov_all_cal": 0.9114,
+    "median_width_group_cal": 32.3115,
+    "median_width_all_cal": 20.7995
+   },
+   "far": {
+    "n_cal_per_group": 29,
+    "mean_cov_group_cal": 0.9301,
+    "mean_cov_all_cal": 0.9123,
+    "median_width_group_cal": 28.6267,
+    "median_width_all_cal": 20.8357
+   }
+  }
+ }
+}

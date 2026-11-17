@@ -32,3 +32,10 @@ adjacency (the committed `*_adj.npz`); the speed time series are the original re
   `experiments/B6`, and the monthly table reproduce with no download.
 - After placing the fetched files at the paths above, every experiment in `experiments/` runs
   unchanged; see the top-level `RESULTS-INDEX.md` for which script produces which reported number.
+
+## GHCN-Daily late-installation network (experiment D6)
+| Dataset | Loader | Committed? | Source |
+|---|---|---|---|
+| GHCN-Daily TMAX, contiguous US: 458 established and 70 late stations (first value 2019 to 2022), 2014 to 2024 | `src/data_ghcn_late.py` | yes: `data/ghcn_late/ghcn_late.npz` (2.4 MB) and `selection.json` (IDs kept and dropped, with reasons) | NOAA NCEI `https://www.ncei.noaa.gov/pub/data/ghcn/daily/` (public, no authentication) |
+
+Rebuild with `python3 experiments/fetch_ghcn_late.py`; the raw per-station cache (`data/ghcn_late/raw/`, about 357 MB) and the inventory file are not committed. Selection rules are in the script header and were fixed before any station data were downloaded.

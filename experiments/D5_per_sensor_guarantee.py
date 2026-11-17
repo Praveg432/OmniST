@@ -31,7 +31,7 @@ Non-random new sensor: in each split, the held-out sensor farthest from the trai
 to its nearest training sensor, in units of the training network's median nearest-neighbor spacing), chosen before
 looking at any error.
 
-Settings fixed before the results were seen: alpha = 0.1, L = 4 windows (daily networks) or 24 (5-minute traffic),
+Settings fixed before the results were seen: alpha = 0.1, L = 4 windows (daily networks) or 24 (traffic networks),
 t0 = L, gamma in {0.1, 0.5}.
 Run: python3 experiments/D5_per_sensor_guarantee.py      Out: results/exp_D5_per_sensor.json
 """

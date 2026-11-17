@@ -135,8 +135,8 @@ out.append("\\end{tabular}\n\\end{table}\n")
 # ---- S-seasonal: OmniST against seasonal-naive on the same windows ------------------------------
 d4 = json.load(open(PAPER.parent / "results" / "exp_D4_seasonal.json"))
 out.append("\\begin{table*}[htbp]\n\\caption{OmniST, the coordinate-free GRU, persistence and seasonal-naive on the same "
-           "windows (those with a seasonal-naive forecast: all for the daily networks, windows 20 onward for the "
-           "5-minute traffic networks). MAE, and the 90\\% interval width under the pooled and the sensor-level rule "
+           "windows (those with a seasonal-naive forecast: all for the daily networks, windows 20 onward for PeMSD7-M, "
+           "all for PeMS-BAY, whose lag is one day of 48 half-hour steps). MAE, and the 90\\% interval width under the pooled and the sensor-level rule "
            "(same-window calibration) at the largest calibration size. The last column is OmniST minus "
            "seasonal-naive MAE, mean and 95\\% interval over splits.}\n\\label{tab:seasonalfull}\n\\centering\\small\n"
            "\\begin{tabular}{llcccl}\n\\toprule\n\\textbf{Dataset} & \\textbf{Method} & \\textbf{MAE} & "
@@ -228,5 +228,56 @@ for key, label in NAMES:
 out[-1] = "\\bottomrule"
 out.append("\\end{tabular}\n\\end{table*}\n")
 
+
+# ---- S-D5b: blocks of windows and distance groups --------------------------------------------------
+d5b = json.load(open(PAPER.parent / "results" / "exp_D5b_blocks_groups.json"))
+out.append("\\begin{table}[htbp]\n\\caption{Coverage of the worst block of $k$ consecutive windows, per sensor (experiment D5b). "
+           "Minimum over all sensor cases of each sensor's worst block, and the coverage certified for every block by "
+           "Corollary~2, $1-\\alpha-(1+2\\gamma)/(\\gamma k)$. The certificate held for every block.}\n"
+           "\\label{tab:d5b}\n\\centering\\footnotesize\n\\begin{tabular}{lrrcccc}\n\\toprule\n"
+           " & & & \\multicolumn{2}{c}{$\\gamma=0.1$} & \\multicolumn{2}{c}{$\\gamma=0.5$} \\\\\n"
+           "\\textbf{Dataset} & $k$ & $T$ & Worst & Cert. & Worst & Cert. \\\\\n\\midrule")
+for key, label in NAMES:
+    r = d5b[key]
+    a, b = r["aci-0.1"], r["aci-0.5"]
+    ca = f"{a['certified_every_block']:.3f}" if a["certified_every_block"] > 0 else "vac."
+    cb = f"{b['certified_every_block']:.3f}" if b["certified_every_block"] > 0 else "vac."
+    out.append(f"{label} & {r['k']} & {r['eval_windows']} & {a['worst_block_cov_min']:.3f} & {ca} & "
+               f"{b['worst_block_cov_min']:.3f} & {cb} \\\\")
+out.append("\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+
+out.append("\\begin{table}[htbp]\n\\caption{Same-window coverage and median 90\\% width by distance third on the traffic networks "
+           "(experiment D5b). Group: each sensor calibrated on the other sensors of its own third (Theorem~1 within the "
+           "group). All: calibrated on all other held-out sensors.}\n\\label{tab:groups}\n\\centering\\footnotesize\n"
+           "\\begin{tabular}{llcccccc}\n\\toprule\n\\textbf{Dataset} & \\textbf{Third} & $n_\\mathrm{cal}$ & \\multicolumn{2}{c}{Coverage} & "
+           "\\multicolumn{2}{c}{Median width} \\\\\n & & & Group & All & Group & All \\\\\n\\midrule")
+for key, label in (("pemsd7_traffic", "PeMSD7-M"), ("pemsbay_traffic", "PeMS-BAY")):
+    for third, v in d5b[key]["distance_groups"].items():
+        out.append(f"{label} & {third} & {v['n_cal_per_group']} & {v['mean_cov_group_cal']:.3f} & {v['mean_cov_all_cal']:.3f} & "
+                   f"{v['median_width_group_cal']:.1f} & {v['median_width_all_cal']:.1f} \\\\")
+out.append("\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+
+# ---- S-D6: sensors installed late ------------------------------------------------------------------
+d6 = json.load(open(PAPER.parent / "results" / "exp_D6_late.json"))
+out.append("\\begin{table}[htbp]\n\\caption{Sensors installed late (GHCN-Daily TMAX, experiment D6, target 0.90, $T="
+           f"{d6['eval_windows']}$ windows). Late: {d6['n_late_cases']} station cases; control: {d6['n_control_cases']} "
+           "established held-out station cases. Mean, worst coverage, share of cases below 0.80, share of infinite windows, "
+           "median width ($^\\circ$C), and the worst coverage over any block of 6 windows (90 days). $^*$Not deployable.}\n"
+           "\\label{tab:d6full}\n\\centering\\scriptsize\n\\setlength{\\tabcolsep}{3pt}\n"
+           "\\begin{tabular}{llccccc}\n\\toprule\n\\textbf{Stations} & \\textbf{Scheme} & \\textbf{Mean} & \\textbf{Worst} & "
+           "\\textbf{$<0.80$} & \\textbf{Inf.} & \\textbf{Width} \\\\\n\\midrule")
+for grp, glabel in (("late", "Late"), ("control", "Control")):
+    first = True
+    for sk, sl in SCH:
+        a = d6[grp][sk]
+        out.append(f"{glabel if first else ''} & {sl} & {a['mean_cov']:.3f} & {a['min_cov']:.3f} & "
+                   f"{a['share_below_0.80']:.3f} & {a['inf_share']:.3f} & {a['width_med']:.1f} \\\\")
+        first = False
+    wb = d6[grp]["worst_block"]
+    out.append(f" & Worst 6-window block, ACI $\\gamma=0.1$ / $0.5$ & \\multicolumn{{5}}{{l}}{{{wb['aci-0.1']['min']:.3f} / "
+               f"{wb['aci-0.5']['min']:.3f}}} \\\\")
+    out.append("\\midrule")
+out[-1] = "\\bottomrule"
+out.append("\\end{tabular}\n\\end{table}\n")
 (PAPER / "supplement_tables.tex").write_text("\n".join(out))
 print("wrote", PAPER / "supplement_tables.tex", len("\n".join(out).split("\n")), "lines")

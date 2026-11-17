@@ -94,7 +94,7 @@ Table~\ref{tab:d5full} expands Table~II of the main text (\texttt{experiments/D5
 $|\frac1T\sum_t e_t-\alpha|\le(\max(\alpha,1-\alpha)+\gamma)/(\gamma T)$ was checked for every sensor case and held in
 all of them; no window received an empty interval. The farthest-sensor column uses the held-out sensor of each split
 with the largest distance to its nearest training sensor, chosen before any error was looked at.
-Table~\ref{tab:legacyfull} gives the random-split evaluation (experiment C1) summarized in Section~IV-C of the main
+Table~\ref{tab:legacyfull} gives the random-split evaluation (experiment C1) summarized in Section~IV-B of the main
 text. Fig.~\ref{fig:sensorlevel} shows the same-window coverage of Table~I against the number of calibration sensors.
 
 \begin{figure}[htbp]
@@ -105,6 +105,38 @@ text. Fig.~\ref{fig:sensorlevel} shows the same-window coverage of Table~I again
 \label{fig:sensorlevel}
 \end{figure}
 
+\section{Blocks, Location Groups, Late-Installed Sensors and Distance}
+\sloppy
+\emph{Blocks of windows.} Table~\ref{tab:d5b} gives, for every sensor case, the coverage of the worst block of $k$
+consecutive windows under per-sensor ACI, with the certificate of Corollary~2. $k$ was fixed in advance: one week
+of windows on the traffic networks ($120$ on PeMSD7-M, where windows are 1~hour and weekdays only; $28$ on
+PeMS-BAY, with 6-hour windows) and $6$ windows on the daily networks ($180$ days on Delhi, which has only 6
+evaluation windows; $90$ days elsewhere). The certificate held for every block of every sensor
+(\texttt{experiments/D5b\_blocks\_and\_groups.py}).\\
+\emph{Location groups.} Table~\ref{tab:groups} applies Theorem~1 within thirds of the held-out sensors ordered by
+distance to the nearest training sensor. A third needs at least 9 calibration sensors for a finite 90\% interval, so
+this is run on the two traffic networks only. Calibrating within a third gives coverage near 0.95 (PeMSD7-M) and 0.93
+(PeMS-BAY) at 37\% to 59\% more width than calibrating on all held-out sensors, which already covers each third at
+0.905 or more.\\
+\emph{Late-installed stations.} Table~\ref{tab:d6full} gives the full results of experiment D6
+(\texttt{experiments/fetch\_ghcn\_late.py}, \texttt{src/data\_ghcn\_late.py}, \texttt{experiments/D6\_late\_installed.py}).
+Of 668 candidate stations (85 late, 583 established; late means the first TMAX value falls in 2019 to 2022,
+established means a first value in 2012 or earlier, and all candidates report in 2025 or later), 70 late and 458
+established stations remained. Established stations needed at least 90\% of days present in both 2014--2018 and
+2023--2024; late stations needed 90\% in 2023--2024, no value before 2019 and a first value by 2022-12-01 (140
+dropped: 55 for the evaluation period only, 44 for the training period only, 39 for both, 2 for starting after
+2022-12-01). Selection rules were fixed before any data were downloaded. Training windows 2014-01-01 to 2018-06-30, validation 2018-07-01 to 2018-12-31,
+evaluation 2023-01-01 to 2024-12-31. The block length 6 windows is 90 days; the certificate is vacuous
+there and the worst blocks (0.69 to 0.74) show how much a short block can deviate.\\
+\emph{Distance from the training network (earlier analysis).} Assumption (A1) is least safe for a sensor far from
+the network. Holding out a contiguous region and relating per-sensor coverage to the distance from the nearest
+training sensor, in units of the median spacing (experiment C2), a distance effect appears only in the sparse weather
+network: coverage falls by 0.0136 per extra spacing [$-0.0221$, $-0.0063$]. In the other four networks the
+within-sensor slopes lie within 0.004 of zero. A total-variation bound on the shift between sensors' score
+distributions would be vacuous at our sample sizes (experiment C3: median 0.11 on Delhi and 0.19 on weather, against a
+noise floor of 0.13). Weather is also where the pooled rule most often misses badly for an individual sensor, but with
+one sparse network of 30 sensors this is a pattern to test, not a result. The far-sensor test, the group test and the
+late-installation test of the main text supersede this analysis.
 \section{Networks, Splits and Calibration Sizes}
 Table~\ref{tab:setup} lists the networks, the training and held-out sensors per split, the number of splits, the
 number of evaluation windows, the points $U$ per sensor, and the calibration sizes $n$ used.
@@ -132,6 +164,10 @@ python3 experiments/D1_sensor_level_scores.py all        # original coordinate c
 python3 experiments/D1_sensor_level_scores.py all norm   # normalized coordinates
 python3 experiments/D2_analyse.py                        # same-window coverage, accuracy
 python3 experiments/D3_deployable.py                     # forecast-time calibration
+python3 experiments/D5_per_sensor_guarantee.py            # per-sensor ACI, far sensors
+python3 experiments/D5b_blocks_and_groups.py             # blocks of windows, distance groups
+python3 experiments/fetch_ghcn_late.py                   # GHCN-Daily late-installation data
+python3 experiments/D6_late_installed.py                 # sensors installed late
 python3 experiments/make_figures_v2.py
 python3 paper/make_supplement_tables.py
 python3 paper/assemble_jsen.py

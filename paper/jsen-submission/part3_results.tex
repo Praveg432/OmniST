@@ -5,7 +5,7 @@
 \subsection{Does the Sensor-Level Bound Hold? Same-Window Calibration}
 \label{sec:bound}
 
-This subsection is the setting of Theorem~\ref{thm:coverage}: the calibration sensors' errors are those of the window being evaluated. It is a reference for what the theorem delivers, not a deployable procedure; Section~\ref{sec:deployable} removes that advantage.
+This is the setting of Theorem~\ref{thm:coverage}: calibration errors come from the evaluated window. It is a reference, not a deployable procedure; Section~\ref{sec:deployable} removes that advantage.
 
 Table~\ref{tab:bound} compares the two calibration rules at the 90\% target. For each trained model
 we draw 4000 random (new sensor, calibration set) assignments from $\mathcal{R}$ (1500 for the two
@@ -40,8 +40,7 @@ PeMS-BAY   & 20 & 0.9448 & 40.8 & 0.8983 & 19.4 & 2.10 & --- \\
 (traffic); widths in the units of each dataset. $n$ is the number of calibration sensors. ``Draws
 $<0.80$'' is the share of random assignments, under the pooled rule at the largest $n$, whose new
 sensor was covered less than 0.80 of the time. With 6 held-out sensors (Beijing) the sensor-level rule
-is vacuous at the 90\% target; at the 80\% target and $n{=}5$ it gives coverage 0.960 at width 310
-against 0.801 at width 129 for the pooled rule.} \\
+is vacuous at the 90\% target.} \\
 \end{tabular}
 \end{table}
 
@@ -51,15 +50,10 @@ Three points follow. \emph{First}, the price is set by the number of calibration
 the number of calibration points: with 9 to 15 sensors the interval is 1.4 to 4.3 times wider than the
 pooled one, with 59 to 89 sensors it is 1.1 times wider. A network with a dozen held-out sensors cannot
 support a finite distribution-free 90\% interval at all. \emph{Second}, the pooled rule, which has no
-guarantee here, averages between 0.896 and 0.901 over random new sensors at every $n$ we tried. We read
-this as an empirical fact about these networks, not as a property we can promise: in the weather data
-it is 0.4 points under target, and the average hides the spread. For the same pooled rule, in 13\%
-(weather), 8\% (PeMS-BAY) and 5\% (PeMSD7-M) of random assignments the new sensor is covered less
-than 0.80 of the time, and the tenth percentile of the per-draw coverage is 0.78 to 0.88. Marginal
-coverage is a statement about the average new sensor. \emph{Third}, nothing in Theorem~\ref{thm:coverage}
-depends on OmniST: it applies to any forecaster whose error at a new sensor is a function of that
-sensor's data and the training network, including the baselines below.
-
+guarantee here, averages between 0.896 and 0.901 over random new sensors at every $n$ we tried. This is an empirical fact about these networks, not a promise (weather: 0.4 points under target), and the average hides the spread. In 13\% (weather), 8\% (PeMS-BAY) and 5\% (PeMSD7-M) of random
+assignments the new sensor is covered less than 0.80 of the time, and the tenth percentile of the per-draw
+coverage is 0.78 to 0.88. \emph{Third}, nothing in Theorem~\ref{thm:coverage} depends on OmniST: it applies to
+any forecaster whose error at a new sensor is a function of that sensor's data and the training network.
 \subsection{Calibration at Forecast Time, Sensor by Sensor}
 \label{sec:deployable}
 
@@ -100,31 +94,29 @@ latter is finite. With per-sensor ACI ($\gamma=0.1$) the worst sensor on the two
 (PeMSD7-M) and 0.887 (PeMS-BAY) against 0.706 and 0.581, and no sensor falls below 0.80 on any network except Delhi
 (1.9\% of cases). On the traffic networks Theorem~\ref{thm:aci} certifies 0.845 and 0.814 for every sensor, and
 0.885 and 0.876 with $\gamma=0.5$; on the daily networks, with 6 to 18 windows, its certificate is weak or vacuous
-and the protection seen there is empirical. \emph{Cost.} With $\gamma=0.1$ the median interval width is not larger
-than under rolling sensor-level calibration (15.9 against 19.4 on PeMSD7-M, 19.6 against 20.3 on PeMS-BAY, 23.2
-against 26.3 on weather, 105 against 112 on Delhi), but 2\% to 8\% of windows get an infinite interval, 40\% on the
+and the protection seen there is empirical.  \emph{Cost.} With $\gamma=0.1$ the median width is not larger
+than under rolling sensor-level calibration (15.9 against 19.4 on PeMSD7-M, 19.6 against 20.3 on PeMS-BAY), but 2\% to 8\% of windows get an infinite interval, 40\% on the
 6-sensor Beijing set; $\gamma=0.5$ tightens the certificate and raises that share to 13\% to 24\%. \emph{Delhi} remains
 the hard case: mean coverage 0.855 ($\gamma=0.1$) or 0.877 ($\gamma=0.5$) with six evaluation windows, and no
-procedure here certifies coverage there. \emph{Static and expanding} calibration (supplementary material) are no
-better than rolling; static falls to 0.870 on PeMS-BAY. The earlier version of this work reported that a rolling ACI
-layer raised late-year coverage on Delhi from 0.50 to 0.96; that result came from a different protocol, used a
-clipped update, and is withdrawn.
-
+procedure here certifies it. Static and expanding calibration are no better than rolling (supplement).
+The earlier claim of a rise in Delhi coverage from 0.50 to 0.96 used a different protocol and a clipped update, and is withdrawn.
 \emph{Non-random new sensors.} Assumption (A1) is the one a deployment breaks first. In each split we take, before
-looking at any error, the held-out sensor farthest from the training network. These sensors are 2.1 to 5.8 times
-farther than the average held-out sensor (2.4 to 11.8 median spacings). Their mean coverage is close to that of all
-sensors under every scheme, for example 0.904 and 0.897 on the two traffic networks with ACI ($\gamma=0.1$), and the
-worst of them is 0.822 (Delhi), 0.904 (weather), 0.898 (PeMSD7-M) and 0.892 (PeMS-BAY). Theorem~\ref{thm:aci}
-covers them without any assumption about how they were chosen.
+looking at any error, the held-out sensor farthest from the training network: 2.1 to 5.8 times farther than the
+average held-out sensor (2.4 to 11.8 median spacings). Their mean coverage is close to that of all sensors under
+every scheme, for example 0.904 and 0.897 on the two traffic networks with ACI ($\gamma=0.1$), and the worst of
+them is 0.822 (Delhi), 0.904 (weather), 0.898 (PeMSD7-M) and 0.892 (PeMS-BAY). Theorem~\ref{thm:aci} covers them
+without any assumption about how they were chosen.
+\emph{Blocks of windows and location groups.} Corollary~\ref{cor:block} held for every sensor case and block. The worst
+one-week block of any sensor is covered 0.880 ($\gamma=0.1$; certified 0.800) and 0.888 ($\gamma=0.5$; certified 0.867) on
+PeMSD7-M ($k=120$), and 0.839 (certified 0.471) and 0.860 (0.757) on PeMS-BAY ($k=28$). On the daily networks ($k=6$) the certificate is vacuous and the worst block is 0.78 (Delhi), 0.88 (Beijing) and 0.77 (weather). For location, the traffic sensors were split into thirds by distance from the network and
+Theorem~\ref{thm:coverage} applied within each third: coverage is 0.946 to 0.947 (PeMSD7-M, 19 calibration sensors per
+third) and 0.930 (PeMS-BAY, 29), against 0.905 to 0.919 when calibrating on all held-out sensors, at 37\% to 59\% larger
+median width. 
 
-\subsection{What the Earlier Protocol Would Have Reported}
-\label{sec:legacy}
-
-The previous version of this work calibrated on the residuals of the training sensors and measured coverage on 3
-to 5 fixed held-out sensors, the same in every seed, and reported 0.914 to 0.928. Repeating it with sensors split
-at random into training, calibration and test sets over many splits (experiment C1, supplementary material) gives
-0.876 to 0.906, with three of five networks below 0.90 and a worst individual sensor of 0.40 to 0.86. The earlier
-numbers were 1.3 to 3.9 points high.
+\emph{The earlier protocol.} The previous version calibrated on training-sensor residuals and measured coverage on 3
+to 5 fixed held-out sensors (0.914 to 0.928). Random sensor splits (experiment C1, supplementary material) give
+0.876 to 0.906, three of five networks below 0.90 and a worst sensor of 0.40 to 0.86: the earlier numbers were 1.3 to 3.9
+points high.
 
 \subsection{Accuracy at New Sensors and What Each Component Contributes}
 \label{sec:ablation}
@@ -149,9 +141,8 @@ OmniST, earlier code   & 28.0 & 49.6 & 5.72 & 9.76 & 5.17 \\
 IDW, concurrent$^\dagger$ & 18.9 & 8.4 & 3.22 & 7.63 & 5.66 \\
 \bottomrule
 \multicolumn{6}{p{0.93\columnwidth}}{\footnotesize Units of each dataset; D7-M is PeMSD7-M, BAY is
-PeMS-BAY. ``Normalized'': coordinates normalized from the training network. ``Earlier code'' uses the
-coordinate constants of the submitted version (see text). $^\dagger$Inverse-distance weighting of the
-training sensors' \emph{concurrent} values: a nowcasting reference that a forecaster cannot use.} \\
+PeMS-BAY. ``Earlier code'': coordinate constants of the submitted version (see text). $^\dagger$Inverse-distance
+weighting of training sensors' \emph{concurrent} values: a nowcasting reference, not a forecast.} \\
 \end{tabular}
 \end{table}
 
@@ -162,11 +153,9 @@ statements.
 air-quality networks (Delhi $-9.5$ [$-10.8$, $-8.1$]; Beijing $-3.9$ [$-4.3$, $-3.5$]) and on PeMS-BAY
 ($-0.65$ [$-0.76$, $-0.55$]), and indistinguishable from it on weather ($+0.10$ [$-0.23$, $0.43$]) and
 PeMSD7-M ($+0.09$ [$-0.19$, $0.37$]). On those two networks a forecaster that repeats the last value
-is as accurate. The comparison with the concurrent-observation interpolators is not one of equals:
-they see what happens at the neighboring sensors during the target window and they are better
-on Delhi, Beijing and weather. We therefore withdraw the earlier statement that OmniST improves on
-interpolation by 12\% and on a kriging network by 21\%, which compared a forecast with a
-reconstruction.
+is as accurate. Interpolators that see the neighbors during the target window are better on Delhi,
+Beijing and weather; that is not a comparison of equals, and we withdraw the earlier claim that OmniST improves on
+interpolation by 12\% and on a kriging network by 21\%, which compared a forecast with a reconstruction.
 
 \emph{(ii) The coordinate-free control.} A GRU shared across sensors, with neither coordinates nor
 attention, is within about 2\% of OmniST on every dataset: OmniST minus control is $+0.57$ [$-0.20$, $1.33$]
@@ -174,21 +163,15 @@ on Delhi, $+0.42$ [$-0.02$, $0.87$] on Beijing, $-0.067$ [$-0.122$, $-0.012$] on
 [$-0.43$, $0.32$] on PeMSD7-M and $+0.04$ [$-0.03$, $0.11$] on PeMS-BAY. Removing only the attention
 changes the error by at most 0.11 on the datasets where we ran it. \textbf{The capability to forecast
 at a new sensor comes from sharing parameters across sensors, not from the coordinates or the
-attention.} In the data we have, the coordinates and the attention do not improve accuracy at new
-sensors; they make spatial context available, and the architecture keeps the locality property
-that Lemma~\ref{lem:locality} needs, but we cannot claim a benefit from them.
+attention.} In our data the coordinates and the attention do not improve accuracy at new sensors; they
+keep the locality property that Lemma~\ref{lem:locality} needs, but we cannot claim a benefit from them.
 
-\emph{(iii) A defect in the earlier code.} The coordinate embedding in the submitted version centered
-and scaled coordinates with constants chosen for Delhi (latitude 28.6, longitude 77.1, scales 0.2 and
-0.3). For any other region the input to the embedding MLP lay tens to hundreds of units outside its
-intended range, and the control experiment exposed it: with those constants OmniST was 0.7 to 6.0
-error units worse than the coordinate-free control on every dataset but Delhi (PeMSD7-M: 9.76 against
-3.71). Normalizing coordinates with the mean and standard deviation of the \emph{training} network,
-fixed before any held-out sensor is seen, removes the gap (PeMSD7-M: 3.66; weather: 5.72 to 4.75;
-PeMS-BAY: 5.17 to 4.49). Delhi, whose range the constants were chosen for, is slightly worse after the
-change ($+0.48$ [$0.24$, $0.73$]). Every coverage and accuracy result in this paper uses the
-normalized version; Table~\ref{tab:accuracy} keeps the earlier values for the record.
-
+\emph{(iii) A defect in the earlier code.} The coordinate embedding in the submitted version centered and scaled
+coordinates with constants chosen for Delhi, so for any other region its input lay far outside the intended range.
+The control exposed it: OmniST was 0.7 to 6.0 error units worse than the coordinate-free control on every dataset
+but Delhi (PeMSD7-M: 9.76 against 3.71). Normalizing with the mean and standard deviation of the \emph{training}
+network removes the gap (PeMSD7-M: 3.66; weather: 5.72 to 4.75; PeMS-BAY: 5.17 to 4.49); Delhi is slightly worse
+($+0.48$ [$0.24$, $0.73$]). All results here use the normalized version.
 \emph{(iv) Intervals are as wide as the forecaster is inaccurate.} The width of every interval follows
 the error of its forecaster: persistence gives intervals about 1.5 times wider than OmniST on Delhi
 and PeMS-BAY, and nearest-neighbor interpolation gives intervals about 2.9 times wider on PeMSD7-M, at
@@ -196,27 +179,32 @@ the same coverage.
 Calibration, not the forecaster, is what makes the coverage hold.
 
 \emph{(v) Against seasonal-naive.} A seasonal-naive forecast repeats the sensor's own value one period earlier
-(a week for the daily networks, the previous day for the traffic networks), restricted for all methods to the
-windows that have one. It is no better than persistence on Delhi and clearly worse than OmniST on Delhi
-($-9.5$ [$-10.7$, $-8.3$], 10 of 10 splits) and Beijing ($-15.2$ [$-15.9$, $-14.5$]); it ties OmniST on weather
-($-0.24$ [$-0.56$, $0.07$]) and is worse on PeMSD7-M ($-0.74$ [$-1.16$, $-0.32$]). On PeMS-BAY it is clearly better
-than both learned models: MAE 3.56 against 4.68 for OmniST (OmniST minus seasonal-naive $+1.12$ [$0.95$, $1.30$],
-0 of 4 splits), and its 90\% pooled interval is 15.6 wide against 20.5, so OmniST's intervals are 31\% wider.
-\emph{(vi) Removing reference sensors} (30\% or 50\% of the training network at inference, rescoring and
-recalibrating on the survivors) changes MAE by at most 0.6\% and coverage by about 0.3 points at most
-(supplementary material). This is expected: the model reads only its $k$ nearest neighbors and, as the controls
-show, gets little from them.
-
-\subsection{Distance From the Training Network}
-\label{sec:distance}
-
-Assumption (A1) is least safe for a sensor far from the network. Holding out a contiguous region and relating
-per-sensor coverage to the distance from the nearest training sensor, in units of the median spacing
-(experiment C2), a distance effect appears only in the sparse weather network: coverage falls by 0.0136 per extra
-spacing [$-0.0221$, $-0.0063$]. In the other four networks the within-sensor slopes lie within 0.004 of zero. A
-total-variation bound on the shift between sensors' score distributions would be vacuous at our sample sizes
-(experiment C3: median 0.11 on Delhi and 0.19 on weather, against a noise floor of 0.13). Weather is also where the
-pooled rule most often misses badly for an individual sensor, but with one sparse network of 30 sensors this is a
-pattern to test, not a result.
-
+(a week for the daily networks, the previous day for the traffic networks: 288 five-minute steps on PeMSD7-M, 48
+half-hour steps on PeMS-BAY), restricted for all methods to the windows that have one. OmniST is clearly better than it on
+Delhi ($-9.5$ [$-10.7$, $-8.3$], 10 of 10 splits) and Beijing ($-15.2$ [$-15.9$, $-14.5$]), ties on weather
+($-0.24$ [$-0.56$, $0.07$]) and is better on PeMSD7-M ($-0.74$ [$-1.16$, $-0.32$]).
+On PeMS-BAY seasonal-naive is clearly better than both learned models: MAE 3.35 against 4.49 for OmniST (OmniST
+minus seasonal-naive $+1.13$ [$1.00$, $1.27$], 0 of 4 splits), and its 90\% pooled interval is 14.3 wide against
+19.4, so OmniST's intervals are 35\% wider.
+\emph{(vi) Removing reference sensors} (30\% or 50\% of the training network at inference) changes MAE by at most
+0.6\% and coverage by about 0.3 points at most (supplementary material), as expected: the model reads only its $k$
+nearest neighbors and gets little from them.
+\subsection{Sensors Installed Late}
+\label{sec:late}
+Held-out sensors so far were random members of networks that existed throughout. Stations that really arrived later
+give a natural test. We use NOAA GHCN-Daily maximum temperature over the contiguous United States: 458 established
+stations reporting through 2014--2024 and 70 stations whose first TMAX value came between 2019 and 2022 (selection
+rules fixed before download). The model is trained on established stations in 2014--2018, before any late station
+existed, and evaluated on 2023--2024 (30-day inputs, 15-day horizon, 42 forecast-time windows after $L=4$). In each of 4
+splits, 60 random established stations are held out of training together with all 70 late stations. Late stations are
+scored with their 8 nearest training stations and calibrated on the 60 held-out established stations; those 60 also
+ serve as controls, each calibrated on the other 59.
+Over 280 late-station cases, per-sensor ACI covers 0.907 ($\gamma=0.1$) and
+0.903 ($\gamma=0.5$) on average, the worst late station is covered 0.881 and 0.894, none falls below 0.80, and the
+bound of Theorem~\ref{thm:aci} held for every station (certified 0.662 and 0.833). Controls behave the same (0.909 and
+0.903, worst 0.876 and 0.891). Without ACI, the rolling sensor-level rule averages 0.909 but the worst late station is
+covered 0.665 (0.646 for the pooled rule), and 2.5\% (sensor-level) and 4.3\% (pooled) of late stations fall below 0.80
+(supplementary material). Late stations are no harder than controls (MAE 5.83 against 5.74~\textdegree C) and lie slightly nearer the training network (0.85 against 1.08 median spacings): this is not a far-sensor test.  The
+forecaster is weak here (persistence has MAE 4.83) and the 90\% intervals are about 22~\textdegree C wide: coverage
+does not depend on this, but usefulness does.
 @@LIMITS@@

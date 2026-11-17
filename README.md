@@ -46,12 +46,16 @@ network, provided that sensor has its own input window.
      0.845 / 0.814, at no larger median width, with about 3% of windows infinite. It is weak with short histories:
      Delhi (6 windows) reaches 0.855 to 0.877. Sensors farthest from the training network fared like the rest
      (`experiments/D5_per_sensor_guarantee.py`).
+     Over any block of k windows each sensor's coverage is within (1+2g)/(gk) of target (Corollary 2; worst
+     one-week block 0.84 to 0.89 on traffic). Exact single-window or location-conditional coverage is impossible
+     distribution-free. On 70 GHCN-Daily stations installed after training (`experiments/D6_late_installed.py`),
+     per-sensor ACI covered every station at 0.88 or more (mean 0.907, certified 0.66).
    Prior art: treating the sensor as a group is hierarchical conformal prediction (Lee, Barber, Willett;
    arXiv:2306.06342). With equal points per sensor the sensor-level rule is exactly HCP's threshold
    (`tests/test_hcp_equivalence.py`), so the rule is not claimed as new. Generalized HCP (Mallick et al.,
    arXiv:2608.15500) and sequential whitening were not evaluated.
    Against seasonal-naive forecasting: OmniST is better on Delhi, Beijing and PeMSD7-M, ties on weather, and is
-   worse on PeMS-BAY (MAE 4.68 against 3.56; `experiments/D4_seasonal_comparison.py`).
+   worse on PeMS-BAY (MAE 4.49 against 3.35; `experiments/D4_seasonal_comparison.py`).
 4. **Controls.** A coordinate-free GRU shared across sensors matches OmniST's accuracy at new sensors within
    about 2%, and persistence matches it on weather and PeMSD7-M. The ability to forecast at a new sensor comes
    from sharing parameters across sensors; coordinates and attention show no measured benefit.
@@ -74,6 +78,9 @@ python3 experiments/D1_sensor_level_scores.py all norm    # same splits, coordin
 python3 experiments/D2_analyse.py                         # same-window theorem check, accuracy -> results/exp_D2_analysis.json
 python3 experiments/D3_deployable.py                      # static/expanding/rolling at forecast time -> results/exp_D3_deployable.json
 python3 experiments/D5_per_sensor_guarantee.py            # per-sensor ACI, Theorem 2 check, farthest sensors -> results/exp_D5_per_sensor.json
+python3 experiments/D5b_blocks_and_groups.py             # blocks of windows, distance thirds -> results/exp_D5b_blocks_groups.json
+python3 experiments/fetch_ghcn_late.py                    # GHCN late-installation data -> data/ghcn_late (cached in the repo)
+python3 experiments/D6_late_installed.py                  # sensors installed late -> results/exp_D6_late.json
 python3 experiments/D1c_seasonal_naive.py all             # seasonal-naive errors on the same splits -> results/D1c
 python3 experiments/D4_seasonal_comparison.py             # OmniST vs seasonal-naive -> results/exp_D4_seasonal.json
 python3 experiments/P2_coordinate_range.py                # coordinate input ranges (docs/THESIS-COORDINATE-DEFECT.md)

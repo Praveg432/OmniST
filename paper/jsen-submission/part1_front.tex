@@ -80,15 +80,17 @@ set of sensors.
 training-network neighbors. Theorem~\ref{thm:coverage} then gives finite-sample expected coverage at a randomly
 drawn new sensor, with a correction counted in calibration \emph{sensors}; it needs random assignment and errors
 from the evaluated window. Theorem~\ref{thm:aci} gives what the first cannot: coverage at forecast time for every
-individual sensor, including named, distant and non-randomly chosen ones, in the long run over that sensor's
-windows. Neither argument is new (hierarchical conformal prediction~\cite{lee2023hcp}, conformal risk
-control~\cite{crc2024} and adaptive conformal inference~\cite{gibbs2021aci}); the lemma is what makes them apply to
-a forecaster deployed on a changing network, and the lemma alone does not imply coverage, which the previous
-version of this work assumed.
+individual sensor, including named, distant and non-randomly chosen ones, in the long run and over any block of
+windows. Exact single-window or location-conditional coverage is impossible without assumptions
+(Section~\ref{sec:online-conformal}). Neither argument is new (hierarchical conformal
+prediction~\cite{lee2023hcp}, conformal risk control~\cite{crc2024}, adaptive conformal
+inference~\cite{gibbs2021aci}); the lemma makes them apply to a forecaster on a changing network, and the lemma
+alone does not imply coverage, as the previous version of this work assumed.
 \item \textbf{Measured scope and price of each guarantee on five real networks}, from models trained on disjoint
 sensors: where each holds, where it is vacuous, its width cost, and the worst individual sensor
 (Section~\ref{sec:results}). The usual pooled recipe averages near target but leaves the worst sensor at 0.53 to
-0.81 at forecast time; per-sensor ACI raises it to about 0.89 on the traffic networks at no larger median width.
+0.81 at forecast time; per-sensor ACI raises it to about 0.89 on the traffic networks at no larger median width. On 70 weather
+stations that were installed after training, every station was covered at least 0.88 (Section~\ref{sec:late}).
 \item \textbf{What the architecture contributes}, against like-for-like forecasting baselines, seasonal-naive
 forecasting and a coordinate-free shared per-sensor model.
 \end{enumerate}
@@ -222,11 +224,10 @@ hierarchical conformal prediction~\cite{lee2023hcp}.
 \textbf{What the theorem does and does not say.}
 \emph{(A1) Random assignment.} The probability is over which sensor plays the new one. It is a
 statement about a sensor drawn at random from $\mathcal{R}$, not about a named sensor, and not
-conditional on location. If $\mathcal{R}$ is itself a random sample of a larger population of
-sensors, the same bound holds over that population. A new sensor that is systematically different
+conditional on location.  A new sensor that is systematically different
 from the calibration sensors, for instance far outside the network, is outside the theorem;
 weighted conformal prediction~\cite{tibshirani2019covshift,barber2023nexcp} is the route there, and
-Section~\ref{sec:distance} measures how much distance matters on our data.
+Sections~\ref{sec:deployable} and \ref{sec:late} test far and late-installed sensors.
 \emph{(A2) Common window.} Calibration and test errors come from the same evaluation window. This is
 the setting in which the theorem holds, and it cannot be run at forecast time: when a forecast for
 window $t$ is issued, the calibration sensors' errors for window $t$ are not yet known. With
@@ -236,13 +237,11 @@ theorem says nothing; Theorem~\ref{thm:aci} (Section~\ref{sec:online-conformal})
 \emph{(A4) Own history.} Every sensor has its input window.
 The bound is on average coverage over the $U$ points of a sensor, not per time step and not per sensor.
 
-\textbf{Topology change.} Suppose a set $D\subset\mathcal{T}$ of reference sensors goes offline. By
-Lemma~\ref{lem:locality} only the sensors of $\mathcal{R}$ with a neighbor in $D$ change their score;
-the others keep theirs exactly. Recomputing the scores of the affected sensors against the reduced
-reference network and recalibrating gives Theorem~\ref{thm:coverage} for the reduced network with the
-same $\hat f$. The earlier version of this work claimed that no recalibration is needed in this case.
-That is true only for the cached scores of unaffected sensors, not for the validity of a threshold
-calibrated on a different network.
+\textbf{Topology change.} If a set $D\subset\mathcal{T}$ of reference sensors goes offline, by
+Lemma~\ref{lem:locality} only the sensors of $\mathcal{R}$ with a neighbor in $D$ change their score.
+Rescoring them against the reduced network and recalibrating gives Theorem~\ref{thm:coverage} for the reduced
+network with the same $\hat f$; the earlier claim that no recalibration is needed holds only for the cached
+scores of unaffected sensors.
 
 \subsection{A Guarantee at Forecast Time, for Every Sensor}
 \label{sec:online-conformal}
@@ -280,5 +279,21 @@ average over that sensor's own windows, with slack of order $1/(\gamma T)$, so i
 after enough windows, and some windows receive an infinite interval while $\alpha_t$ is low. An earlier
 draft of this work clipped $\alpha_t$ to $[0.005,0.995]$, which voids the bound; the results here use the
 unclipped update. $L$, $t_0=L$ and $\gamma\in\{0.1,0.5\}$ were fixed before the results were seen.
+\begin{corollary}[Blocks of windows]
+\label{cor:block}
+For every sensor $j$, every $k\ge1$ and every block of $k$ consecutive windows,
+$\big|\frac1k\sum_{t=s}^{s+k-1}e_t-\alpha\big|\le\frac{1+2\gamma}{\gamma k}$.
+\end{corollary}
+\begin{proof}
+Both $\alpha_s$ and $\alpha_{s+k}$ lie in $[-\gamma,1+\gamma]$, so $|\alpha_{s+k}-\alpha_s|\le1+2\gamma$, and
+$\alpha_{s+k}-\alpha_s=\gamma\sum_{t=s}^{s+k-1}(\alpha-e_t)$. \end{proof}
+\emph{Single windows and locations.} Coverage at one window, or conditional on the new sensor's location, cannot
+be guaranteed exactly by any distribution-free method: a method valid conditionally on a point must, for
+continuous data, return intervals of infinite expected length~\cite{vovk2012conditional,lei2014distribution,barber2021limits}.
+We therefore guarantee what is attainable: coverage per sensor, and hence per location, over any block of $k$
+windows, with certificate $1-\alpha-(1+2\gamma)/(\gamma k)$, which is informative only for long blocks.
+Theorem~\ref{thm:coverage} applied within groups of sensors (for example by distance from the network) gives
+group-conditional coverage when each group has at least $1/\alpha-1=9$ calibration sensors. Tracking local
+shifts more tightly is the aim of strongly adaptive variants~\cite{gibbs2024dtaci}, which we do not implement.
 
 @@RESULTS@@

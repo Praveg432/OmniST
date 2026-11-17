@@ -39,7 +39,7 @@ Software Development Engineer (e-mail: praveg\_pa2503mth259@iitp.ac.in).}}
 \includegraphics[width=3in]{graphical_abstract_jsen.png}%
 \end{wrapfigure}%
 \begin{abstract}
-Deployed sensor networks change: stations are added, fail, or go offline, and forecasters built on a fixed adjacency matrix cannot forecast at a sensor added after training. We present OmniST, a forecaster with no dependence on the number of sensors, and ask when conformal intervals at a new sensor can be trusted. With neighbors drawn from the training network, a new sensor's error does not depend on other new sensors. Two guarantees then apply. A correction counted in calibration sensors, as in hierarchical conformal prediction, gives expected coverage of at least $1-\alpha$ at a randomly drawn new sensor, but calibrates on the window it evaluates. Adaptive conformal inference run per sensor gives coverage at forecast time for every individual sensor in the long run, with slack of order $1/T$ over $T$ windows. On five real networks (12 to 325 sensors) over repeated random sensor splits, the first held in every finite case at 1.1 to 1.6 times the pooled width with 11 to 89 calibration sensors. At forecast time the usual pooled recipe left the worst sensor covered only 0.53 to 0.81 of the time; per-sensor adaptive calibration raised it to 0.89 on both traffic networks, certified at 0.81 to 0.85 per sensor, at no larger median width, with 3\% of windows infinite. It is weak where histories are short: Delhi reaches 0.855. Sensors farthest from the network fared like the rest. A coordinate-free shared GRU matched OmniST's accuracy within about 2\%, and a coordinate-normalization defect in our earlier code is reported and fixed.
+Deployed sensor networks change: stations are added, fail, or go offline, and forecasters built on a fixed adjacency matrix cannot forecast at a sensor added after training. We present OmniST, a forecaster with no dependence on the number of sensors, and ask when conformal intervals at a new sensor can be trusted. With neighbors drawn from the training network, a new sensor's error does not depend on other new sensors. Two guarantees then apply. A correction counted in calibration sensors, as in hierarchical conformal prediction, gives expected coverage of at least $1-\alpha$ at a randomly drawn new sensor, but calibrates on the window it evaluates. Adaptive conformal inference run per sensor gives coverage at forecast time for every sensor in the long run, and over any block of windows, with slack of order $1/T$. Exact single-window or location-conditional coverage is impossible without assumptions. On five real networks (12 to 325 sensors) the first held in every finite case at 1.1 to 1.6 times the pooled width. At forecast time the usual pooled recipe left the worst sensor covered only 0.53 to 0.81 of the time; per-sensor adaptive calibration raised it to 0.89 on both traffic networks, certified at 0.81 to 0.85, at no larger median width. It is weak where histories are short: Delhi reaches 0.855. On 70 weather stations installed after training, every station was covered at least 0.88 (certified 0.66), although that forecaster is worse than persistence. A coordinate-free GRU matched OmniST's accuracy within about 2\%.
 \end{abstract}
 \begin{IEEEkeywords}
 Conformal prediction, inductive prediction, sensor failure, sensor networks, spatiotemporal forecasting, uncertainty quantification.
@@ -80,15 +80,17 @@ set of sensors.
 training-network neighbors. Theorem~\ref{thm:coverage} then gives finite-sample expected coverage at a randomly
 drawn new sensor, with a correction counted in calibration \emph{sensors}; it needs random assignment and errors
 from the evaluated window. Theorem~\ref{thm:aci} gives what the first cannot: coverage at forecast time for every
-individual sensor, including named, distant and non-randomly chosen ones, in the long run over that sensor's
-windows. Neither argument is new (hierarchical conformal prediction~\cite{lee2023hcp}, conformal risk
-control~\cite{crc2024} and adaptive conformal inference~\cite{gibbs2021aci}); the lemma is what makes them apply to
-a forecaster deployed on a changing network, and the lemma alone does not imply coverage, which the previous
-version of this work assumed.
+individual sensor, including named, distant and non-randomly chosen ones, in the long run and over any block of
+windows. Exact single-window or location-conditional coverage is impossible without assumptions
+(Section~\ref{sec:online-conformal}). Neither argument is new (hierarchical conformal
+prediction~\cite{lee2023hcp}, conformal risk control~\cite{crc2024}, adaptive conformal
+inference~\cite{gibbs2021aci}); the lemma makes them apply to a forecaster on a changing network, and the lemma
+alone does not imply coverage, as the previous version of this work assumed.
 \item \textbf{Measured scope and price of each guarantee on five real networks}, from models trained on disjoint
 sensors: where each holds, where it is vacuous, its width cost, and the worst individual sensor
 (Section~\ref{sec:results}). The usual pooled recipe averages near target but leaves the worst sensor at 0.53 to
-0.81 at forecast time; per-sensor ACI raises it to about 0.89 on the traffic networks at no larger median width.
+0.81 at forecast time; per-sensor ACI raises it to about 0.89 on the traffic networks at no larger median width. On 70 weather
+stations that were installed after training, every station was covered at least 0.88 (Section~\ref{sec:late}).
 \item \textbf{What the architecture contributes}, against like-for-like forecasting baselines, seasonal-naive
 forecasting and a coordinate-free shared per-sensor model.
 \end{enumerate}
@@ -222,11 +224,10 @@ hierarchical conformal prediction~\cite{lee2023hcp}.
 \textbf{What the theorem does and does not say.}
 \emph{(A1) Random assignment.} The probability is over which sensor plays the new one. It is a
 statement about a sensor drawn at random from $\mathcal{R}$, not about a named sensor, and not
-conditional on location. If $\mathcal{R}$ is itself a random sample of a larger population of
-sensors, the same bound holds over that population. A new sensor that is systematically different
+conditional on location.  A new sensor that is systematically different
 from the calibration sensors, for instance far outside the network, is outside the theorem;
 weighted conformal prediction~\cite{tibshirani2019covshift,barber2023nexcp} is the route there, and
-Section~\ref{sec:distance} measures how much distance matters on our data.
+Sections~\ref{sec:deployable} and \ref{sec:late} test far and late-installed sensors.
 \emph{(A2) Common window.} Calibration and test errors come from the same evaluation window. This is
 the setting in which the theorem holds, and it cannot be run at forecast time: when a forecast for
 window $t$ is issued, the calibration sensors' errors for window $t$ are not yet known. With
@@ -236,13 +237,11 @@ theorem says nothing; Theorem~\ref{thm:aci} (Section~\ref{sec:online-conformal})
 \emph{(A4) Own history.} Every sensor has its input window.
 The bound is on average coverage over the $U$ points of a sensor, not per time step and not per sensor.
 
-\textbf{Topology change.} Suppose a set $D\subset\mathcal{T}$ of reference sensors goes offline. By
-Lemma~\ref{lem:locality} only the sensors of $\mathcal{R}$ with a neighbor in $D$ change their score;
-the others keep theirs exactly. Recomputing the scores of the affected sensors against the reduced
-reference network and recalibrating gives Theorem~\ref{thm:coverage} for the reduced network with the
-same $\hat f$. The earlier version of this work claimed that no recalibration is needed in this case.
-That is true only for the cached scores of unaffected sensors, not for the validity of a threshold
-calibrated on a different network.
+\textbf{Topology change.} If a set $D\subset\mathcal{T}$ of reference sensors goes offline, by
+Lemma~\ref{lem:locality} only the sensors of $\mathcal{R}$ with a neighbor in $D$ change their score.
+Rescoring them against the reduced network and recalibrating gives Theorem~\ref{thm:coverage} for the reduced
+network with the same $\hat f$; the earlier claim that no recalibration is needed holds only for the cached
+scores of unaffected sensors.
 
 \subsection{A Guarantee at Forecast Time, for Every Sensor}
 \label{sec:online-conformal}
@@ -280,6 +279,22 @@ average over that sensor's own windows, with slack of order $1/(\gamma T)$, so i
 after enough windows, and some windows receive an infinite interval while $\alpha_t$ is low. An earlier
 draft of this work clipped $\alpha_t$ to $[0.005,0.995]$, which voids the bound; the results here use the
 unclipped update. $L$, $t_0=L$ and $\gamma\in\{0.1,0.5\}$ were fixed before the results were seen.
+\begin{corollary}[Blocks of windows]
+\label{cor:block}
+For every sensor $j$, every $k\ge1$ and every block of $k$ consecutive windows,
+$\big|\frac1k\sum_{t=s}^{s+k-1}e_t-\alpha\big|\le\frac{1+2\gamma}{\gamma k}$.
+\end{corollary}
+\begin{proof}
+Both $\alpha_s$ and $\alpha_{s+k}$ lie in $[-\gamma,1+\gamma]$, so $|\alpha_{s+k}-\alpha_s|\le1+2\gamma$, and
+$\alpha_{s+k}-\alpha_s=\gamma\sum_{t=s}^{s+k-1}(\alpha-e_t)$. \end{proof}
+\emph{Single windows and locations.} Coverage at one window, or conditional on the new sensor's location, cannot
+be guaranteed exactly by any distribution-free method: a method valid conditionally on a point must, for
+continuous data, return intervals of infinite expected length~\cite{vovk2012conditional,lei2014distribution,barber2021limits}.
+We therefore guarantee what is attainable: coverage per sensor, and hence per location, over any block of $k$
+windows, with certificate $1-\alpha-(1+2\gamma)/(\gamma k)$, which is informative only for long blocks.
+Theorem~\ref{thm:coverage} applied within groups of sensors (for example by distance from the network) gives
+group-conditional coverage when each group has at least $1/\alpha-1=9$ calibration sensors. Tracking local
+shifts more tightly is the aim of strongly adaptive variants~\cite{gibbs2024dtaci}, which we do not implement.
 
 %% ====================================================================
 \section{Data and Evaluation Protocol}
@@ -295,30 +310,28 @@ form the validation set; the test year is 2023 (365 days), with 60-day inputs an
 dataset~\cite{zhang2017beijingair} (2013--2017), aggregated to daily; 30-day inputs, 15-day horizon.
 \item \textbf{Western-US weather:} daily maximum temperature from 30 NOAA GHCN-Daily stations
 (2018--2022) with native coordinates; 30-day inputs, 15-day horizon.
-\item \textbf{Freeway traffic:} 5-minute speeds from the 228-sensor Caltrans PeMSD7-M
-benchmark~\cite{yu2018stgcn} and the 325-sensor PeMS-BAY benchmark~\cite{li2018dcrnn}; 48-step inputs,
-12-step horizon. Both release a distance adjacency, not coordinates, so positions are reconstructed by
+\item \textbf{Late-installed stations:} daily maximum temperature from 458 established and 70 late NOAA GHCN-Daily
+stations of the contiguous United States (training 2014--2018, evaluation 2023--2024), described in
+Section~\ref{sec:late}.
+\item \textbf{Freeway traffic:} speeds from the 228-sensor Caltrans PeMSD7-M
+benchmark~\cite{yu2018stgcn} (5-minute, weekdays) and the 325-sensor PeMS-BAY benchmark~\cite{li2018dcrnn}
+(subsampled to 30 minutes); 48-step inputs, 12-step horizon (1 hour on PeMSD7-M, 6 hours on PeMS-BAY). Both release a distance adjacency, not coordinates, so positions are reconstructed by
 classical multidimensional scaling. They are not physical coordinates.
 \end{itemize}
 Within each dataset the split is chronological: the last year (air quality, weather) or the last 20\%
 (traffic) is the evaluation period, preceded by a validation block of 180 days or 10\%.
-\textbf{Missing data.} Non-positive and implausible readings are treated as missing and filled by
-forward fill, then backward fill, then the station median. Forecast targets in the evaluation period
-may therefore contain imputed values, and no mask is used. Values are standardized with
-training-network statistics.
-
+\textbf{Missing data.} Non-positive and implausible readings are treated as missing and filled by forward fill,
+then backward fill, then the station median, so evaluation targets may contain imputed values; no mask is used.
+Values are standardized with training-network statistics.
 \subsection{Random Sensor Splits}
 \label{sec:splits}
 Each experiment is repeated over independent random splits of the sensors into a training network
-$\mathcal{T}$ and a held-out set $\mathcal{R}$, with a fresh model trained on
-$\mathcal{T}$ for each split. All sensors of $\mathcal{R}$ are scored by the trained model in the
-reference-restricted mode of Section~\ref{sec:architecture}, over the same evaluation windows. Windows
-advance by the horizon, so target windows do not overlap; $U$ is the number of (window, horizon-step)
-points per sensor. The unit of replication in every confidence interval below is the split, not the
-forecast. Calibration and test sensors are then drawn \emph{from $\mathcal{R}$ at random inside each
-split}, thousands of times, so that the expectation of Theorem~\ref{thm:coverage} is estimated directly
-and without retraining.
-
+$\mathcal{T}$ and a held-out set $\mathcal{R}$, with a fresh model trained on $\mathcal{T}$ for each split. All
+sensors of $\mathcal{R}$ are scored in the reference-restricted mode of Section~\ref{sec:architecture} over the same
+evaluation windows. Windows advance by the horizon, so targets do not overlap; $U$ is the number of (window,
+horizon-step) points per sensor. The unit of replication in every confidence interval is the split. Calibration and
+test sensors are drawn \emph{from $\mathcal{R}$ at random inside each split}, thousands of times, so the expectation
+of Theorem~\ref{thm:coverage} is estimated without retraining.
 Training/held-out sensors are 21/16 (Delhi), 6/6 (Beijing), 18/12 (weather), 168/60 (PeMSD7-M) and 235/90
 (PeMS-BAY), over 10 splits for the first three networks and 4 for the traffic networks; the supplement lists
 the windows, points per sensor and calibration sizes.
@@ -336,10 +349,9 @@ also inductive, since it has no sensor-specific parameters.
 \emph{window mean} (mean of the input window), both from the sensor's own history only.
 \item \textbf{Concurrent-observation interpolators (nowcasting references).} \emph{Nearest
 neighbor} and \emph{inverse-distance weighting} predict the sensor from the values that training-network
-sensors report \emph{during the target window}. A forecaster does not have these values at the
-forecast origin, so these methods solve an easier task and are included as a reference, not as a
-competitor. The previous version of this work compared OmniST with such interpolators, and with a
-kriging network that reconstructs concurrent signals, as if the tasks were the same.
+sensors report \emph{during the target window}, which a forecaster does not have at the forecast origin. They solve
+an easier task and are a reference, not a competitor; the previous version of this work compared OmniST with them,
+and with a kriging network, as if the tasks were the same.
 \end{itemize}
 
 \subsection{Calibration Rules and Metrics}
@@ -350,7 +362,7 @@ calibration sensors, in two settings. In the \emph{same-window} setting the cali
 of the window being evaluated; it is the setting of the theorem and a reference, not a deployable
 procedure. In the \emph{forecast-time} setting only errors of earlier windows, and the new sensor's own
 realized errors, may be used: static, expanding, rolling ($L=4$ windows for the daily networks, 24 for
-the 5-minute traffic networks) and per-sensor ACI ($\gamma\in\{0.1,0.5\}$), evaluated from window $L$ onward. In the
+the two traffic networks) and per-sensor ACI ($\gamma\in\{0.1,0.5\}$), evaluated from window $L$ onward. In the
 same-window setting coverage is averaged over random (new sensor, calibration set) draws; at forecast time each
 held-out sensor serves once as the new sensor with all others as calibration sensors. Coverage is the fraction of
 the new sensor's points inside the interval; width is $2q$. Where $q=\infty$ the
@@ -365,7 +377,7 @@ $t$-intervals over splits; differences between methods are paired within a split
 \subsection{Does the Sensor-Level Bound Hold? Same-Window Calibration}
 \label{sec:bound}
 
-This subsection is the setting of Theorem~\ref{thm:coverage}: the calibration sensors' errors are those of the window being evaluated. It is a reference for what the theorem delivers, not a deployable procedure; Section~\ref{sec:deployable} removes that advantage.
+This is the setting of Theorem~\ref{thm:coverage}: calibration errors come from the evaluated window. It is a reference, not a deployable procedure; Section~\ref{sec:deployable} removes that advantage.
 
 Table~\ref{tab:bound} compares the two calibration rules at the 90\% target. For each trained model
 we draw 4000 random (new sensor, calibration set) assignments from $\mathcal{R}$ (1500 for the two
@@ -400,8 +412,7 @@ PeMS-BAY   & 20 & 0.9448 & 40.8 & 0.8983 & 19.4 & 2.10 & --- \\
 (traffic); widths in the units of each dataset. $n$ is the number of calibration sensors. ``Draws
 $<0.80$'' is the share of random assignments, under the pooled rule at the largest $n$, whose new
 sensor was covered less than 0.80 of the time. With 6 held-out sensors (Beijing) the sensor-level rule
-is vacuous at the 90\% target; at the 80\% target and $n{=}5$ it gives coverage 0.960 at width 310
-against 0.801 at width 129 for the pooled rule.} \\
+is vacuous at the 90\% target.} \\
 \end{tabular}
 \end{table}
 
@@ -411,15 +422,10 @@ Three points follow. \emph{First}, the price is set by the number of calibration
 the number of calibration points: with 9 to 15 sensors the interval is 1.4 to 4.3 times wider than the
 pooled one, with 59 to 89 sensors it is 1.1 times wider. A network with a dozen held-out sensors cannot
 support a finite distribution-free 90\% interval at all. \emph{Second}, the pooled rule, which has no
-guarantee here, averages between 0.896 and 0.901 over random new sensors at every $n$ we tried. We read
-this as an empirical fact about these networks, not as a property we can promise: in the weather data
-it is 0.4 points under target, and the average hides the spread. For the same pooled rule, in 13\%
-(weather), 8\% (PeMS-BAY) and 5\% (PeMSD7-M) of random assignments the new sensor is covered less
-than 0.80 of the time, and the tenth percentile of the per-draw coverage is 0.78 to 0.88. Marginal
-coverage is a statement about the average new sensor. \emph{Third}, nothing in Theorem~\ref{thm:coverage}
-depends on OmniST: it applies to any forecaster whose error at a new sensor is a function of that
-sensor's data and the training network, including the baselines below.
-
+guarantee here, averages between 0.896 and 0.901 over random new sensors at every $n$ we tried. This is an empirical fact about these networks, not a promise (weather: 0.4 points under target), and the average hides the spread. In 13\% (weather), 8\% (PeMS-BAY) and 5\% (PeMSD7-M) of random
+assignments the new sensor is covered less than 0.80 of the time, and the tenth percentile of the per-draw
+coverage is 0.78 to 0.88. \emph{Third}, nothing in Theorem~\ref{thm:coverage} depends on OmniST: it applies to
+any forecaster whose error at a new sensor is a function of that sensor's data and the training network.
 \subsection{Calibration at Forecast Time, Sensor by Sensor}
 \label{sec:deployable}
 
@@ -460,31 +466,29 @@ latter is finite. With per-sensor ACI ($\gamma=0.1$) the worst sensor on the two
 (PeMSD7-M) and 0.887 (PeMS-BAY) against 0.706 and 0.581, and no sensor falls below 0.80 on any network except Delhi
 (1.9\% of cases). On the traffic networks Theorem~\ref{thm:aci} certifies 0.845 and 0.814 for every sensor, and
 0.885 and 0.876 with $\gamma=0.5$; on the daily networks, with 6 to 18 windows, its certificate is weak or vacuous
-and the protection seen there is empirical. \emph{Cost.} With $\gamma=0.1$ the median interval width is not larger
-than under rolling sensor-level calibration (15.9 against 19.4 on PeMSD7-M, 19.6 against 20.3 on PeMS-BAY, 23.2
-against 26.3 on weather, 105 against 112 on Delhi), but 2\% to 8\% of windows get an infinite interval, 40\% on the
+and the protection seen there is empirical.  \emph{Cost.} With $\gamma=0.1$ the median width is not larger
+than under rolling sensor-level calibration (15.9 against 19.4 on PeMSD7-M, 19.6 against 20.3 on PeMS-BAY), but 2\% to 8\% of windows get an infinite interval, 40\% on the
 6-sensor Beijing set; $\gamma=0.5$ tightens the certificate and raises that share to 13\% to 24\%. \emph{Delhi} remains
 the hard case: mean coverage 0.855 ($\gamma=0.1$) or 0.877 ($\gamma=0.5$) with six evaluation windows, and no
-procedure here certifies coverage there. \emph{Static and expanding} calibration (supplementary material) are no
-better than rolling; static falls to 0.870 on PeMS-BAY. The earlier version of this work reported that a rolling ACI
-layer raised late-year coverage on Delhi from 0.50 to 0.96; that result came from a different protocol, used a
-clipped update, and is withdrawn.
-
+procedure here certifies it. Static and expanding calibration are no better than rolling (supplement).
+The earlier claim of a rise in Delhi coverage from 0.50 to 0.96 used a different protocol and a clipped update, and is withdrawn.
 \emph{Non-random new sensors.} Assumption (A1) is the one a deployment breaks first. In each split we take, before
-looking at any error, the held-out sensor farthest from the training network. These sensors are 2.1 to 5.8 times
-farther than the average held-out sensor (2.4 to 11.8 median spacings). Their mean coverage is close to that of all
-sensors under every scheme, for example 0.904 and 0.897 on the two traffic networks with ACI ($\gamma=0.1$), and the
-worst of them is 0.822 (Delhi), 0.904 (weather), 0.898 (PeMSD7-M) and 0.892 (PeMS-BAY). Theorem~\ref{thm:aci}
-covers them without any assumption about how they were chosen.
+looking at any error, the held-out sensor farthest from the training network: 2.1 to 5.8 times farther than the
+average held-out sensor (2.4 to 11.8 median spacings). Their mean coverage is close to that of all sensors under
+every scheme, for example 0.904 and 0.897 on the two traffic networks with ACI ($\gamma=0.1$), and the worst of
+them is 0.822 (Delhi), 0.904 (weather), 0.898 (PeMSD7-M) and 0.892 (PeMS-BAY). Theorem~\ref{thm:aci} covers them
+without any assumption about how they were chosen.
+\emph{Blocks of windows and location groups.} Corollary~\ref{cor:block} held for every sensor case and block. The worst
+one-week block of any sensor is covered 0.880 ($\gamma=0.1$; certified 0.800) and 0.888 ($\gamma=0.5$; certified 0.867) on
+PeMSD7-M ($k=120$), and 0.839 (certified 0.471) and 0.860 (0.757) on PeMS-BAY ($k=28$). On the daily networks ($k=6$) the certificate is vacuous and the worst block is 0.78 (Delhi), 0.88 (Beijing) and 0.77 (weather). For location, the traffic sensors were split into thirds by distance from the network and
+Theorem~\ref{thm:coverage} applied within each third: coverage is 0.946 to 0.947 (PeMSD7-M, 19 calibration sensors per
+third) and 0.930 (PeMS-BAY, 29), against 0.905 to 0.919 when calibrating on all held-out sensors, at 37\% to 59\% larger
+median width. 
 
-\subsection{What the Earlier Protocol Would Have Reported}
-\label{sec:legacy}
-
-The previous version of this work calibrated on the residuals of the training sensors and measured coverage on 3
-to 5 fixed held-out sensors, the same in every seed, and reported 0.914 to 0.928. Repeating it with sensors split
-at random into training, calibration and test sets over many splits (experiment C1, supplementary material) gives
-0.876 to 0.906, with three of five networks below 0.90 and a worst individual sensor of 0.40 to 0.86. The earlier
-numbers were 1.3 to 3.9 points high.
+\emph{The earlier protocol.} The previous version calibrated on training-sensor residuals and measured coverage on 3
+to 5 fixed held-out sensors (0.914 to 0.928). Random sensor splits (experiment C1, supplementary material) give
+0.876 to 0.906, three of five networks below 0.90 and a worst sensor of 0.40 to 0.86: the earlier numbers were 1.3 to 3.9
+points high.
 
 \subsection{Accuracy at New Sensors and What Each Component Contributes}
 \label{sec:ablation}
@@ -509,9 +513,8 @@ OmniST, earlier code   & 28.0 & 49.6 & 5.72 & 9.76 & 5.17 \\
 IDW, concurrent$^\dagger$ & 18.9 & 8.4 & 3.22 & 7.63 & 5.66 \\
 \bottomrule
 \multicolumn{6}{p{0.93\columnwidth}}{\footnotesize Units of each dataset; D7-M is PeMSD7-M, BAY is
-PeMS-BAY. ``Normalized'': coordinates normalized from the training network. ``Earlier code'' uses the
-coordinate constants of the submitted version (see text). $^\dagger$Inverse-distance weighting of the
-training sensors' \emph{concurrent} values: a nowcasting reference that a forecaster cannot use.} \\
+PeMS-BAY. ``Earlier code'': coordinate constants of the submitted version (see text). $^\dagger$Inverse-distance
+weighting of training sensors' \emph{concurrent} values: a nowcasting reference, not a forecast.} \\
 \end{tabular}
 \end{table}
 
@@ -522,11 +525,9 @@ statements.
 air-quality networks (Delhi $-9.5$ [$-10.8$, $-8.1$]; Beijing $-3.9$ [$-4.3$, $-3.5$]) and on PeMS-BAY
 ($-0.65$ [$-0.76$, $-0.55$]), and indistinguishable from it on weather ($+0.10$ [$-0.23$, $0.43$]) and
 PeMSD7-M ($+0.09$ [$-0.19$, $0.37$]). On those two networks a forecaster that repeats the last value
-is as accurate. The comparison with the concurrent-observation interpolators is not one of equals:
-they see what happens at the neighboring sensors during the target window and they are better
-on Delhi, Beijing and weather. We therefore withdraw the earlier statement that OmniST improves on
-interpolation by 12\% and on a kriging network by 21\%, which compared a forecast with a
-reconstruction.
+is as accurate. Interpolators that see the neighbors during the target window are better on Delhi,
+Beijing and weather; that is not a comparison of equals, and we withdraw the earlier claim that OmniST improves on
+interpolation by 12\% and on a kriging network by 21\%, which compared a forecast with a reconstruction.
 
 \emph{(ii) The coordinate-free control.} A GRU shared across sensors, with neither coordinates nor
 attention, is within about 2\% of OmniST on every dataset: OmniST minus control is $+0.57$ [$-0.20$, $1.33$]
@@ -534,21 +535,15 @@ on Delhi, $+0.42$ [$-0.02$, $0.87$] on Beijing, $-0.067$ [$-0.122$, $-0.012$] on
 [$-0.43$, $0.32$] on PeMSD7-M and $+0.04$ [$-0.03$, $0.11$] on PeMS-BAY. Removing only the attention
 changes the error by at most 0.11 on the datasets where we ran it. \textbf{The capability to forecast
 at a new sensor comes from sharing parameters across sensors, not from the coordinates or the
-attention.} In the data we have, the coordinates and the attention do not improve accuracy at new
-sensors; they make spatial context available, and the architecture keeps the locality property
-that Lemma~\ref{lem:locality} needs, but we cannot claim a benefit from them.
+attention.} In our data the coordinates and the attention do not improve accuracy at new sensors; they
+keep the locality property that Lemma~\ref{lem:locality} needs, but we cannot claim a benefit from them.
 
-\emph{(iii) A defect in the earlier code.} The coordinate embedding in the submitted version centered
-and scaled coordinates with constants chosen for Delhi (latitude 28.6, longitude 77.1, scales 0.2 and
-0.3). For any other region the input to the embedding MLP lay tens to hundreds of units outside its
-intended range, and the control experiment exposed it: with those constants OmniST was 0.7 to 6.0
-error units worse than the coordinate-free control on every dataset but Delhi (PeMSD7-M: 9.76 against
-3.71). Normalizing coordinates with the mean and standard deviation of the \emph{training} network,
-fixed before any held-out sensor is seen, removes the gap (PeMSD7-M: 3.66; weather: 5.72 to 4.75;
-PeMS-BAY: 5.17 to 4.49). Delhi, whose range the constants were chosen for, is slightly worse after the
-change ($+0.48$ [$0.24$, $0.73$]). Every coverage and accuracy result in this paper uses the
-normalized version; Table~\ref{tab:accuracy} keeps the earlier values for the record.
-
+\emph{(iii) A defect in the earlier code.} The coordinate embedding in the submitted version centered and scaled
+coordinates with constants chosen for Delhi, so for any other region its input lay far outside the intended range.
+The control exposed it: OmniST was 0.7 to 6.0 error units worse than the coordinate-free control on every dataset
+but Delhi (PeMSD7-M: 9.76 against 3.71). Normalizing with the mean and standard deviation of the \emph{training}
+network removes the gap (PeMSD7-M: 3.66; weather: 5.72 to 4.75; PeMS-BAY: 5.17 to 4.49); Delhi is slightly worse
+($+0.48$ [$0.24$, $0.73$]). All results here use the normalized version.
 \emph{(iv) Intervals are as wide as the forecaster is inaccurate.} The width of every interval follows
 the error of its forecaster: persistence gives intervals about 1.5 times wider than OmniST on Delhi
 and PeMS-BAY, and nearest-neighbor interpolation gives intervals about 2.9 times wider on PeMSD7-M, at
@@ -556,67 +551,61 @@ the same coverage.
 Calibration, not the forecaster, is what makes the coverage hold.
 
 \emph{(v) Against seasonal-naive.} A seasonal-naive forecast repeats the sensor's own value one period earlier
-(a week for the daily networks, the previous day for the traffic networks), restricted for all methods to the
-windows that have one. It is no better than persistence on Delhi and clearly worse than OmniST on Delhi
-($-9.5$ [$-10.7$, $-8.3$], 10 of 10 splits) and Beijing ($-15.2$ [$-15.9$, $-14.5$]); it ties OmniST on weather
-($-0.24$ [$-0.56$, $0.07$]) and is worse on PeMSD7-M ($-0.74$ [$-1.16$, $-0.32$]). On PeMS-BAY it is clearly better
-than both learned models: MAE 3.56 against 4.68 for OmniST (OmniST minus seasonal-naive $+1.12$ [$0.95$, $1.30$],
-0 of 4 splits), and its 90\% pooled interval is 15.6 wide against 20.5, so OmniST's intervals are 31\% wider.
-\emph{(vi) Removing reference sensors} (30\% or 50\% of the training network at inference, rescoring and
-recalibrating on the survivors) changes MAE by at most 0.6\% and coverage by about 0.3 points at most
-(supplementary material). This is expected: the model reads only its $k$ nearest neighbors and, as the controls
-show, gets little from them.
-
-\subsection{Distance From the Training Network}
-\label{sec:distance}
-
-Assumption (A1) is least safe for a sensor far from the network. Holding out a contiguous region and relating
-per-sensor coverage to the distance from the nearest training sensor, in units of the median spacing
-(experiment C2), a distance effect appears only in the sparse weather network: coverage falls by 0.0136 per extra
-spacing [$-0.0221$, $-0.0063$]. In the other four networks the within-sensor slopes lie within 0.004 of zero. A
-total-variation bound on the shift between sensors' score distributions would be vacuous at our sample sizes
-(experiment C3: median 0.11 on Delhi and 0.19 on weather, against a noise floor of 0.13). Weather is also where the
-pooled rule most often misses badly for an individual sensor, but with one sparse network of 30 sensors this is a
-pattern to test, not a result.
-
+(a week for the daily networks, the previous day for the traffic networks: 288 five-minute steps on PeMSD7-M, 48
+half-hour steps on PeMS-BAY), restricted for all methods to the windows that have one. OmniST is clearly better than it on
+Delhi ($-9.5$ [$-10.7$, $-8.3$], 10 of 10 splits) and Beijing ($-15.2$ [$-15.9$, $-14.5$]), ties on weather
+($-0.24$ [$-0.56$, $0.07$]) and is better on PeMSD7-M ($-0.74$ [$-1.16$, $-0.32$]).
+On PeMS-BAY seasonal-naive is clearly better than both learned models: MAE 3.35 against 4.49 for OmniST (OmniST
+minus seasonal-naive $+1.13$ [$1.00$, $1.27$], 0 of 4 splits), and its 90\% pooled interval is 14.3 wide against
+19.4, so OmniST's intervals are 35\% wider.
+\emph{(vi) Removing reference sensors} (30\% or 50\% of the training network at inference) changes MAE by at most
+0.6\% and coverage by about 0.3 points at most (supplementary material), as expected: the model reads only its $k$
+nearest neighbors and gets little from them.
+\subsection{Sensors Installed Late}
+\label{sec:late}
+Held-out sensors so far were random members of networks that existed throughout. Stations that really arrived later
+give a natural test. We use NOAA GHCN-Daily maximum temperature over the contiguous United States: 458 established
+stations reporting through 2014--2024 and 70 stations whose first TMAX value came between 2019 and 2022 (selection
+rules fixed before download). The model is trained on established stations in 2014--2018, before any late station
+existed, and evaluated on 2023--2024 (30-day inputs, 15-day horizon, 42 forecast-time windows after $L=4$). In each of 4
+splits, 60 random established stations are held out of training together with all 70 late stations. Late stations are
+scored with their 8 nearest training stations and calibrated on the 60 held-out established stations; those 60 also
+ serve as controls, each calibrated on the other 59.
+Over 280 late-station cases, per-sensor ACI covers 0.907 ($\gamma=0.1$) and
+0.903 ($\gamma=0.5$) on average, the worst late station is covered 0.881 and 0.894, none falls below 0.80, and the
+bound of Theorem~\ref{thm:aci} held for every station (certified 0.662 and 0.833). Controls behave the same (0.909 and
+0.903, worst 0.876 and 0.891). Without ACI, the rolling sensor-level rule averages 0.909 but the worst late station is
+covered 0.665 (0.646 for the pooled rule), and 2.5\% (sensor-level) and 4.3\% (pooled) of late stations fall below 0.80
+(supplementary material). Late stations are no harder than controls (MAE 5.83 against 5.74~\textdegree C) and lie slightly nearer the training network (0.85 against 1.08 median spacings): this is not a far-sensor test.  The
+forecaster is weak here (persistence has MAE 4.83) and the 90\% intervals are about 22~\textdegree C wide: coverage
+does not depend on this, but usefulness does.
 %% ====================================================================
 \section{Related Work}
 \label{sec:related}
 
 \textbf{Dynamic and inductive forecasting.} Fixed-topology STGCNs~\cite{yu2018stgcn} couple weights to a sensor
 count. Inductive kriging~\cite{ignnk2020} reconstructs the signal at unobserved locations from the concurrent
-observations of other sensors, a different task from forecasting at a new sensor from its own history; our earlier
-comparison with it is withdrawn. STFO~\cite{stfo2026} and cold-start forecasting at unseen
-sensors~\cite{coldstart_unseen2026} target point prediction under growing networks. Our control
-(Section~\ref{sec:ablation}) indicates that what these methods share, no sensor-specific parameters, is what makes
-a model applicable at a new sensor. Inductive kriging protocols can leak spatial information through model
-selection~\cite{yang2026leakagefree}; our splits keep held-out sensors out of fitting and early stopping.
+observations of other sensors, a different task from forecasting at a new sensor from its own history. STFO~\cite{stfo2026} and cold-start forecasting at unseen
+sensors~\cite{coldstart_unseen2026} target point prediction under growing networks. Our control (Section~\ref{sec:ablation}) suggests that what they share, no sensor-specific parameters, is what makes a model applicable at a new sensor.  Kriging protocols can leak spatial information~\cite{yang2026leakagefree}; ours keep held-out sensors out of fitting.
 
 \textbf{Conformal prediction on graphs, space and time.} Split
 conformal prediction~\cite{vovk2005algorithmic,angelopoulos2023conformal} has been extended to correlated time
-series~\cite{corel2025}, graph time series~\cite{conformalgraphts2026,incontextresidual2026}, dynamic and temporal
-GNNs~\cite{validcpdyngnn2024,nonexchcptgnn2025}, stream networks~\cite{staci2025} and online Gaussian processes on
-graphs~\cite{conformalgp_online2025}, mostly with a fixed node set. Zargarbashi and
+series~\cite{corel2025}, graph time series~\cite{conformalgraphts2026,incontextresidual2026}, dynamic GNNs~\cite{validcpdyngnn2024,nonexchcptgnn2025}, stream networks~\cite{staci2025} and online graph Gaussian processes~\cite{conformalgp_online2025}, mostly with a fixed node set. Zargarbashi and
 Bojchevski~\cite{conformalinductivegnn2024} analyze the inductive case in which new nodes shift the scores of
-message-passing GNNs. The locality of our architecture (Lemma~\ref{lem:locality}) removes that interference by
-construction, but removing interference is not the same as establishing exchangeability.
+message-passing GNNs. Locality (Lemma~\ref{lem:locality}) removes that interference by construction, which is not
+the same as establishing exchangeability.
 
 The closest statistics treat grouped data. Hierarchical conformal prediction
 (HCP)~\cite{lee2023hcp} gives distribution-free sets for a new observation from a previously unseen group. With the
 same number of points per sensor, HCP's weighted quantile coincides exactly with the sensor-level rule of
-Corollary~\ref{cor:pooled} (checked numerically in the released tests), so the rule itself is not new. What
-differs is the statement: HCP states coverage for one observation of the new group and uses exchangeability within
-the group to do so, whereas Theorem~\ref{thm:coverage} bounds the average over a sensor's points and needs only
-exchangeability of sensors. Generalized HCP~\cite{mallick2026ghcp} also uses the first observations of the new
-group, the situation of a sensor that has been running for a few windows; we have not evaluated it. Sequential
-whitening~\cite{sen2026whitening} gives exact coverage under a correct working covariance, with a PM2.5
-application, and model-free valid spatial prediction~\cite{validspatial2020} uses the random-location design that
-our condition (A1) borrows. Non-exchangeable and covariate-shift
-extensions~\cite{barber2023nexcp,tibshirani2019covshift} are the tools for new sensors that differ systematically
-from the calibration sensors. What this paper adds is not a conformal method. It is the sensor-as-group view
-applied to forecasting at new sensors, a locality property that makes sensor-level scores well defined, a
-measurement of the guarantee's price, and a measurement of what is lost when calibration must respect forecast
-time.
+Corollary~\ref{cor:pooled} (checked numerically in the released tests), so the rule itself is not new. What differs is the statement: HCP covers one observation of the new group and uses exchangeability within it, whereas Theorem~\ref{thm:coverage} bounds the average over a sensor's points and needs only exchangeability of sensors. Generalized HCP~\cite{mallick2026ghcp} also uses the first observations of the new
+group; we have not evaluated it. Sequential
+whitening~\cite{sen2026whitening} gives exact coverage under a correct working covariance, and model-free valid
+spatial prediction~\cite{validspatial2020} uses the random-location design that our (A1) borrows. Non-exchangeable and
+covariate-shift extensions~\cite{barber2023nexcp,tibshirani2019covshift} are the tools for new sensors that differ
+systematically from the calibration sensors. What this paper adds is not a conformal method: it is the
+sensor-as-group view applied to forecasting at new sensors, a locality property that makes sensor-level scores well
+defined, and measurements of the price of each guarantee and of what is lost at forecast time.
 
 %% ====================================================================
 \section{Limitations}
@@ -624,22 +613,24 @@ time.
 \begin{itemize}
 \item \textbf{Each guarantee has a narrow scope.} Theorem~\ref{thm:coverage} is an average over which sensor is
 new and needs errors from the evaluated window, so it cannot be run at forecast time. Theorem~\ref{thm:aci} holds
-for each sensor at forecast time but only for its long-run average: it certifies 0.81 to 0.89 per sensor on the
-traffic networks, is weak or vacuous with the 6 to 18 windows of the daily networks, and says nothing about a
-single window. Neither gives coverage conditional on location.
-\item \textbf{Delhi is not covered at forecast time}: 0.855 to 0.877 with six evaluation windows, and no
-procedure here certifies it.
+for each sensor at forecast time but only in the long run: it certifies 0.81 to 0.89 per sensor on the traffic
+networks and is weak or vacuous with the 6 to 18 windows of the daily networks. Neither gives coverage for a single
+window or at a point location, which no distribution-free method can; block coverage is certified only for long
+blocks (worst week 0.84 to 0.89 on traffic), and group-conditional coverage by distance costs 37\% to 59\% more width
+and needs at least 9 calibration sensors per group.
+
 \item \textbf{Infinite intervals.} Per-sensor ACI issues an infinite interval in 2\% to 8\% of windows
-($\gamma=0.1$), 40\% on the 6-sensor Beijing set, and more with $\gamma=0.5$.
-\item \textbf{Few calibration sensors are expensive}: a finite same-window 90\% interval needs at least 9.
+($\gamma=0.1$), 40\% on the 6-sensor Beijing set, and more with $\gamma=0.5$. Delhi (six evaluation windows) stays at 0.855 to 0.877. A finite same-window 90\% interval needs at least 9 calibration sensors.
 \item \textbf{The learned forecaster is not the best simple one everywhere.} Seasonal-naive forecasting
-beats OmniST on PeMS-BAY (MAE 3.56 against 4.68, intervals 24\% narrower), persistence ties it on weather
-and PeMSD7-M, and coordinates and attention add no measured accuracy. The training budget was fixed.
+beats OmniST on PeMS-BAY (MAE 3.35 against 4.49, intervals 26\% narrower), persistence ties it on weather
+and PeMSD7-M, and coordinates and attention add no measured accuracy. 
+\item \textbf{The late-installation test is one network}: contiguous-US daily maximum temperature, 42 forecast-time
+windows, late stations slightly nearer the training network than the controls, and a forecaster worse than
+persistence (MAE 5.83 against 4.83~\textdegree C) whose intervals are about 22~\textdegree C wide. It shows coverage
+holds at stations that arrived late, not that the forecasts are useful.
 \item \textbf{Not evaluated}: Generalized HCP, HCP's second-moment variant, sequential whitening, and other
 inductive forecasters under the forecasting task.
-\item \textbf{Data and history.} Targets include imputed values; traffic positions are reconstructed from
-distance matrices; architecture settings come from earlier Delhi development, so (A3) holds only up to that
-history; a sensor with no history of its own is not handled; the largest network has 325 sensors.
+\item \textbf{Data and history.} Targets include imputed values; traffic positions are reconstructed from distance matrices; architecture settings come from earlier Delhi development, so (A3) holds only up to that history; a sensor with no history is not handled.
 \end{itemize}
 
 %% ====================================================================
@@ -652,23 +643,16 @@ apply to a forecaster on a changing network, with different scope. Counted in ca
 calibration covers a randomly drawn new sensor in expectation (Theorem~\ref{thm:coverage}); on five networks it
 held in every finite case, at a width cost that falls from several-fold to about 10\% as calibration sensors
 grow from 10 to 90, but it calibrates on the evaluated window. Run per sensor, adaptive conformal inference covers
-every sensor at forecast time in the long run (Theorem~\ref{thm:aci}); it lifted the worst sensor from 0.58 to
-0.89 on PeMS-BAY, certified 0.81 to 0.85 per sensor on the traffic networks, and covered the farthest sensors as
-well as the rest, at the price of occasional infinite intervals. The usual pooled recipe, by contrast, averages
-near target and leaves individual sensors badly covered. Coordinates and attention, in our implementation, add no
-measured accuracy over a shared per-sensor model. Open problems are a finite-sample guarantee at forecast time
-for short histories, coverage conditional on a sensor's location, and a comparison with Generalized HCP and
-other inductive forecasters.
-
+every sensor at forecast time in the long run and over blocks of windows (Theorem~\ref{thm:aci}); it lifted the
+worst sensor from 0.58 to 0.89 on PeMS-BAY, certified 0.81 to 0.85 per sensor on the traffic networks, and covered the
+farthest sensors and 70 stations installed after training as well as the rest, at the price of occasional infinite
+intervals.   Open problems are a finite-sample guarantee at forecast time for short histories, tighter local coverage, and a comparison with Generalized HCP.
 \section*{Data and Code Availability}
 All datasets are public: Delhi CPCB PM$_{2.5}$ from the E-STGCN repository~\cite{panja2026estgcn};
-Beijing Multi-Site Air Quality from the UCI repository~\cite{zhang2017beijingair}; western-US daily
-temperature from NOAA GHCN-Daily; PeMSD7-M traffic from~\cite{yu2018stgcn}; and PeMS-BAY traffic
-from~\cite{li2018dcrnn}. The implementation, including the model, loaders for every dataset, each
-experiment script (the per-sensor score collection, the same-window and forecast-time coverage
-analyses, and the random-split evaluation), the unit tests for Lemma~\ref{lem:locality}, a pinned environment, and an index mapping
-each reported number to its result file, is available at \url{\repourl}.
-
+Beijing Multi-Site Air Quality from the UCI repository~\cite{zhang2017beijingair}; daily temperature from NOAA
+GHCN-Daily; PeMSD7-M traffic from~\cite{yu2018stgcn}; and PeMS-BAY traffic from~\cite{li2018dcrnn}. The
+implementation, loaders, every experiment script, the unit tests for Lemma~\ref{lem:locality}, a pinned environment and
+an index mapping each reported number to its result file are at \url{\repourl}.
 \section*{Acknowledgment}
 The author declares no competing interests; the work was carried out
 independently of the author's employment at Sopra Banking Software India, which neither funded nor

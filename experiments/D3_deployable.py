@@ -16,7 +16,7 @@ Both the sensor-level rule (Theorem 1's correction counted in sensors) and the p
 for every scheme, on the same random (new sensor, calibration set) draws.
 
 Fixed in advance (not tuned on these results): alpha = 0.1, gamma = 0.1, L = 4 windows for the daily
-networks (Delhi, Beijing, weather) and 24 windows (one day) for the 5-minute traffic networks, t0 = L.
+networks (Delhi, Beijing, weather) and 24 windows for the two traffic networks (one day on PeMSD7-M, six days on PeMS-BAY), t0 = L.
 
 No theorem covers these schemes: errors of different windows are not exchangeable. They are measured.
 Run: python3 experiments/D3_deployable.py     Out: results/exp_D3_deployable.json

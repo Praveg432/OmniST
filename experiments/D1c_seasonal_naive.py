@@ -3,8 +3,9 @@
 
 A seasonal-naive forecast repeats the sensor's own value one period earlier:
   daily networks (Delhi, Beijing, weather): period 7 days, i.e. the last observed week repeated;
-  5-minute traffic (PeMSD7-M, PeMS-BAY):    period 288 steps, i.e. the same time of the previous day.
-For traffic the previous day lies outside the 48-step input window, so it is read from the sensor's own series
+  traffic: the same time of the previous day, 288 steps on PeMSD7-M (5-minute cadence) and 48 steps on PeMS-BAY
+  (30-minute cadence after the loader's subsampling).
+For PeMSD7-M the previous day lies outside the 48-step input window, so it is read from the sensor's own series
 before the forecast origin (never from the forecast period). Windows that start before one full day of data
 exists have no seasonal-naive forecast; they are stored as NaN and every comparison in the paper restricts all
 methods to the windows that have one (`first_valid_window`).
@@ -25,8 +26,10 @@ from D1_sensor_level_scores import DOMAINS, make_loader  # noqa: E402
 from src.data import DataConfig  # noqa: E402
 
 RES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results")
+# One day for the traffic networks: PeMSD7-M is at 5-minute cadence (288 steps); PeMS-BAY is loaded at 30-minute
+# cadence (src/data_pemsbay.py subsamples every 6th 5-minute step), so one day is 48 steps.
 PERIOD = {"delhi_air_quality": 7, "beijing_air_quality": 7, "ghcn_weather": 7,
-          "pemsd7_traffic": 288, "pemsbay_traffic": 288}
+          "pemsd7_traffic": 288, "pemsbay_traffic": 48}
 
 
 def seasonal_errors(ds, held, period, sd):
