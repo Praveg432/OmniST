@@ -1,0 +1,871 @@
+{
+  "experiment": "C2 contiguous-region holdout: coverage versus distance to training sensors",
+  "domain": "beijing_air_quality",
+  "n_stations": 12,
+  "network_spacing": 6.9785,
+  "distance_unit": "km",
+  "n_calibration_stations": 3,
+  "n_test_stations": 3,
+  "splits": [
+    {
+      "split": 0,
+      "seed_station": 2,
+      "n_train": 6,
+      "test_stations": [
+        1,
+        2,
+        10
+      ],
+      "cal_stations": [
+        3,
+        6,
+        7
+      ],
+      "test_d1": [
+        4.2629,
+        5.3909,
+        1.121
+      ],
+      "test_d3": [
+        4.6337,
+        5.759,
+        1.3925
+      ],
+      "cal_d1": [
+        0.6959,
+        3.2196,
+        1.0461
+      ],
+      "station_coverage": [
+        0.9333,
+        0.9364,
+        0.9061
+      ],
+      "station_mae": [
+        48.3045,
+        48.8089,
+        49.5627
+      ],
+      "coverage": 0.9253,
+      "width": 170.49,
+      "seconds": 10.9
+    },
+    {
+      "split": 1,
+      "seed_station": 0,
+      "n_train": 6,
+      "test_stations": [
+        0,
+        3,
+        7
+      ],
+      "cal_stations": [
+        2,
+        4,
+        11
+      ],
+      "test_d1": [
+        1.3444,
+        0.6959,
+        1.0461
+      ],
+      "test_d3": [
+        1.8981,
+        1.7947,
+        2.2376
+      ],
+      "cal_d1": [
+        1.2013,
+        1.076,
+        0.683
+      ],
+      "station_coverage": [
+        0.8909,
+        0.8697,
+        0.8788
+      ],
+      "station_mae": [
+        49.8092,
+        52.6624,
+        51.9156
+      ],
+      "coverage": 0.8798,
+      "width": 168.06,
+      "seconds": 6.4
+    },
+    {
+      "split": 2,
+      "seed_station": 10,
+      "n_train": 6,
+      "test_stations": [
+        0,
+        4,
+        10
+      ],
+      "cal_stations": [
+        2,
+        8,
+        11
+      ],
+      "test_d1": [
+        0.879,
+        0.9516,
+        1.7123
+      ],
+      "test_d3": [
+        1.1579,
+        1.1738,
+        1.9078
+      ],
+      "cal_d1": [
+        1.2013,
+        3.2196,
+        0.683
+      ],
+      "station_coverage": [
+        0.8788,
+        0.8788,
+        0.897
+      ],
+      "station_mae": [
+        50.0254,
+        51.0462,
+        48.9566
+      ],
+      "coverage": 0.8848,
+      "width": 165.41,
+      "seconds": 5.3
+    },
+    {
+      "split": 3,
+      "seed_station": 9,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        9,
+        11
+      ],
+      "cal_stations": [
+        2,
+        8,
+        10
+      ],
+      "test_d1": [
+        0.5517,
+        1.0461,
+        0.828
+      ],
+      "test_d3": [
+        0.7941,
+        1.2189,
+        1.4007
+      ],
+      "cal_d1": [
+        1.2013,
+        3.2196,
+        1.121
+      ],
+      "station_coverage": [
+        0.8636,
+        0.8879,
+        0.8697
+      ],
+      "station_mae": [
+        52.5248,
+        49.6574,
+        51.723
+      ],
+      "coverage": 0.8737,
+      "width": 154.941,
+      "seconds": 5.7
+    },
+    {
+      "split": 4,
+      "seed_station": 8,
+      "n_train": 6,
+      "test_stations": [
+        6,
+        7,
+        8
+      ],
+      "cal_stations": [
+        2,
+        3,
+        4
+      ],
+      "test_d1": [
+        5.1677,
+        1.0461,
+        3.9045
+      ],
+      "test_d3": [
+        6.0675,
+        1.2449,
+        4.6022
+      ],
+      "cal_d1": [
+        1.2013,
+        0.6959,
+        0.828
+      ],
+      "station_coverage": [
+        0.9333,
+        0.8788,
+        0.903
+      ],
+      "station_mae": [
+        45.7885,
+        51.704,
+        48.6674
+      ],
+      "coverage": 0.9051,
+      "width": 174.859,
+      "seconds": 5.1
+    },
+    {
+      "split": 5,
+      "seed_station": 3,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        7,
+        9
+      ],
+      "cal_stations": [
+        5,
+        6,
+        11
+      ],
+      "test_d1": [
+        0.879,
+        1.0601,
+        1.076
+      ],
+      "test_d3": [
+        1.2221,
+        1.6071,
+        1.5954
+      ],
+      "cal_d1": [
+        1.7123,
+        3.2196,
+        0.828
+      ],
+      "station_coverage": [
+        0.8758,
+        0.8818,
+        0.897
+      ],
+      "station_mae": [
+        51.6857,
+        50.9187,
+        48.7589
+      ],
+      "coverage": 0.8848,
+      "width": 177.192,
+      "seconds": 10.2
+    },
+    {
+      "split": 6,
+      "seed_station": 1,
+      "n_train": 6,
+      "test_stations": [
+        1,
+        2,
+        10
+      ],
+      "cal_stations": [
+        7,
+        8,
+        11
+      ],
+      "test_d1": [
+        4.2629,
+        5.0106,
+        1.121
+      ],
+      "test_d3": [
+        4.6337,
+        5.455,
+        1.3925
+      ],
+      "cal_d1": [
+        0.5517,
+        3.2196,
+        0.683
+      ],
+      "station_coverage": [
+        0.9455,
+        0.9424,
+        0.9152
+      ],
+      "station_mae": [
+        47.7862,
+        48.2553,
+        49.2152
+      ],
+      "coverage": 0.9343,
+      "width": 190.881,
+      "seconds": 9.5
+    },
+    {
+      "split": 7,
+      "seed_station": 4,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        4,
+        11
+      ],
+      "cal_stations": [
+        0,
+        6,
+        7
+      ],
+      "test_d1": [
+        0.6959,
+        1.076,
+        0.683
+      ],
+      "test_d3": [
+        1.7947,
+        1.3677,
+        1.5735
+      ],
+      "cal_d1": [
+        1.3444,
+        3.2196,
+        1.0461
+      ],
+      "station_coverage": [
+        0.8697,
+        0.8848,
+        0.8848
+      ],
+      "station_mae": [
+        52.6951,
+        50.9029,
+        51.5486
+      ],
+      "coverage": 0.8798,
+      "width": 179.973,
+      "seconds": 5.0
+    },
+    {
+      "split": 8,
+      "seed_station": 8,
+      "n_train": 6,
+      "test_stations": [
+        6,
+        7,
+        8
+      ],
+      "cal_stations": [
+        9,
+        10,
+        11
+      ],
+      "test_d1": [
+        5.0106,
+        0.5517,
+        3.9045
+      ],
+      "test_d3": [
+        5.4566,
+        1.0352,
+        4.3913
+      ],
+      "cal_d1": [
+        0.6959,
+        1.121,
+        0.828
+      ],
+      "station_coverage": [
+        0.9455,
+        0.8879,
+        0.9091
+      ],
+      "station_mae": [
+        45.5921,
+        51.3523,
+        48.5188
+      ],
+      "coverage": 0.9141,
+      "width": 185.801,
+      "seconds": 10.5
+    },
+    {
+      "split": 9,
+      "seed_station": 10,
+      "n_train": 6,
+      "test_stations": [
+        0,
+        4,
+        10
+      ],
+      "cal_stations": [
+        2,
+        5,
+        7
+      ],
+      "test_d1": [
+        0.879,
+        0.828,
+        1.8356
+      ],
+      "test_d3": [
+        1.3864,
+        0.9518,
+        1.9735
+      ],
+      "cal_d1": [
+        1.2013,
+        2.1284,
+        0.5517
+      ],
+      "station_coverage": [
+        0.8909,
+        0.8879,
+        0.9
+      ],
+      "station_mae": [
+        49.3337,
+        50.2943,
+        48.3271
+      ],
+      "coverage": 0.8929,
+      "width": 170.93,
+      "seconds": 6.8
+    },
+    {
+      "split": 10,
+      "seed_station": 9,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        9,
+        11
+      ],
+      "cal_stations": [
+        1,
+        6,
+        7
+      ],
+      "test_d1": [
+        0.879,
+        1.076,
+        0.828
+      ],
+      "test_d3": [
+        1.2221,
+        1.5954,
+        1.4943
+      ],
+      "cal_d1": [
+        1.2013,
+        3.2196,
+        1.0601
+      ],
+      "station_coverage": [
+        0.8606,
+        0.8818,
+        0.8697
+      ],
+      "station_mae": [
+        52.4511,
+        49.8282,
+        51.7268
+      ],
+      "coverage": 0.8707,
+      "width": 153.077,
+      "seconds": 6.8
+    },
+    {
+      "split": 11,
+      "seed_station": 8,
+      "n_train": 6,
+      "test_stations": [
+        6,
+        7,
+        8
+      ],
+      "cal_stations": [
+        2,
+        4,
+        5
+      ],
+      "test_d1": [
+        5.1677,
+        0.5517,
+        3.9045
+      ],
+      "test_d3": [
+        6.0675,
+        0.886,
+        4.3604
+      ],
+      "cal_d1": [
+        1.2013,
+        0.828,
+        1.7123
+      ],
+      "station_coverage": [
+        0.9273,
+        0.8727,
+        0.897
+      ],
+      "station_mae": [
+        47.5884,
+        52.7187,
+        49.7469
+      ],
+      "coverage": 0.899,
+      "width": 163.175,
+      "seconds": 5.0
+    },
+    {
+      "split": 12,
+      "seed_station": 10,
+      "n_train": 6,
+      "test_stations": [
+        0,
+        4,
+        10
+      ],
+      "cal_stations": [
+        1,
+        2,
+        5
+      ],
+      "test_d1": [
+        0.879,
+        0.828,
+        1.8356
+      ],
+      "test_d3": [
+        1.1579,
+        0.9518,
+        1.9735
+      ],
+      "cal_d1": [
+        5.1248,
+        5.0106,
+        2.1284
+      ],
+      "station_coverage": [
+        0.8788,
+        0.8667,
+        0.8879
+      ],
+      "station_mae": [
+        49.5552,
+        50.5711,
+        48.5364
+      ],
+      "coverage": 0.8778,
+      "width": 152.019,
+      "seconds": 6.2
+    },
+    {
+      "split": 13,
+      "seed_station": 5,
+      "n_train": 6,
+      "test_stations": [
+        4,
+        5,
+        10
+      ],
+      "cal_stations": [
+        1,
+        2,
+        7
+      ],
+      "test_d1": [
+        0.828,
+        2.1284,
+        1.3444
+      ],
+      "test_d3": [
+        0.9518,
+        2.5669,
+        1.6964
+      ],
+      "cal_d1": [
+        4.2629,
+        5.0106,
+        0.5517
+      ],
+      "station_coverage": [
+        0.8758,
+        0.8758,
+        0.897
+      ],
+      "station_mae": [
+        50.8909,
+        50.4563,
+        49.068
+      ],
+      "coverage": 0.8828,
+      "width": 155.989,
+      "seconds": 9.9
+    },
+    {
+      "split": 14,
+      "seed_station": 4,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        4,
+        11
+      ],
+      "cal_stations": [
+        7,
+        8,
+        10
+      ],
+      "test_d1": [
+        0.6959,
+        1.076,
+        0.683
+      ],
+      "test_d3": [
+        1.4759,
+        1.3613,
+        1.519
+      ],
+      "cal_d1": [
+        1.0461,
+        3.2196,
+        1.3444
+      ],
+      "station_coverage": [
+        0.8758,
+        0.8909,
+        0.8879
+      ],
+      "station_mae": [
+        52.0625,
+        50.1896,
+        51.1409
+      ],
+      "coverage": 0.8848,
+      "width": 184.198,
+      "seconds": 5.0
+    },
+    {
+      "split": 15,
+      "seed_station": 9,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        9,
+        11
+      ],
+      "cal_stations": [
+        2,
+        4,
+        8
+      ],
+      "test_d1": [
+        0.5517,
+        1.0461,
+        1.6285
+      ],
+      "test_d3": [
+        1.0888,
+        1.5854,
+        1.7612
+      ],
+      "cal_d1": [
+        1.2013,
+        1.1018,
+        3.2196
+      ],
+      "station_coverage": [
+        0.8697,
+        0.8879,
+        0.8848
+      ],
+      "station_mae": [
+        53.4312,
+        51.1561,
+        52.8748
+      ],
+      "coverage": 0.8808,
+      "width": 165.817,
+      "seconds": 5.1
+    },
+    {
+      "split": 16,
+      "seed_station": 2,
+      "n_train": 6,
+      "test_stations": [
+        1,
+        2,
+        10
+      ],
+      "cal_stations": [
+        5,
+        7,
+        8
+      ],
+      "test_d1": [
+        4.2629,
+        5.0106,
+        1.121
+      ],
+      "test_d3": [
+        4.7218,
+        5.455,
+        1.4336
+      ],
+      "cal_d1": [
+        1.9061,
+        0.5517,
+        3.2196
+      ],
+      "station_coverage": [
+        0.9455,
+        0.9424,
+        0.9152
+      ],
+      "station_mae": [
+        47.8036,
+        48.3002,
+        49.0977
+      ],
+      "coverage": 0.9343,
+      "width": 186.831,
+      "seconds": 8.4
+    },
+    {
+      "split": 17,
+      "seed_station": 5,
+      "n_train": 6,
+      "test_stations": [
+        4,
+        5,
+        10
+      ],
+      "cal_stations": [
+        0,
+        6,
+        8
+      ],
+      "test_d1": [
+        0.828,
+        2.1284,
+        1.8356
+      ],
+      "test_d3": [
+        0.9518,
+        2.5793,
+        1.9735
+      ],
+      "cal_d1": [
+        0.879,
+        5.0106,
+        3.8428
+      ],
+      "station_coverage": [
+        0.8788,
+        0.8818,
+        0.897
+      ],
+      "station_mae": [
+        50.2906,
+        49.9125,
+        48.2277
+      ],
+      "coverage": 0.8859,
+      "width": 161.227,
+      "seconds": 8.8
+    },
+    {
+      "split": 18,
+      "seed_station": 3,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        7,
+        9
+      ],
+      "cal_stations": [
+        1,
+        4,
+        11
+      ],
+      "test_d1": [
+        0.879,
+        1.0601,
+        1.5345
+      ],
+      "test_d3": [
+        1.8558,
+        2.2422,
+        2.1557
+      ],
+      "cal_d1": [
+        1.2013,
+        1.1018,
+        1.7457
+      ],
+      "station_coverage": [
+        0.8727,
+        0.8727,
+        0.897
+      ],
+      "station_mae": [
+        52.0778,
+        51.3381,
+        49.2737
+      ],
+      "coverage": 0.8808,
+      "width": 170.103,
+      "seconds": 7.7
+    },
+    {
+      "split": 19,
+      "seed_station": 3,
+      "n_train": 6,
+      "test_stations": [
+        3,
+        7,
+        9
+      ],
+      "cal_stations": [
+        1,
+        4,
+        11
+      ],
+      "test_d1": [
+        0.879,
+        1.0601,
+        1.5345
+      ],
+      "test_d3": [
+        1.8558,
+        2.2422,
+        2.1557
+      ],
+      "cal_d1": [
+        1.2013,
+        1.1018,
+        1.7457
+      ],
+      "station_coverage": [
+        0.8758,
+        0.8788,
+        0.897
+      ],
+      "station_mae": [
+        52.0506,
+        51.1886,
+        49.0787
+      ],
+      "coverage": 0.8838,
+      "width": 173.005,
+      "seconds": 8.7
+    }
+  ]
+}

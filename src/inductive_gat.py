@@ -96,7 +96,7 @@ class InductiveGAT(nn.Module):
         self.norm = nn.LayerNorm(d_model)
         self.dropout = nn.Dropout(dropout)
 
-    def _scalable_knn(self, coords: torch.Tensor, k: int):
+    def _scalable_knn(self, coords: torch.Tensor, k: int, ref_mask: torch.Tensor = None):
         """k-NN indices via a per-batch cKDTree on an equirectangular projection of (lat, lon).
         Returns (knn_idx (B,N,k) long, knn_dists (B,N,k) Haversine km on the selected pairs).
 
@@ -112,9 +112,17 @@ class InductiveGAT(nn.Module):
             c = coords[b].detach().cpu().numpy()                      # (N, 2) lat, lon degrees
             lat0 = np.radians(c[:, 0].mean())
             xy = np.stack([np.radians(c[:, 1]) * np.cos(lat0), np.radians(c[:, 0])], axis=1)  # equirect
-            tree = cKDTree(xy)
-            _, nbr = tree.query(xy, k=k + 1)                          # +1 because self is included
-            nbr = np.asarray(nbr)
+            if ref_mask is None:
+                tree = cKDTree(xy)
+                _, nbr = tree.query(xy, k=k + 1)                      # +1 because self is included
+                nbr = np.asarray(nbr)
+            else:
+                # Reference-restricted search: the tree holds ONLY reference nodes, every node queries
+                # it, and indices are mapped back to the global node numbering.
+                ref_ids = np.flatnonzero(ref_mask[b].detach().cpu().numpy())
+                tree = cKDTree(xy[ref_ids])
+                _, local = tree.query(xy, k=k + 1)
+                nbr = ref_ids[np.asarray(local)]
             if nbr.ndim == 1:
                 nbr = nbr[:, None]
             # drop self (first column where present), keep k
@@ -137,17 +145,27 @@ class InductiveGAT(nn.Module):
         knn_dists = 6371.0 * 2 * torch.atan2(torch.sqrt(a.clamp(min=1e-8)), torch.sqrt((1 - a).clamp(min=1e-8)))
         return idx_out, knn_dists
 
-    def forward(self, tokens: torch.Tensor, coords: torch.Tensor) -> torch.Tensor:
+    def forward(self, tokens: torch.Tensor, coords: torch.Tensor,
+                ref_mask: torch.Tensor = None) -> torch.Tensor:
         """
         Args:
             tokens: (B, N, d_model) — node features
             coords: (B, N, 2) — lat, lon in degrees
+            ref_mask: optional (B, N) bool. If given, a node's neighbours are drawn ONLY from nodes
+                with ref_mask=True (the reference network). Nodes outside the reference network then
+                never influence anyone, and each is scored exactly as if it were the only sensor
+                added to the reference network (Lemma 1 in the paper). None = original behaviour.
 
         Returns:
             output: (B, N, d_model) — spatially contextualized tokens
         """
         B, N, D = tokens.shape
-        k = min(self.k, N - 1)  # Can't have more neighbors than nodes-1
+        if ref_mask is None:
+            k = min(self.k, N - 1)  # Can't have more neighbors than nodes-1
+        else:
+            k = min(self.k, int(ref_mask[0].sum().item()) - 1)
+            if k < 1:
+                raise ValueError("ref_mask must mark at least two reference nodes")
 
         # --- neighbour selection: (B,N,k) indices + (B,N,k) distances ---
         if self.knn_mode == "exact" or N <= 64:
@@ -155,9 +173,11 @@ class InductiveGAT(nn.Module):
             dists = haversine_distance_batch(coords)  # (B, N, N)
             eye_mask = torch.eye(N, device=dists.device, dtype=torch.bool).unsqueeze(0)
             dists_masked = dists.masked_fill(eye_mask, float('inf'))
+            if ref_mask is not None:
+                dists_masked = dists_masked.masked_fill(~ref_mask.unsqueeze(1), float('inf'))
             knn_dists, knn_idx = dists_masked.topk(k, dim=-1, largest=False)  # (B, N, k)
         else:
-            knn_idx, knn_dists = self._scalable_knn(coords, k)               # (B, N, k)
+            knn_idx, knn_dists = self._scalable_knn(coords, k, ref_mask)     # (B, N, k)
 
         # Project Q, K, V
         Q = self.q_proj(tokens).view(B, N, self.n_heads, self.d_head)     # (B, N, H, dh)

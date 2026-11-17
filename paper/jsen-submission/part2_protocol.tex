@@ -1,0 +1,74 @@
+%% ====================================================================
+\section{Data and Evaluation Protocol}
+\label{sec:experiments}
+
+\subsection{Datasets}
+We use five networks from three physical domains, all public.
+\begin{itemize}
+\item \textbf{Delhi air quality:} daily PM$_{2.5}$ from 37 CPCB stations (2019--2023), from the
+E-STGCN repository~\cite{panja2026estgcn}. Training uses 2019--2022 except the last 180 days, which
+form the validation set; the test year is 2023 (365 days), with 60-day inputs and a 30-day horizon.
+\item \textbf{Beijing air quality:} hourly PM$_{2.5}$ from the 12-station UCI Multi-Site
+dataset~\cite{zhang2017beijingair} (2013--2017), aggregated to daily; 30-day inputs, 15-day horizon.
+\item \textbf{Western-US weather:} daily maximum temperature from 30 NOAA GHCN-Daily stations
+(2018--2022) with native coordinates; 30-day inputs, 15-day horizon.
+\item \textbf{Freeway traffic:} 5-minute speeds from the 228-sensor Caltrans PeMSD7-M
+benchmark~\cite{yu2018stgcn} and the 325-sensor PeMS-BAY benchmark~\cite{li2018dcrnn}; 48-step inputs,
+12-step horizon. Both release a distance adjacency, not coordinates, so positions are reconstructed by
+classical multidimensional scaling. They are not physical coordinates.
+\end{itemize}
+Within each dataset the split is chronological: the last year (air quality, weather) or the last 20\%
+(traffic) is the evaluation period, preceded by a validation block of 180 days or 10\%.
+\textbf{Missing data.} Non-positive and implausible readings are treated as missing and filled by
+forward fill, then backward fill, then the station median. Forecast targets in the evaluation period
+may therefore contain imputed values, and no mask is used. Values are standardized with
+training-network statistics.
+
+\subsection{Random Sensor Splits}
+\label{sec:splits}
+Each experiment is repeated over independent random splits of the sensors into a training network
+$\mathcal{T}$ and a held-out set $\mathcal{R}$, with a fresh model trained on
+$\mathcal{T}$ for each split. All sensors of $\mathcal{R}$ are scored by the trained model in the
+reference-restricted mode of Section~\ref{sec:architecture}, over the same evaluation windows. Windows
+advance by the horizon, so target windows do not overlap; $U$ is the number of (window, horizon-step)
+points per sensor. The unit of replication in every confidence interval below is the split, not the
+forecast. Calibration and test sensors are then drawn \emph{from $\mathcal{R}$ at random inside each
+split}, thousands of times, so that the expectation of Theorem~\ref{thm:coverage} is estimated directly
+and without retraining.
+
+Training/held-out sensors are 21/16 (Delhi), 6/6 (Beijing), 18/12 (weather), 168/60 (PeMSD7-M) and 235/90
+(PeMS-BAY), over 10 splits for the first three networks and 4 for the traffic networks; the supplement lists
+the windows, points per sensor and calibration sizes.
+
+\subsection{Methods Compared}
+All methods are evaluated at the sensors of $\mathcal{R}$ on identical windows, with identical
+calibration. We separate three kinds of method, because they use different information.
+\begin{itemize}
+\item \textbf{Trained forecasters that use the sensor's own history and its training-network
+neighbors.} \emph{OmniST} (coordinates, neighbor attention, GRU); \emph{No-attention}
+(coordinates and GRU); and \emph{Coordinate-free} (a GRU shared across sensors, with neither
+coordinates nor attention). The last is the control that shows what the spatial components add: it is
+also inductive, since it has no sensor-specific parameters.
+\item \textbf{Forecasters with no training.} \emph{Persistence} (last observed value) and
+\emph{window mean} (mean of the input window), both from the sensor's own history only.
+\item \textbf{Concurrent-observation interpolators (nowcasting references).} \emph{Nearest
+neighbor} and \emph{inverse-distance weighting} predict the sensor from the values that training-network
+sensors report \emph{during the target window}. A forecaster does not have these values at the
+forecast origin, so these methods solve an easier task and are included as a reference, not as a
+competitor. The previous version of this work compared OmniST with such interpolators, and with a
+kriging network that reconstructs concurrent signals, as if the tasks were the same.
+\end{itemize}
+
+\subsection{Calibration Rules and Metrics}
+Intervals are symmetric, $\hat y\pm q$. We compare the \emph{sensor-level} rule of
+Theorem~\ref{thm:coverage} (Corollary~\ref{cor:pooled}) with the \emph{pooled} rule, the usual
+split-conformal quantile with the $(nU+1)$ correction. Both are computed from the errors of $n$
+calibration sensors, in two settings. In the \emph{same-window} setting the calibration errors are those
+of the window being evaluated; it is the setting of the theorem and a reference, not a deployable
+procedure. In the \emph{forecast-time} setting only errors of earlier windows, and the new sensor's own
+realized errors, may be used: static, expanding, rolling ($L=4$ windows for the daily networks, 24 for
+the 5-minute traffic networks) and ACI ($\gamma=0.1$), evaluated from window $L$ onward. Coverage is the fraction of the new sensor's points inside the interval,
+averaged over random (new sensor, calibration set) draws; width is $2q$. Where $q=\infty$ the
+interval is vacuous: coverage is 1 and the width is reported as infinite and excluded from width means.
+Point accuracy is the mean absolute error over the sensors of $\mathcal{R}$. All intervals are
+$t$-intervals over splits; differences between methods are paired within a split.

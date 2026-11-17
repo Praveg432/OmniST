@@ -1,0 +1,247 @@
+%% ====================================================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Does the Sensor-Level Bound Hold? Same-Window Calibration}
+\label{sec:bound}
+
+This subsection is the setting of Theorem~\ref{thm:coverage}: the calibration sensors' errors are those of the window being evaluated. It is a reference for what the theorem delivers, not a deployable procedure; Section~\ref{sec:deployable} removes that advantage.
+
+Table~\ref{tab:bound} compares the two calibration rules at the 90\% target. For each trained model
+we draw 4000 random (new sensor, calibration set) assignments from $\mathcal{R}$ (1500 for the two
+traffic networks) and average the new sensor's coverage; the table gives the mean over splits.
+Where Theorem~\ref{thm:coverage} gives a finite interval, its average coverage is at or above 0.90 in
+every case, from 0.911 (PeMS-BAY, $n{=}89$) to 0.9996 (Delhi, $n{=}9$). The same holds at the 80\%
+target (0.810 to 0.888 with at least 9 calibration sensors; the full set is in the released analysis
+file). This is what the theorem predicts, and it is conservative: the guarantee costs width.
+
+\begin{table}[htbp]
+\caption{Coverage and Width at the 90\% Target, Sensor-Level Rule Versus Pooled Rule}
+\label{tab:bound}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrcccccc}
+\toprule
+ & & \multicolumn{2}{c}{\textbf{Sensor-level}} & \multicolumn{2}{c}{\textbf{Pooled}} & \textbf{Width} & \textbf{Draws} \\
+\textbf{Dataset} & $n$ & Cov. & Width & Cov. & Width & \textbf{ratio} & \textbf{$<0.80$} \\
+\midrule
+Delhi AQ   &  9 & 0.9996 & 491 & 0.8998 & 127.6 & 3.85 & --- \\
+           & 15 & 0.9597 & 204 & 0.8997 & 127.6 & 1.60 & 0\% \\
+Beijing AQ &  5 & vacuous & $\infty$ & 0.9003 & 179.0 & --- & 0\% \\
+Weather    &  9 & 0.9996 & 36.8 & 0.8960 & 20.3 & 1.82 & --- \\
+           & 11 & 0.9795 & 27.8 & 0.8965 & 20.3 & 1.37 & 13\% \\
+PeMSD7-M   & 20 & 0.9443 & 27.3 & 0.8987 & 17.6 & 1.55 & --- \\
+           & 59 & 0.9155 & 20.1 & 0.9003 & 17.6 & 1.14 & 5\% \\
+PeMS-BAY   & 20 & 0.9448 & 40.8 & 0.8983 & 19.4 & 2.10 & --- \\
+           & 89 & 0.9110 & 21.3 & 0.9010 & 19.4 & 1.10 & 8\% \\
+\bottomrule
+\multicolumn{8}{p{0.93\columnwidth}}{\footnotesize Means over 10 splits (Delhi, Beijing, weather) or 4
+(traffic); widths in the units of each dataset. $n$ is the number of calibration sensors. ``Draws
+$<0.80$'' is the share of random assignments, under the pooled rule at the largest $n$, whose new
+sensor was covered less than 0.80 of the time. With 6 held-out sensors (Beijing) the sensor-level rule
+is vacuous at the 90\% target; at the 80\% target and $n{=}5$ it gives coverage 0.960 at width 310
+against 0.801 at width 129 for the pooled rule.} \\
+\end{tabular}
+\end{table}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.72\textwidth]{fig_sensor_level.png}
+\caption{Mean coverage as the number of calibration sensors grows, at the 90\% target (dotted line),
+same-window calibration. The sensor-level rule stays above target and its price (Table~\ref{tab:bound}) falls as
+$n$ grows; the pooled rule sits on the target on average.}
+\label{fig:sensorlevel}
+\end{figure*}
+
+Three points follow. \emph{First}, the price is set by the number of calibration sensors and not by
+the number of calibration points: with 9 to 15 sensors the interval is 1.4 to 4.3 times wider than the
+pooled one, with 59 to 89 sensors it is 1.1 times wider. A network with a dozen held-out sensors cannot
+support a finite distribution-free 90\% interval at all. \emph{Second}, the pooled rule, which has no
+guarantee here, averages between 0.896 and 0.901 over random new sensors at every $n$ we tried. We read
+this as an empirical fact about these networks, not as a property we can promise: in the weather data
+it is 0.4 points under target, and the average hides the spread. For the same pooled rule, in 13\%
+(weather), 8\% (PeMS-BAY) and 5\% (PeMSD7-M) of random assignments the new sensor is covered less
+than 0.80 of the time, and the tenth percentile of the per-draw coverage is 0.78 to 0.88. Marginal
+coverage is a statement about the average new sensor. \emph{Third}, nothing in Theorem~\ref{thm:coverage}
+depends on OmniST: it applies to any forecaster whose error at a new sensor is a function of that
+sensor's data and the training network, including the baselines below.
+
+\subsection{Calibration at Forecast Time}
+\label{sec:deployable}
+
+Table~\ref{tab:deployable} repeats the evaluation with the threshold for each window formed only from
+errors of earlier windows (Section~\ref{sec:online-conformal}), at the largest calibration size of each
+network and the 90\% target. The same random (new sensor, calibration set) draws are used for every scheme.
+
+\begin{table*}[!t]
+\caption{Coverage at Forecast Time (Target 0.90). Static, Expanding, Rolling and ACI Calibration, Sensor-Level and Pooled Rules, Largest $n$}
+\label{tab:deployable}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrlcccccc}
+\toprule
+ & & & \multicolumn{4}{c}{\textbf{Mean coverage}} & \multicolumn{2}{c}{\textbf{Share of draws $<0.80$}} \\
+\textbf{Dataset} & $n$ & \textbf{Rule} & Static & Expanding & Rolling & ACI & Rolling & ACI \\
+\midrule
+Delhi AQ   & 15 & Sensor-level & 0.848 & 0.863 & 0.853 & 0.855 & 0.10 & 0.02 \\
+           &    & Pooled       & 0.800 & 0.795 & 0.785 & 0.790 & 0.55 & 0.53 \\
+Weather    & 11 & Sensor-level & 0.948 & 0.970 & 0.971 & 0.947 & 0.02 & 0.00 \\
+           &    & Pooled       & 0.854 & 0.882 & 0.889 & 0.863 & 0.13 & 0.19 \\
+PeMSD7-M   & 59 & Sensor-level & 0.914 & 0.914 & 0.913 & 0.900 & 0.05 & 0.00 \\
+           &    & Pooled       & 0.900 & 0.899 & 0.897 & 0.883 & 0.07 & 0.00 \\
+PeMS-BAY   & 89 & Sensor-level & 0.870 & 0.890 & 0.899 & 0.899 & 0.04 & 0.00 \\
+           &    & Pooled       & 0.854 & 0.877 & 0.889 & 0.887 & 0.12 & 0.00 \\
+\bottomrule
+\multicolumn{9}{p{0.9\textwidth}}{\footnotesize Means over splits (10 for Delhi and weather, 4 for traffic) of
+the new sensor's coverage averaged over the evaluated windows. Evaluation starts at window $L$: 6 windows for
+Delhi, 18 for weather, 183 for PeMSD7-M and 116 for PeMS-BAY. Rolling uses $L=4$ windows (daily networks) or 24
+(traffic); ACI uses $\gamma=0.1$. No theorem covers these schemes.} \\
+\end{tabular}
+\end{table*}
+
+Four statements follow. \emph{First}, the same-window result is an upper bound on what the theorem-backed
+procedure delivers at forecast time. With static calibration the sensor-level rule falls to 0.870 on
+PeMS-BAY ($n{=}89$) and 0.848 on Delhi. \emph{Second}, rolling recalibration recovers the target on PeMS-BAY
+(0.899) and keeps weather (0.971) and PeMSD7-M (0.913) above it, but not on Delhi, where no scheme exceeds
+0.863. Delhi has six evaluation windows of 30 days and a strong seasonal cycle, and we do not claim the other
+networks are free of drift. \emph{Third}, the pooled rule, which was on target in the same-window setting,
+under-covers on Delhi, weather and PeMS-BAY under every scheme (0.785 to 0.889), and on PeMSD7-M it is within
+0.003 of the target except under ACI (0.883). \emph{Fourth}, ACI removes the tail of badly covered sensors: the
+share of random new sensors covered below 0.80 under the sensor-level rule falls from 10\%, 2\%, 5\% and 4\%
+(rolling) to 2\%, 0\%, 0\% and 0\%. It does so by changing the width: relative to rolling, ACI intervals are 7\%
+narrower on Delhi, 15\% on weather and 3\% on PeMSD7-M, and 31\% wider on PeMS-BAY (28.8 against 21.9). The
+earlier version of this work reported that a rolling ACI layer raised late-year coverage on Delhi from 0.50 to
+0.96. That result came from a different protocol and does not reproduce here; we withdraw it.
+
+\subsection{What the Earlier Protocol Would Have Reported}
+\label{sec:legacy}
+
+The previous version of this work calibrated on the residuals of the training sensors and measured
+coverage on 3 to 5 fixed held-out sensors, the same in every seed. It reported 0.914 to 0.928.
+Table~\ref{tab:legacy} repeats the evaluation with sensors split at random into training,
+calibration and test sets, over many splits (experiment C1, released with the code), once with disjoint
+calibration sensors and once, on the same trained models, with training-sensor calibration. Mean
+coverage is 0.876 to 0.906; three of five estimates lie below 0.90, and the earlier numbers were 1.3 to
+3.9 points higher than the random-split means. On the same trained models, calibrating on training
+sensors and calibrating on disjoint sensors differ by at most 0.018 in average coverage, in either
+direction. The concern about exchangeability therefore did not turn into a large average error on
+these data, but it remained unsupported until the sensor-level argument above.
+
+\begin{table}[htbp]
+\caption{Coverage Over Random Disjoint Sensor Splits (Target 0.90, Pooled Rule)}
+\label{tab:legacy}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrccc}
+\toprule
+ & & \textbf{Disjoint cal.} & \textbf{Train-sensor} & \textbf{Worst} \\
+\textbf{Dataset} & \textbf{Splits} & \textbf{(95\% interval)} & \textbf{cal.} & \textbf{sensor} \\
+\midrule
+Delhi AQ   & 20 & 0.893 [0.884, 0.901] & 0.901 & 0.777 \\
+Beijing AQ & 20 & 0.903 [0.895, 0.912] & 0.902 & 0.861 \\
+Weather    & 20 & 0.906 [0.881, 0.931] & 0.888 & 0.654 \\
+PeMSD7-M   &  6 & 0.876 [0.843, 0.909] & 0.890 & 0.519 \\
+PeMS-BAY   &  6 & 0.892 [0.872, 0.913] & 0.887 & 0.402 \\
+\bottomrule
+\multicolumn{5}{p{0.93\columnwidth}}{\footnotesize ``Worst sensor'' is the lowest per-sensor
+coverage over all test sensors and splits, under disjoint calibration.} \\
+\end{tabular}
+\end{table}
+
+\subsection{Accuracy at New Sensors and What Each Component Contributes}
+\label{sec:ablation}
+
+\begin{table}[htbp]
+\caption{MAE at Held-Out Sensors, Mean Over Splits (95\% Interval)}
+\label{tab:accuracy}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Method} & \textbf{Delhi} & \textbf{Beijing} & \textbf{Weather} & \textbf{D7-M} & \textbf{BAY} \\
+\midrule
+OmniST (normalized)    & 28.5 & 48.8 & 4.75 & 3.66 & 4.49 \\
+No attention           & 28.6 & 48.8 & 4.76 & ---  & ---  \\
+Coordinate-free GRU    & 28.0 & 48.4 & 4.82 & 3.71 & 4.45 \\
+Persistence            & 38.0 & 52.7 & 4.65 & 3.57 & 5.14 \\
+Window mean            & 47.2 & 51.3 & 4.58 & 7.44 & 5.41 \\
+OmniST, earlier code   & 28.0 & 49.6 & 5.72 & 9.76 & 5.17 \\
+\midrule
+IDW, concurrent$^\dagger$ & 18.9 & 8.4 & 3.22 & 7.63 & 5.66 \\
+\bottomrule
+\multicolumn{6}{p{0.93\columnwidth}}{\footnotesize Units of each dataset; D7-M is PeMSD7-M, BAY is
+PeMS-BAY. ``Normalized'': coordinates normalized from the training network. ``Earlier code'' uses the
+coordinate constants of the submitted version (see text). $^\dagger$Inverse-distance weighting of the
+training sensors' \emph{concurrent} values: a nowcasting reference that a forecaster cannot use.} \\
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:accuracy} and the paired differences (95\% intervals over splits) lead to four
+statements.
+
+\emph{(i) Against no-training forecasters.} OmniST is clearly better than persistence on the
+air-quality networks (Delhi $-9.5$ [$-10.8$, $-8.1$]; Beijing $-3.9$ [$-4.3$, $-3.5$]) and on PeMS-BAY
+($-0.65$ [$-0.76$, $-0.55$]), and indistinguishable from it on weather ($+0.10$ [$-0.23$, $0.43$]) and
+PeMSD7-M ($+0.09$ [$-0.19$, $0.37$]). On those two networks a forecaster that repeats the last value
+is as accurate. The comparison with the concurrent-observation interpolators is not one of equals:
+they see what happens at the neighboring sensors during the target window and they are better
+on Delhi, Beijing and weather. We therefore withdraw the earlier statement that OmniST improves on
+interpolation by 12\% and on a kriging network by 21\%, which compared a forecast with a
+reconstruction.
+
+\emph{(ii) The coordinate-free control.} A GRU shared across sensors, with neither coordinates nor
+attention, is within about 2\% of OmniST on every dataset: OmniST minus control is $+0.57$ [$-0.20$, $1.33$]
+on Delhi, $+0.42$ [$-0.02$, $0.87$] on Beijing, $-0.067$ [$-0.122$, $-0.012$] on weather, $-0.056$
+[$-0.43$, $0.32$] on PeMSD7-M and $+0.04$ [$-0.03$, $0.11$] on PeMS-BAY. Removing only the attention
+changes the error by at most 0.11 on the datasets where we ran it. \textbf{The capability to forecast
+at a new sensor comes from sharing parameters across sensors, not from the coordinates or the
+attention.} In the data we have, the coordinates and the attention do not improve accuracy at new
+sensors; they make spatial context available, and the architecture keeps the locality property
+that Lemma~\ref{lem:locality} needs, but we cannot claim a benefit from them.
+
+\emph{(iii) A defect in the earlier code.} The coordinate embedding in the submitted version centered
+and scaled coordinates with constants chosen for Delhi (latitude 28.6, longitude 77.1, scales 0.2 and
+0.3). For any other region the input to the embedding MLP lay tens to hundreds of units outside its
+intended range, and the control experiment exposed it: with those constants OmniST was 0.7 to 6.0
+error units worse than the coordinate-free control on every dataset but Delhi (PeMSD7-M: 9.76 against
+3.71). Normalizing coordinates with the mean and standard deviation of the \emph{training} network,
+fixed before any held-out sensor is seen, removes the gap (PeMSD7-M: 3.66; weather: 5.72 to 4.75;
+PeMS-BAY: 5.17 to 4.49). Delhi, whose range the constants were chosen for, is slightly worse after the
+change ($+0.48$ [$0.24$, $0.73$]). Every coverage and accuracy result in this paper uses the
+normalized version; Table~\ref{tab:accuracy} keeps the earlier values for the record.
+
+\emph{(iv) Intervals are as wide as the forecaster is inaccurate.} The width of every interval follows
+the error of its forecaster: persistence gives intervals about 1.5 times wider than OmniST on Delhi
+and PeMS-BAY, and nearest-neighbor interpolation gives intervals about 2.9 times wider on PeMSD7-M, at
+the same coverage.
+Calibration, not the forecaster, is what makes the coverage hold.
+
+\emph{(v) Against seasonal-naive.} A seasonal-naive forecast repeats the sensor's own value one period earlier
+(a week for the daily networks, the previous day for the traffic networks), restricted for all methods to the
+windows that have one. It is no better than persistence on Delhi and clearly worse than OmniST on Delhi
+($-9.5$ [$-10.7$, $-8.3$], 10 of 10 splits) and Beijing ($-15.2$ [$-15.9$, $-14.5$]); it ties OmniST on weather
+($-0.24$ [$-0.56$, $0.07$]) and is worse on PeMSD7-M ($-0.74$ [$-1.16$, $-0.32$]). On PeMS-BAY it is clearly better
+than both learned models: MAE 3.56 against 4.68 for OmniST (OmniST minus seasonal-naive $+1.12$ [$0.95$, $1.30$],
+0 of 4 splits), and its 90\% pooled interval is 15.6 wide against 20.5, so OmniST's intervals are 31\% wider.
+\emph{(vi) Removing reference sensors} (30\% or 50\% of the training network at inference, rescoring and
+recalibrating on the survivors) changes MAE by at most 0.6\% and coverage by about 0.3 points at most
+(supplementary material). This is expected: the model reads only its $k$ nearest neighbors and, as the controls
+show, gets little from them.
+
+\subsection{Distance From the Training Network}
+\label{sec:distance}
+
+Assumption (A1) is least safe for a sensor far from the network. Holding out a contiguous region and relating
+per-sensor coverage to the distance from the nearest training sensor, in units of the median spacing
+(experiment C2), a distance effect appears only in the sparse weather network: coverage falls by 0.0136 per extra
+spacing [$-0.0221$, $-0.0063$]. In the other four networks the within-sensor slopes lie within 0.004 of zero. A
+total-variation bound on the shift between sensors' score distributions would be vacuous at our sample sizes
+(experiment C3: median 0.11 on Delhi and 0.19 on weather, against a noise floor of 0.13). Weather is also where the
+pooled rule most often misses badly for an individual sensor, but with one sparse network of 30 sensors this is a
+pattern to test, not a result.
+
+@@LIMITS@@

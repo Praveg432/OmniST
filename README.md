@@ -1,118 +1,111 @@
-# OmniST: Topology-Invariant Spatiotemporal Forecasting with Guaranteed-Coverage Uncertainty at Unseen Sensor Locations
+# OmniST: Topology-Invariant Forecasting for Dynamic Sensor Networks With Conformal Intervals at Unseen Sensors
 
-Reference implementation and full experiment suite for the OmniST paper.
+> **Status (17 Nov 2026): research work, not thesis work.** The M.Tech thesis is `thesis-omnist/` (title and abstract submitted and finalised 17 Nov 2026). This is the standalone OmniST paper repository. Its work is also carried into the thesis as Phase 1 (`thesis-omnist/phase1-omnist/`); this repository itself is research and paper work.
+
+
+Reference implementation and experiment suite.
 
 **Author:** Praveg Vashishtha  
 **Affiliation:** Department of Computer Science and Engineering, IIT Patna | Senior SDE, SBS India  
-**Contact:** praveg_pa2503mth259@iitp.ac.in | omvashishtha432@gmail.com  
-**LinkedIn:** [pravegvashishtha](https://www.linkedin.com/in/pravegvashishtha/)  
-**Paper:** [arXiv:2611.04256](https://arxiv.org/abs/2611.04256)  
+**Contact:** praveg_pa2503mth259@iitp.ac.in  
+**Preprint (earlier version):** [arXiv:2611.04256](https://arxiv.org/abs/2611.04256)  
 **Code:** [github.com/Praveg432/OmniST](https://github.com/Praveg432/OmniST)
 
+> **Status of the claims.** This repository now accompanies a revised manuscript. The earlier version
+> (arXiv:2611.04256 and the first journal submission) described the intervals as having a "guaranteed"
+> coverage at unseen sensors. That claim is **withdrawn** as stated: the proposition offered for it showed
+> only that a sensor's error is unchanged by far-away topology changes, which does not make calibration and
+> new-sensor errors exchangeable. The revision replaces it with a theorem whose assumptions are stated,
+> tests it on real data, and corrects several other points. See [`paper/REVISION-NOTES.md`](paper/REVISION-NOTES.md).
 
-OmniST is a spatiotemporal forecaster whose computation has **no structural dependency on the number
-of sensors** `N`. Composed with inductive split-conformal calibration, it produces
-**distribution-free, coverage-guaranteed prediction intervals at sensor coordinates never seen during
-training**, and preserves that guarantee as sensors are added or removed. The contribution is a
-*capability* (resilient, trustable inductive uncertainty under dynamic topology), demonstrated on four
-real datasets across three physical domains — not a point-accuracy state of the art.
+## What OmniST is
 
-## Why it works (three design choices)
+A forecaster with no structural dependence on the number of sensors `N`: each sensor is embedded from its
+coordinates, spatial context comes from k-nearest-neighbor attention recomputed at every forward pass, and
+each sensor's history goes through a GRU on its own. It forecasts at a sensor that was not in the training
+network, provided that sensor has its own input window.
 
-1. **Coordinate-based tokenization** — each sensor is embedded from its geographic coordinates via a
-   learned spatial MLP, with no positional index or global node count.
-2. **k-NN spatial attention** — neighbours are selected from coordinates at every forward pass, so the
-   graph adapts to whatever sensors are present (no pre-computed `N x N` adjacency).
-3. **Per-node temporal processing** — a bidirectional GRU runs independently per node; adding/removing
-   a node changes no other node's representation.
+## What the revised paper claims
 
-A short **Proposition** (paper §Theory) formalizes the consequence: each node's nonconformity score
-is *exactly invariant* to nodes outside its k-NN set, so the conformal guarantee is recalibration-free
-under far topology changes.
+1. **Locality lemma.** With neighbors drawn from the training network only, a new sensor's forecast, and
+   so its error, depends on its own data and its `k` nearest training-network sensors alone. Scoring many new
+   sensors in one pass equals scoring each alone (`tests/test_reference_scoring.py`).
+2. **Sensor-level coverage theorem.** If a new sensor and its calibration sensors are exchangeable by random
+   assignment, a correction counted in calibration *sensors* (not forecasts) gives expected coverage of at
+   least `1 - alpha` at the new sensor. The interval is finite only with at least `1/alpha - 1` calibration
+   sensors, so a 12-station network cannot support it at 90%.
+3. **Evidence, in two settings.** On five real networks (12 to 325 sensors), over repeated random sensor
+   splits and thousands of random calibration/test assignments per model:
+   - *Same-window calibration* (the theorem's setting): the bound held in every finite case at a width cost of
+     1.1 to 1.6 times the pooled rule with 11 to 89 calibration sensors. The pooled rule has no guarantee; it
+     averaged 0.896 to 0.901 at the 0.90 target, but for up to 13% of random new sensors it covered less than 0.80.
+   - *Forecast-time calibration* (errors of earlier windows only; deployable, no theorem): the sensor-level rule
+     with rolling recalibration reached the target on three of four networks (weather 0.971, PeMSD7-M 0.913,
+     PeMS-BAY 0.899) but not Delhi (0.853); the pooled rule fell short on Delhi, weather and PeMS-BAY under every
+     scheme (0.785 to 0.889). The same-window numbers are therefore not deployment results.
+   Prior art: treating the sensor as a group is hierarchical conformal prediction (Lee, Barber, Willett;
+   arXiv:2306.06342) and its generalization (Mallick et al., arXiv:2608.15500); the paper cites them and has
+   not compared against them.
+4. **Controls.** A coordinate-free GRU shared across sensors matches OmniST's accuracy at new sensors within
+   about 2%, and persistence matches it on weather and PeMSD7-M. The ability to forecast at a new sensor comes
+   from sharing parameters across sensors; coordinates and attention show no measured benefit.
+5. **A defect, fixed.** The coordinate embedding used centering constants chosen for Delhi for every dataset.
+   Normalizing from the training network removes a 0.7 to 6.0 unit accuracy loss on the other regions. The old
+   behavior is the default of `ModelConfig.coord_center/coord_scale` so earlier results reproduce.
 
-## Key results (all from committed result files; see `RESULTS-INDEX.md`)
+Withdrawn from the earlier version: the 12% and 21% accuracy gains over nearest-neighbor interpolation and the
+IGNNK kriging network (those methods use neighbors' concurrent values, a different task), the "no
+recalibration needed" statement, and the drift result of 0.50 to 0.96 (does not reproduce under the new
+protocol).
 
-- **Guaranteed inductive coverage** at unseen sensors on **4 real datasets / 3 domains**: Delhi 0.914,
-  Beijing 0.928, weather 0.919, PeMSD7-M traffic 0.915 (target 0.90), holding under 30–50% node
-  dropout; the only method among four model-free interpolators to hold the target on all four.
-- **Beats learned baselines at unseen stations**: inductive MAE better than nearest-neighbor (~12%)
-  and the learned IGNNK kriging GNN (~21% on Delhi), while hitting the coverage target more precisely
-  with tighter intervals.
-- **Controlled comparison** vs a faithful E-STGCN reimplementation (identical data/seeds/budget):
-  comparable transductive accuracy; the fixed-topology baseline structurally cannot predict at unseen
-  nodes and crashes under node dropout, demonstrated (not asserted).
-- **Scale**: coverage holds at 325 real sensors (full PeMS-BAY) with a scalable k-NN attention that is
-  numerically equivalent to exact (cosine 0.99996) and removes the O(N^2) bottleneck.
-- **Temporal drift**: a rolling adaptive-conformal layer restores coverage over time (0.89 overall /
-  0.96 in the worst-drift window vs 0.50 for static), at an honest width cost.
-
-## Install
+## Install and reproduce
 
 ```bash
-python3 -m pip install -r requirements.txt   # pinned, verified environment
-# or:  python3 -m pip install -e ".[dev]"
+python3 -m pip install -r requirements.txt
+python3 -m pytest tests                                   # 18 tests, incl. the locality lemma
+python3 experiments/D1_sensor_level_scores.py all         # per-sensor errors, original coordinate constants
+python3 experiments/D1_sensor_level_scores.py all norm    # same splits, coordinates normalized
+python3 experiments/D2_analyse.py                         # same-window theorem check, accuracy -> results/exp_D2_analysis.json
+python3 experiments/D3_deployable.py                      # forecast-time calibration -> results/exp_D3_deployable.json
+python3 experiments/P0_heterogeneity_pilot.py             # pilot: per-sensor scale normalization (not in the paper)
+python3 experiments/P1_chronological_calibration.py       # pilot: same-window vs earlier-window calibration
+python3 experiments/make_figures_v2.py
+python3 paper/make_supplement_tables.py && python3 paper/assemble_jsen.py
+python3 paper/check_numbers.py                            # table numbers vs result files
+python3 paper/build_preview.py                            # preview PDF
 ```
 
-## Reproduce
+`paper/check_numbers.py` parses the printed tables in the manuscript and compares every number with the
+result file it came from. The random-split evaluation (Table III) is `experiments/C1_*.py`; the distance
+analysis is `C2_*.py` and `C3_*.py`. The raw per-sensor error arrays are in `results/D1` and `results/D1b`
+(about 45 MB); they are the inputs to D2 and take roughly an hour to regenerate.
 
-```bash
-pytest -q                      # component + integration tests (13 tests)
-python run_all.py              # staged, resumable manifest of all experiments
-python experiments/make_figures.py   # regenerate paper figures from result JSONs
-```
-
-Every number in the paper maps to a committed result JSON and the script that produced it — see
-[`RESULTS-INDEX.md`](RESULTS-INDEX.md). Headline datasets (Delhi, weather) ship in full; the bulky
-traffic/Beijing raw files are fetched from documented public sources — see
-[`data/README.md`](data/README.md).
-
-## Repository layout
+## Layout
 
 ```
-src/
-  omnist_model.py        full OmniST model (coordinate tokenizer + k-NN GAT + BiGRU + head)
-  inductive_gat.py       coordinate-based k-NN attention (exact + scalable cKDTree paths)
-  conformal.py           split-conformal calibration
-  online_conformal.py    rolling-window + ACI + Mondrian (temporal / conditional coverage)
-  evt_loss.py            Peaks-Over-Threshold loss (adopted from E-STGCN)
-  trainer.py             training / evaluation loop
-  baselines.py           E-STGCN (faithful reimpl), LSTM-only, DLinear
-  ignnk_baseline.py      IGNNK learned inductive-kriging baseline (faithful reimpl)
-  data_real.py / data_beijing.py / data_weather.py / data_traffic_real.py / data_pemsbay.py
-                         real-dataset loaders (provenance documented inline)
-
-experiments/
-  06_inductive_conformal.py      headline inductive coverage (real CPCB)
-  B1_multidomain_v2.py           cross-domain coverage (4 real datasets)
-  B2_baselines.py                OmniST vs 4 model-free interpolators
-  B3_ablations.py                ablation on the coverage metric
-  B4_calibration.py              calibration curves / size-stratified
-  B5_theorem_check.py            empirical verification of the locality Proposition
-  B6_estgcn_controlled.py        controlled OmniST vs E-STGCN (identical conditions)
-  B7_largeN_pemsbay.py           large-N coverage (325 real sensors)
-  B8_fixedtopo_crash_demo.py     fixed-topology crash under node dropout
-  B9_ignnk_inductive.py          OmniST vs learned IGNNK at unseen nodes
-  10/11/12/13/14_*.py            temporal drift, multi-target, scalability, Mondrian, scalable k-NN
-  make_figures.py                regenerate all paper figures
-
-results/      committed result JSONs (one per experiment) + figures/
-paper/        LaTeX source (IEEEtran) + references.bib
+src/                   model (coordinate tokenizer, k-NN attention with optional reference restriction, GRU),
+                       loaders, trainer, conformal utilities
+experiments/D1_*       per-sensor error collection under the sensor-level protocol
+experiments/D2_*       theorem check, accuracy, drift, report
+experiments/C1-C3_*    random-split evaluation and distance analyses
+experiments/B*, 0*_    earlier-protocol experiments, kept as a record (see RESULTS-INDEX.md)
+paper/                 manuscript parts, assembler, preview build, upload package, supplement
+results/               result JSONs, per-sensor arrays, figures
 ```
 
 ## Honest scope
 
-The contribution is the *capability* (guaranteed inductive UQ under dynamic topology), not a
-point-accuracy SOTA. Baselines (E-STGCN, IGNNK) are faithful reimplementations, not the authors'
-original code. Coverage is certified to 325 real sensors; thousands-of-node certification awaits a
-larger real benchmark (a data gate, not an architecture gate). The conformal guarantee is marginal,
-with a partial Mondrian fix for conditional coverage.
+The guarantee is design-based: it is over which sensor is the new one, not for a named sensor, a time step,
+or a sensor outside the network, and real new sensors are not random draws. Baselines in the earlier
+experiments (E-STGCN, IGNNK) are the author's reimplementations. Targets include imputed values; traffic
+coordinates are reconstructed from distance matrices; the largest network has 325 sensors. Delhi has 10
+evaluation windows. A head-to-head comparison with other inductive forecasting methods under the forecasting
+task has not been run.
 
 ## Citation
 
-Paper: <https://arxiv.org/abs/2611.04256> (arXiv:2611.04256 [cs.LG]). LaTeX source is in `paper/`.
-Repository: <https://github.com/Praveg432/OmniST>.
-
-If you use this code or build on the method, please cite:
+The current public preprint is arXiv:2611.04256, whose wording on guaranteed coverage is superseded by this
+repository. Cite the preprint for the model and this repository for the corrected claims.
 
 ```bibtex
 @misc{vashishtha2026omnist,
@@ -129,4 +122,4 @@ If you use this code or build on the method, please cite:
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT, see [`LICENSE`](LICENSE).

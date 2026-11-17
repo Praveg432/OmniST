@@ -26,7 +26,7 @@ ZIP = PAPER / "OmniST-JSEN-upload.zip"
 MAIN = "OmniST-JSEN"
 
 IEEE_FILES = ["ieeecolor.cls", "jsen.sty", "LOGO-jsen-web.eps", "IEEEtran.bst"]
-FIGURES = ["graphical_abstract_jsen.png", "fig_multidomain_coverage.png", "fig_temporal_drift.png"]
+FIGURES = ["graphical_abstract_jsen.png", "fig_sensor_level.png"]
 
 
 def fail(msg):

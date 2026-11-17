@@ -24,8 +24,14 @@ class SpatialMLP(nn.Module):
     Validated in Sprint 0 as best for N=37 with good inductive performance.
     """
 
-    def __init__(self, d_model: int, hidden_dim: int = 128):
+    def __init__(self, d_model: int, hidden_dim: int = 128,
+                 center=(28.6, 77.1), scale=(0.2, 0.3)):
         super().__init__()
+        # Fixed (non-trained) normalisation. The defaults are the original Delhi constants; for any
+        # other region they must be set from the TRAINING network's coordinates, otherwise inputs
+        # lie hundreds of units outside the range the MLP is meant for.
+        self.register_buffer("center", torch.tensor(center, dtype=torch.float32))
+        self.register_buffer("scale", torch.tensor(scale, dtype=torch.float32))
         self.mlp = nn.Sequential(
             nn.Linear(2, hidden_dim),
             nn.GELU(),
@@ -44,9 +50,7 @@ class SpatialMLP(nn.Module):
         # Normalize coordinates to roughly [-1, 1] range for stable MLP input
         # Delhi range: lat ~28.4-28.8, lon ~76.8-77.4
         # General approach: center and scale
-        coords_centered = coords.clone()
-        coords_centered[..., 0] = (coords[..., 0] - 28.6) / 0.2   # lat: center=28.6, scale=0.2
-        coords_centered[..., 1] = (coords[..., 1] - 77.1) / 0.3   # lon: center=77.1, scale=0.3
+        coords_centered = (coords - self.center) / self.scale
         return self.mlp(coords_centered)
 
 
@@ -112,12 +116,18 @@ class CCHashTokenizer(nn.Module):
         d_model: int,
         spatial_hidden: int = 128,
         n_temporal_harmonics: int = 4,
+        use_coords: bool = True,
+        coord_center=(28.6, 77.1),
+        coord_scale=(0.2, 0.3),
     ):
         super().__init__()
         self.d_model = d_model
+        # use_coords=False drops the coordinate embedding (control: a shared per-sensor model).
+        self.use_coords = use_coords
 
         # Component embeddings
-        self.spatial_emb = SpatialMLP(d_model, hidden_dim=spatial_hidden)
+        self.spatial_emb = SpatialMLP(d_model, hidden_dim=spatial_hidden,
+                                      center=coord_center, scale=coord_scale)
         self.temporal_emb = TemporalEmbedding(d_model, n_harmonics=n_temporal_harmonics)
         self.feature_emb = nn.Linear(n_features, d_model)
 
@@ -143,8 +153,11 @@ class CCHashTokenizer(nn.Module):
 
         # Spatial embedding: same for all timesteps, different per node
         # coords: (B, N, 2) → (B, N, d) → expand to (B, T, N, d)
-        spatial = self.spatial_emb(coords)  # (B, N, d)
-        spatial = spatial.unsqueeze(1).expand(B, T, N, self.d_model)  # (B, T, N, d)
+        if self.use_coords:
+            spatial = self.spatial_emb(coords)  # (B, N, d)
+            spatial = spatial.unsqueeze(1).expand(B, T, N, self.d_model)  # (B, T, N, d)
+        else:
+            spatial = 0.0
 
         # Temporal embedding: same for all nodes, different per timestep
         # timestamps: (B, T, 4) → (B, T, d) → expand to (B, T, N, d)

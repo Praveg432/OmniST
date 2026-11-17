@@ -28,6 +28,11 @@ class ModelConfig:
     d_model: int = 128
     spatial_hidden: int = 128
     n_temporal_harmonics: int = 4
+    use_coords: bool = True   # False: coordinate-free control (shared per-sensor model)
+    # Fixed coordinate normalisation (lat, lon). Defaults are the original Delhi constants; set from
+    # the training network's coordinates for any other region.
+    coord_center: tuple = (28.6, 77.1)
+    coord_scale: tuple = (0.2, 0.3)
 
     # GAT
     n_gat_heads: int = 4
@@ -63,6 +68,9 @@ class OmniST(nn.Module):
             d_model=config.d_model,
             spatial_hidden=config.spatial_hidden,
             n_temporal_harmonics=config.n_temporal_harmonics,
+            use_coords=config.use_coords,
+            coord_center=config.coord_center,
+            coord_scale=config.coord_scale,
         )
 
         # 2. Inductive GAT (spatial context)
@@ -97,9 +105,11 @@ class OmniST(nn.Module):
         features: torch.Tensor,
         coords: torch.Tensor,
         timestamps: torch.Tensor,
+        ref_mask: torch.Tensor = None,
     ) -> torch.Tensor:
         """
         Args:
+            ref_mask: optional (B, N) bool; restrict neighbour search to the reference network
             features: (B, T, N, F) — raw sensor measurements
             coords: (B, N, 2) — latitude, longitude in degrees
             timestamps: (B, T, 4) — normalized time features
@@ -118,7 +128,7 @@ class OmniST(nn.Module):
         for gat in self.gat_layers:
             spatial_out = []
             for t in range(T):
-                st = gat(tokens[:, t], coords)  # (B, N, d)
+                st = gat(tokens[:, t], coords, ref_mask)  # (B, N, d)
                 spatial_out.append(st)
             tokens = torch.stack(spatial_out, dim=1)  # (B, T, N, d)
 

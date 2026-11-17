@@ -4,6 +4,28 @@ Maps each claim/table in the paper to the result JSON that produced it and the s
 that JSON. All numbers are reproducible: `pip install -r requirements.txt`, then run the script.
 Headline datasets are real; see `src/data_*.py` for provenance.
 
+## Revised manuscript (primary evidence)
+
+`python3 paper/check_numbers.py` verifies the printed table numbers against these files.
+
+| Manuscript item | Result file | Script |
+|---|---|---|
+| Per-sensor errors, original coordinate constants (renamed `*_legacy` in analysis) | `results/D1/*.npz` | `experiments/D1_sensor_level_scores.py <domain>` |
+| Per-sensor errors, coordinates normalized from the training network | `results/D1b/*.npz` | `experiments/D1_sensor_level_scores.py <domain> norm` |
+| Tables II, IV, V, VI (bound, accuracy, sensor removal, drift) and supplement tables | `results/exp_D2_analysis.json` | `experiments/D2_analyse.py`, `D2_report.py`, `paper/make_supplement_tables.py` |
+| Table III (random disjoint sensor splits) | `results/exp_C1_<domain>.json` | `experiments/C1_rigorous_inductive_eval.py`, `C1_summarise.py` |
+| Distance from the training network (Section IV-F) | `results/exp_C2_*.json`, `exp_C2_analysis.json`, `exp_C3_*.json` | `experiments/C2_region_holdout_distance.py`, `C3_score_shift_vs_distance.py` |
+| Locality lemma (numerical check) | — | `tests/test_reference_scoring.py` |
+| Fig. 1, graphical abstract | `results/exp_D2_analysis.json` | `experiments/make_figures_v2.py` |
+| Supplement S5 (computational scaling, earlier code) | `results/exp_scalability_stress.json`, `results/exp_approx_knn.json` | `experiments/12_*.py`, `14_*.py` |
+
+## Earlier protocol (record only)
+
+Everything below used calibration on training-station residuals and a few fixed held-out stations. The
+claims drawn from it (guaranteed coverage, the 12% and 21% gains over interpolation and IGNNK, the drift
+result 0.50 to 0.96, "no recalibration needed") are **withdrawn**; see `paper/REVISION-NOTES.md`. The files are
+kept so the earlier numbers remain traceable.
+
 ## Datasets (all real)
 | Domain | Type | Source | Loader |
 |--------|------|--------|--------|

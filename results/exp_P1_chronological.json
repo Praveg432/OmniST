@@ -1,0 +1,90 @@
+{
+ "delhi_air_quality": {
+  "12": {
+   "chr_crc_cov": 0.8326,
+   "chr_crc_share_below_0.80": 0.2682,
+   "con_crc_cov": 0.9739,
+   "con_crc_share_below_0.80": 0.0,
+   "chr_pool_cov": 0.7465,
+   "chr_pool_share_below_0.80": 0.8318,
+   "con_pool_cov": 0.9,
+   "con_pool_share_below_0.80": 0.0048
+  },
+  "15": {
+   "chr_crc_cov": 0.8046,
+   "chr_crc_share_below_0.80": 0.4193,
+   "con_crc_cov": 0.9586,
+   "con_crc_share_below_0.80": 0.0,
+   "chr_pool_cov": 0.7459,
+   "chr_pool_share_below_0.80": 0.8473,
+   "con_pool_cov": 0.8995,
+   "con_pool_share_below_0.80": 0.0
+  }
+ },
+ "ghcn_weather": {
+  "10": {
+   "chr_crc_cov": 0.9852,
+   "chr_crc_share_below_0.80": 0.0015,
+   "con_crc_cov": 0.9882,
+   "con_crc_share_below_0.80": 0.0,
+   "chr_pool_cov": 0.8913,
+   "chr_pool_share_below_0.80": 0.1464,
+   "con_pool_cov": 0.8958,
+   "con_pool_share_below_0.80": 0.1501
+  },
+  "11": {
+   "chr_crc_cov": 0.9759,
+   "chr_crc_share_below_0.80": 0.0,
+   "con_crc_cov": 0.9793,
+   "con_crc_share_below_0.80": 0.0,
+   "chr_pool_cov": 0.8919,
+   "chr_pool_share_below_0.80": 0.1548,
+   "con_pool_cov": 0.8969,
+   "con_pool_share_below_0.80": 0.1498
+  }
+ },
+ "pemsd7_traffic": {
+  "20": {
+   "chr_crc_cov": 0.9435,
+   "chr_crc_share_below_0.80": 0.0013,
+   "con_crc_cov": 0.9452,
+   "con_crc_share_below_0.80": 0.0,
+   "chr_pool_cov": 0.8997,
+   "chr_pool_share_below_0.80": 0.045,
+   "con_pool_cov": 0.9007,
+   "con_pool_share_below_0.80": 0.0425
+  },
+  "59": {
+   "chr_crc_cov": 0.9129,
+   "chr_crc_share_below_0.80": 0.01,
+   "con_crc_cov": 0.9143,
+   "con_crc_share_below_0.80": 0.015,
+   "chr_pool_cov": 0.898,
+   "chr_pool_share_below_0.80": 0.0531,
+   "con_pool_cov": 0.8992,
+   "con_pool_share_below_0.80": 0.0562
+  }
+ },
+ "pemsbay_traffic": {
+  "20": {
+   "chr_crc_cov": 0.925,
+   "chr_crc_share_below_0.80": 0.0212,
+   "con_crc_cov": 0.9452,
+   "con_crc_share_below_0.80": 0.0056,
+   "chr_pool_cov": 0.8653,
+   "chr_pool_share_below_0.80": 0.2256,
+   "con_pool_cov": 0.8997,
+   "con_pool_share_below_0.80": 0.0906
+  },
+  "89": {
+   "chr_crc_cov": 0.8767,
+   "chr_crc_share_below_0.80": 0.1931,
+   "con_crc_cov": 0.9089,
+   "con_crc_share_below_0.80": 0.05,
+   "chr_pool_cov": 0.8627,
+   "chr_pool_share_below_0.80": 0.2575,
+   "con_pool_cov": 0.8986,
+   "con_pool_share_below_0.80": 0.0938
+  }
+ }
+}

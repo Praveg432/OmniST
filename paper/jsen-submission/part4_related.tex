@@ -1,0 +1,38 @@
+%% ====================================================================
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Dynamic and inductive forecasting.} Fixed-topology STGCNs~\cite{yu2018stgcn} couple weights to a sensor
+count. Inductive kriging~\cite{ignnk2020} reconstructs the signal at unobserved locations from the concurrent
+observations of other sensors, a different task from forecasting at a new sensor from its own history; our earlier
+comparison with it is withdrawn. STFO~\cite{stfo2026} and cold-start forecasting at unseen
+sensors~\cite{coldstart_unseen2026} target point prediction under growing networks. Our control
+(Section~\ref{sec:ablation}) indicates that what these methods share, no sensor-specific parameters, is what makes
+a model applicable at a new sensor. Inductive kriging protocols can leak spatial information through model
+selection~\cite{yang2026leakagefree}; our splits keep held-out sensors out of fitting and early stopping.
+
+\textbf{Conformal prediction on graphs, space and time.} Split
+conformal prediction~\cite{vovk2005algorithmic,angelopoulos2023conformal} has been extended to correlated time
+series~\cite{corel2025}, graph time series~\cite{conformalgraphts2026,incontextresidual2026}, dynamic and temporal
+GNNs~\cite{validcpdyngnn2024,nonexchcptgnn2025}, stream networks~\cite{staci2025} and online Gaussian processes on
+graphs~\cite{conformalgp_online2025}, mostly with a fixed node set. Zargarbashi and
+Bojchevski~\cite{conformalinductivegnn2024} analyze the inductive case in which new nodes shift the scores of
+message-passing GNNs. The locality of our architecture (Lemma~\ref{lem:locality}) removes that interference by
+construction, but removing interference is not the same as establishing exchangeability.
+
+The closest statistics treat grouped data. Hierarchical conformal prediction
+(HCP)~\cite{lee2023hcp} gives distribution-free sets for a new observation from a previously unseen group. With the
+same number of points per sensor, HCP's weighted quantile coincides exactly with the sensor-level rule of
+Corollary~\ref{cor:pooled} (checked numerically in the released tests), so the rule itself is not new. What
+differs is the statement: HCP states coverage for one observation of the new group and uses exchangeability within
+the group to do so, whereas Theorem~\ref{thm:coverage} bounds the average over a sensor's points and needs only
+exchangeability of sensors. Generalized HCP~\cite{mallick2026ghcp} also uses the first observations of the new
+group, the situation of a sensor that has been running for a few windows; we have not evaluated it. Sequential
+whitening~\cite{sen2026whitening} gives exact coverage under a correct working covariance, with a PM2.5
+application, and model-free valid spatial prediction~\cite{validspatial2020} uses the random-location design that
+our condition (A1) borrows. Non-exchangeable and covariate-shift
+extensions~\cite{barber2023nexcp,tibshirani2019covshift} are the tools for new sensors that differ systematically
+from the calibration sensors. What this paper adds is not a conformal method. It is the sensor-as-group view
+applied to forecasting at new sensors, a locality property that makes sensor-level scores well defined, a
+measurement of the guarantee's price, and a measurement of what is lost when calibration must respect forecast
+time.

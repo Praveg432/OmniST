@@ -1,0 +1,242 @@
+{
+ "delhi_air_quality": {
+  "12": {
+   "plain": {
+    "crc_cov": 0.974,
+    "crc_width": 273.1049,
+    "pooled_cov": 0.8997,
+    "pooled_width": 149.1359,
+    "price": 1.831,
+    "pooled_share_below_0p80": 0.0004,
+    "pooled_p10": 0.852
+   },
+   "oracle": {
+    "crc_cov": 0.9745,
+    "crc_width": 265.8366,
+    "pooled_cov": 0.9002,
+    "pooled_width": 149.4024,
+    "price": 1.779,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.872
+   },
+   "burnin": {
+    "crc_cov": 0.9741,
+    "crc_width": 279.0652,
+    "pooled_cov": 0.8998,
+    "pooled_width": 152.6983,
+    "price": 1.828,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.858
+   }
+  },
+  "15": {
+   "plain": {
+    "crc_cov": 0.9593,
+    "crc_width": 232.7652,
+    "pooled_cov": 0.9001,
+    "pooled_width": 149.1707,
+    "price": 1.56,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.85
+   },
+   "oracle": {
+    "crc_cov": 0.9597,
+    "crc_width": 229.1697,
+    "pooled_cov": 0.9003,
+    "pooled_width": 149.223,
+    "price": 1.536,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.872
+   },
+   "burnin": {
+    "crc_cov": 0.9596,
+    "crc_width": 238.8167,
+    "pooled_cov": 0.9,
+    "pooled_width": 152.6904,
+    "price": 1.564,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.859
+   }
+  }
+ },
+ "ghcn_weather": {
+  "10": {
+   "plain": {
+    "crc_cov": 0.987,
+    "crc_width": 29.6842,
+    "pooled_cov": 0.8907,
+    "pooled_width": 20.9253,
+    "price": 1.419,
+    "pooled_share_below_0p80": 0.1691,
+    "pooled_p10": 0.705
+   },
+   "oracle": {
+    "crc_cov": 0.9891,
+    "crc_width": 28.5691,
+    "pooled_cov": 0.899,
+    "pooled_width": 18.4596,
+    "price": 1.548,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.852
+   },
+   "burnin": {
+    "crc_cov": 0.9879,
+    "crc_width": 29.5441,
+    "pooled_cov": 0.8911,
+    "pooled_width": 20.6131,
+    "price": 1.433,
+    "pooled_share_below_0p80": 0.2009,
+    "pooled_p10": 0.714
+   }
+  },
+  "11": {
+   "plain": {
+    "crc_cov": 0.979,
+    "crc_width": 27.969,
+    "pooled_cov": 0.8946,
+    "pooled_width": 20.987,
+    "price": 1.333,
+    "pooled_share_below_0p80": 0.1623,
+    "pooled_p10": 0.709
+   },
+   "oracle": {
+    "crc_cov": 0.981,
+    "crc_width": 25.6122,
+    "pooled_cov": 0.8999,
+    "pooled_width": 18.4109,
+    "price": 1.391,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.855
+   },
+   "burnin": {
+    "crc_cov": 0.9795,
+    "crc_width": 27.6799,
+    "pooled_cov": 0.8949,
+    "pooled_width": 20.6961,
+    "price": 1.337,
+    "pooled_share_below_0p80": 0.1786,
+    "pooled_p10": 0.72
+   }
+  }
+ },
+ "pemsd7_traffic": {
+  "20": {
+   "plain": {
+    "crc_cov": 0.9452,
+    "crc_width": 27.6322,
+    "pooled_cov": 0.901,
+    "pooled_width": 17.765,
+    "price": 1.555,
+    "pooled_share_below_0p80": 0.0706,
+    "pooled_p10": 0.817
+   },
+   "oracle": {
+    "crc_cov": 0.946,
+    "crc_width": 25.9137,
+    "pooled_cov": 0.9019,
+    "pooled_width": 17.0241,
+    "price": 1.522,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.871
+   },
+   "burnin": {
+    "crc_cov": 0.9459,
+    "crc_width": 26.4246,
+    "pooled_cov": 0.9019,
+    "pooled_width": 17.2592,
+    "price": 1.531,
+    "pooled_share_below_0p80": 0.0031,
+    "pooled_p10": 0.859
+   }
+  },
+  "59": {
+   "plain": {
+    "crc_cov": 0.9166,
+    "crc_width": 20.32,
+    "pooled_cov": 0.9015,
+    "pooled_width": 17.7605,
+    "price": 1.144,
+    "pooled_share_below_0p80": 0.0519,
+    "pooled_p10": 0.829
+   },
+   "oracle": {
+    "crc_cov": 0.9152,
+    "crc_width": 19.2128,
+    "pooled_cov": 0.9001,
+    "pooled_width": 16.9742,
+    "price": 1.132,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.868
+   },
+   "burnin": {
+    "crc_cov": 0.9156,
+    "crc_width": 19.5686,
+    "pooled_cov": 0.9006,
+    "pooled_width": 17.2754,
+    "price": 1.133,
+    "pooled_share_below_0p80": 0.0013,
+    "pooled_p10": 0.858
+   }
+  }
+ },
+ "pemsbay_traffic": {
+  "20": {
+   "plain": {
+    "crc_cov": 0.9438,
+    "crc_width": 44.7884,
+    "pooled_cov": 0.8972,
+    "pooled_width": 20.9603,
+    "price": 2.137,
+    "pooled_share_below_0p80": 0.0963,
+    "pooled_p10": 0.802
+   },
+   "oracle": {
+    "crc_cov": 0.9439,
+    "crc_width": 39.6379,
+    "pooled_cov": 0.9,
+    "pooled_width": 22.2073,
+    "price": 1.785,
+    "pooled_share_below_0p80": 0.0006,
+    "pooled_p10": 0.856
+   },
+   "burnin": {
+    "crc_cov": 0.9442,
+    "crc_width": 40.7071,
+    "pooled_cov": 0.8997,
+    "pooled_width": 22.1341,
+    "price": 1.839,
+    "pooled_share_below_0p80": 0.0013,
+    "pooled_p10": 0.849
+   }
+  },
+  "89": {
+   "plain": {
+    "crc_cov": 0.9084,
+    "crc_width": 22.9912,
+    "pooled_cov": 0.8981,
+    "pooled_width": 20.8262,
+    "price": 1.104,
+    "pooled_share_below_0p80": 0.0875,
+    "pooled_p10": 0.796
+   },
+   "oracle": {
+    "crc_cov": 0.9095,
+    "crc_width": 24.2817,
+    "pooled_cov": 0.8994,
+    "pooled_width": 21.9395,
+    "price": 1.107,
+    "pooled_share_below_0p80": 0.0,
+    "pooled_p10": 0.855
+   },
+   "burnin": {
+    "crc_cov": 0.9097,
+    "crc_width": 24.2309,
+    "pooled_cov": 0.8994,
+    "pooled_width": 21.8944,
+    "price": 1.107,
+    "pooled_share_below_0p80": 0.0019,
+    "pooled_p10": 0.85
+   }
+  }
+ }
+}

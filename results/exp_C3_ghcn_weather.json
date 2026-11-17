@@ -1,0 +1,22 @@
+{
+  "experiment": "C3 station score-distribution shift (TV) versus distance",
+  "domain": "ghcn_weather",
+  "n_models": 5,
+  "n_held_out_per_model": 12,
+  "n_pairs": 330,
+  "distance_unit": "network spacings",
+  "bins": 10,
+  "tv_pairs": {
+    "median": 0.176,
+    "p10": 0.096,
+    "p90": 0.382,
+    "nearest_quartile_median": 0.224,
+    "farthest_quartile_median": 0.194,
+    "spearman_rho_distance": -0.021,
+    "p_value": 0.7084
+  },
+  "noise_floor_random_halves_median": 0.133,
+  "noise_floor_time_halves_median": 0.167,
+  "bound_loss_3_nearest_median": 0.188,
+  "bound_loss_3_nearest_p90": 0.261
+}

@@ -1,0 +1,73 @@
+%% ====================================================================
+\section{Limitations}
+\label{sec:limitations}
+\begin{itemize}
+\item \textbf{The guarantee is on average over which sensor is new}, not for a named sensor (the worst
+per-sensor coverage in Table~\ref{tab:legacy} is 0.40 to 0.86), a time step, or a sensor that differs
+systematically from the calibration sensors. Real new sensors are not random draws.
+\item \textbf{Its setting cannot be deployed.} At forecast time no theorem applies; the sensor-level rule with
+rolling recalibration covered 0.853 on Delhi, and the deployable results rest on four networks and, for Delhi,
+six evaluation windows.
+\item \textbf{It is expensive with few calibration sensors}: a finite 90\% interval needs at least 9, and the
+12-station Beijing network cannot support it.
+\item \textbf{The pooled rule is not guaranteed}; its near-nominal same-window average is an observation on
+five networks, with large per-sensor spread.
+\item \textbf{The learned forecaster is not the best simple one everywhere.} Seasonal-naive forecasting
+beats OmniST on PeMS-BAY (MAE 3.56 against 4.68, intervals 24\% narrower), persistence ties it on weather
+and PeMSD7-M, and coordinates and attention add no measured accuracy. The training budget was fixed, not
+tuned per variant.
+\item \textbf{Related methods not evaluated}: Generalized HCP, HCP's second-moment variant, sequential
+whitening, and other inductive forecasters under the forecasting task.
+\item \textbf{Data and history.} Targets include imputed values; traffic positions are reconstructed from
+distance matrices; architecture settings come from earlier Delhi development, so (A3) holds only up to that
+history; a sensor with no history of its own is not handled; the largest network has 325 sensors.
+\end{itemize}
+
+%% ====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+OmniST forecasts at sensors it never trained on and keeps working when reference sensors are removed.
+The more durable result is about calibration. Conformal intervals at a new sensor need the sensor, not
+the forecast, to be the exchangeable unit. With neighbors drawn from the training network, a new
+sensor's error is a function of its own data and its neighbors alone (Lemma~\ref{lem:locality}), and a
+correction counted in calibration sensors gives expected coverage of at least $1-\alpha$ at a randomly
+drawn new sensor (Theorem~\ref{thm:coverage}). On five real networks the bound held in every finite
+case, at a width cost that falls from several-fold to about 10\% as calibration sensors grow from 10
+to 90. That setting calibrates on the window it evaluates. With calibration restricted to earlier
+windows the guarantee no longer applies, and the sensor-level rule with rolling recalibration reached the
+target on three of four networks but not on Delhi. The usual pooled rule averaged within half a point of
+target in the same-window setting, left some new sensors badly under-covered, and fell short of target
+at forecast time on three of four networks. Our controls say that the ability to forecast at a new sensor comes from sharing
+parameters across sensors, and that coordinates and attention, in our implementation, add no measured
+accuracy. Open problems are a coverage statement that survives calibration restricted to earlier
+windows, coverage conditional on a sensor and on its distance from the network, and a fair comparison
+with hierarchical conformal prediction and with other inductive forecasters. A tighter distribution-free
+statement with few calibration sensors is unlikely: the conformal correction is tight up to a factor of
+order $1/n$~\cite{crc2024}.
+
+\section*{Data and Code Availability}
+All datasets are public: Delhi CPCB PM$_{2.5}$ from the E-STGCN repository~\cite{panja2026estgcn};
+Beijing Multi-Site Air Quality from the UCI repository~\cite{zhang2017beijingair}; western-US daily
+temperature from NOAA GHCN-Daily; PeMSD7-M traffic from~\cite{yu2018stgcn}; and PeMS-BAY traffic
+from~\cite{li2018dcrnn}. The implementation, including the model, loaders for every dataset, each
+experiment script (the per-sensor score collection, the same-window and forecast-time coverage
+analyses, and the random-split evaluation), the unit tests for Lemma~\ref{lem:locality}, a pinned environment, and an index mapping
+each reported number to its result file, is available at \url{\repourl}.
+
+\section*{Acknowledgment}
+The author declares no competing interests; the work was carried out
+independently of the author's employment at Sopra Banking Software India, which neither funded nor
+directed it. During the preparation of this work the author used Kiro, an AI coding and writing
+assistant, to help write and debug experiment code and to draft and edit the manuscript text. The
+author reviewed and edited all such content and takes full responsibility for the article.
+
+\bibliographystyle{IEEEtran}
+\bibliography{../references}
+
+\begin{IEEEbiographynophoto}{Praveg Vashishtha}
+is pursuing the Executive M.Tech. degree in the Department of Computer Science and Engineering,
+Indian Institute of Technology Patna, India, and is a Senior Software Development Engineer with Sopra
+Banking Software India. His research interests include spatiotemporal forecasting for sensor
+networks, uncertainty quantification, and regularization for kernel methods.
+\end{IEEEbiographynophoto}
+\end{document}

@@ -1,0 +1,22 @@
+{
+  "experiment": "C3 station score-distribution shift (TV) versus distance",
+  "domain": "delhi_air_quality",
+  "n_models": 5,
+  "n_held_out_per_model": 16,
+  "n_pairs": 600,
+  "distance_unit": "network spacings",
+  "bins": 10,
+  "tv_pairs": {
+    "median": 0.12,
+    "p10": 0.08,
+    "p90": 0.167,
+    "nearest_quartile_median": 0.107,
+    "farthest_quartile_median": 0.127,
+    "spearman_rho_distance": 0.236,
+    "p_value": 0.0
+  },
+  "noise_floor_random_halves_median": 0.133,
+  "noise_floor_time_halves_median": 0.253,
+  "bound_loss_3_nearest_median": 0.113,
+  "bound_loss_3_nearest_p90": 0.133
+}

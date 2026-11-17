@@ -1,5 +1,13 @@
 # OmniST — Findings, Real-World Impact, and Strengthened Evidence
 
+> **Historical document. Superseded by the revised manuscript.** This file was written under the original
+> evaluation protocol and describes the intervals as "guaranteed". That claim is withdrawn: calibration used
+> training-sensor residuals and a few fixed held-out stations, and the locality proposition did not establish
+> exchangeability. The revised claims, with their assumptions and the controls that changed the accuracy
+> statements, are in `README.md` and `paper/REVISION-NOTES.md`. The deployment scenarios below that rely on a
+> "guarantee", on gains over interpolation or kriging, or on the drift result should not be quoted.
+
+
 What OmniST's findings actually mean for deployable systems, and the cross-domain / cross-case
 evidence that makes those findings rigorous rather than a single-dataset artifact.
 
