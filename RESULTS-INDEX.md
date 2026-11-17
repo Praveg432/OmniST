@@ -13,7 +13,8 @@ Headline datasets are real; see `src/data_*.py` for provenance.
 | Per-sensor errors, original coordinate constants (renamed `*_legacy` in analysis) | `results/D1/*.npz` | `experiments/D1_sensor_level_scores.py <domain>` |
 | Per-sensor errors, coordinates normalized from the training network | `results/D1b/*.npz` | `experiments/D1_sensor_level_scores.py <domain> norm` |
 | Table I (same-window bound), Table IV (accuracy), Fig. 1, supplement coverage and sensor-removal tables | `results/exp_D2_analysis.json` | `experiments/D2_analyse.py`, `D2_report.py`, `paper/make_supplement_tables.py` |
-| Table II (forecast-time calibration), supplement forecast-time table, graphical abstract right panel | `results/exp_D3_deployable.json` | `experiments/D3_deployable.py` |
+| Table II (per-sensor forecast-time coverage, Theorem 2 check), non-random farthest-sensor test, supplement Table S8 | `results/exp_D5_per_sensor.json` | `experiments/D5_per_sensor_guarantee.py` |
+| Static / expanding / rolling forecast-time comparison (supplement), graphical abstract right panel | `results/exp_D3_deployable.json` | `experiments/D3_deployable.py` (its ACI column uses a clipped update and is superseded by D5) |
 | Seasonal-naive comparison (Section IV-D (v), limitations, supplement table) | `results/D1c/*.npz`, `results/exp_D4_seasonal.json` | `experiments/D1c_seasonal_naive.py`, `D4_seasonal_comparison.py` |
 | Sensor-level rule equals HCP's threshold (Section II-C, supplement) | — | `tests/test_hcp_equivalence.py`, `src/sensor_conformal.py` |
 | Coordinate normalization fix | — | `tests/test_coordinate_frame.py`; ranges `results/exp_P2_coordinate_range.json` from `experiments/P2_coordinate_range.py` |

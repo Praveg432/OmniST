@@ -1,0 +1,467 @@
+{
+ "delhi_air_quality": {
+  "n_trials": 10,
+  "n_sensor_cases": 160,
+  "eval_windows": 6,
+  "L": 4,
+  "all_sensors": {
+   "same-window": {
+    "mean_cov": 0.9592,
+    "min_cov": 0.8833,
+    "p05_cov": 0.9111,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.0,
+    "width_med": 245.9834
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.7846,
+    "min_cov": 0.6611,
+    "p05_cov": 0.7111,
+    "share_below_0.80": 0.55,
+    "share_below_0.85": 0.95,
+    "inf_share": 0.0,
+    "width_med": 81.7418
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.853,
+    "min_cov": 0.7056,
+    "p05_cov": 0.7831,
+    "share_below_0.80": 0.1,
+    "share_below_0.85": 0.425,
+    "inf_share": 0.0,
+    "width_med": 112.0316
+   },
+   "aci-0.1": {
+    "mean_cov": 0.8547,
+    "min_cov": 0.7778,
+    "p05_cov": 0.8111,
+    "share_below_0.80": 0.0187,
+    "share_below_0.85": 0.3937,
+    "inf_share": 0.0771,
+    "width_med": 104.9194,
+    "bound": 1.6667,
+    "guaranteed_cov": 0.0,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   },
+   "aci-0.5": {
+    "mean_cov": 0.8768,
+    "min_cov": 0.8,
+    "p05_cov": 0.8333,
+    "share_below_0.80": 0.0063,
+    "share_below_0.85": 0.1375,
+    "inf_share": 0.2188,
+    "width_med": 102.7698,
+    "bound": 0.4667,
+    "guaranteed_cov": 0.4333,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   }
+  },
+  "farthest_sensor": {
+   "same-window": {
+    "mean_cov": 0.9633,
+    "min_cov": 0.9389
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.7828,
+    "min_cov": 0.7333
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.8583,
+    "min_cov": 0.8222
+   },
+   "aci-0.1": {
+    "mean_cov": 0.8511,
+    "min_cov": 0.8222
+   },
+   "aci-0.5": {
+    "mean_cov": 0.8756,
+    "min_cov": 0.8167
+   }
+  },
+  "farthest_mean_distance": 2.958,
+  "all_mean_distance": 1.298,
+  "spearman_cov_vs_distance_rolling-sensor": [
+   -0.026,
+   0.7434
+  ],
+  "spearman_cov_vs_distance_aci-0.1": [
+   -0.086,
+   0.2769
+  ]
+ },
+ "beijing_air_quality": {
+  "n_trials": 10,
+  "n_sensor_cases": 60,
+  "eval_windows": 18,
+  "L": 4,
+  "all_sensors": {
+   "same-window": {
+    "mean_cov": 1.0,
+    "min_cov": 1.0,
+    "p05_cov": 1.0,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 1.0,
+    "width_med": Infinity
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8563,
+    "min_cov": 0.8074,
+    "p05_cov": 0.8148,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.4833,
+    "inf_share": 0.0,
+    "width_med": 134.2611
+   },
+   "rolling-sensor": {
+    "mean_cov": 1.0,
+    "min_cov": 1.0,
+    "p05_cov": 1.0,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 1.0,
+    "width_med": Infinity
+   },
+   "aci-0.1": {
+    "mean_cov": 0.9635,
+    "min_cov": 0.9519,
+    "p05_cov": 0.9556,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.4028,
+    "width_med": 651.8458,
+    "bound": 0.5556,
+    "guaranteed_cov": 0.3444,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   },
+   "aci-0.5": {
+    "mean_cov": 0.9225,
+    "min_cov": 0.9148,
+    "p05_cov": 0.9185,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.2111,
+    "width_med": 276.6696,
+    "bound": 0.1556,
+    "guaranteed_cov": 0.7444,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   }
+  },
+  "farthest_sensor": {
+   "same-window": {
+    "mean_cov": 1.0,
+    "min_cov": 1.0
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8863,
+    "min_cov": 0.8593
+   },
+   "rolling-sensor": {
+    "mean_cov": 1.0,
+    "min_cov": 1.0
+   },
+   "aci-0.1": {
+    "mean_cov": 0.9696,
+    "min_cov": 0.9593
+   },
+   "aci-0.5": {
+    "mean_cov": 0.9259,
+    "min_cov": 0.9222
+   }
+  },
+  "farthest_mean_distance": 2.438,
+  "all_mean_distance": 1.161,
+  "spearman_cov_vs_distance_rolling-sensor": [
+   NaN,
+   NaN
+  ],
+  "spearman_cov_vs_distance_aci-0.1": [
+   0.462,
+   0.0002
+  ]
+ },
+ "ghcn_weather": {
+  "n_trials": 10,
+  "n_sensor_cases": 120,
+  "eval_windows": 18,
+  "L": 4,
+  "all_sensors": {
+   "same-window": {
+    "mean_cov": 0.9794,
+    "min_cov": 0.8444,
+    "p05_cov": 0.9219,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0167,
+    "inf_share": 0.0,
+    "width_med": 26.6397
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8904,
+    "min_cov": 0.5333,
+    "p05_cov": 0.7056,
+    "share_below_0.80": 0.125,
+    "share_below_0.85": 0.2417,
+    "inf_share": 0.0,
+    "width_med": 20.3119
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.971,
+    "min_cov": 0.7815,
+    "p05_cov": 0.8957,
+    "share_below_0.80": 0.0167,
+    "share_below_0.85": 0.025,
+    "inf_share": 0.0,
+    "width_med": 26.2936
+   },
+   "aci-0.1": {
+    "mean_cov": 0.9468,
+    "min_cov": 0.8963,
+    "p05_cov": 0.9148,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.019,
+    "width_med": 23.1964,
+    "bound": 0.5556,
+    "guaranteed_cov": 0.3444,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   },
+   "aci-0.5": {
+    "mean_cov": 0.9121,
+    "min_cov": 0.8889,
+    "p05_cov": 0.8963,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.1282,
+    "width_med": 20.2335,
+    "bound": 0.1556,
+    "guaranteed_cov": 0.7444,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   }
+  },
+  "farthest_sensor": {
+   "same-window": {
+    "mean_cov": 0.9704,
+    "min_cov": 0.9333
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8548,
+    "min_cov": 0.7148
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.963,
+    "min_cov": 0.8963
+   },
+   "aci-0.1": {
+    "mean_cov": 0.93,
+    "min_cov": 0.9037
+   },
+   "aci-0.5": {
+    "mean_cov": 0.9022,
+    "min_cov": 0.8889
+   }
+  },
+  "farthest_mean_distance": 3.507,
+  "all_mean_distance": 1.462,
+  "spearman_cov_vs_distance_rolling-sensor": [
+   -0.007,
+   0.9419
+  ],
+  "spearman_cov_vs_distance_aci-0.1": [
+   -0.234,
+   0.0101
+  ]
+ },
+ "pemsd7_traffic": {
+  "n_trials": 4,
+  "n_sensor_cases": 240,
+  "eval_windows": 183,
+  "L": 24,
+  "all_sensors": {
+   "same-window": {
+    "mean_cov": 0.9149,
+    "min_cov": 0.7113,
+    "p05_cov": 0.8233,
+    "share_below_0.80": 0.0292,
+    "share_below_0.85": 0.0958,
+    "inf_share": 0.0,
+    "width_med": 19.7298
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8971,
+    "min_cov": 0.663,
+    "p05_cov": 0.7851,
+    "share_below_0.80": 0.0625,
+    "share_below_0.85": 0.1875,
+    "inf_share": 0.0,
+    "width_med": 16.9878
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.9128,
+    "min_cov": 0.7063,
+    "p05_cov": 0.8179,
+    "share_below_0.80": 0.0333,
+    "share_below_0.85": 0.1042,
+    "inf_share": 0.0,
+    "width_med": 19.4456
+   },
+   "aci-0.1": {
+    "mean_cov": 0.9014,
+    "min_cov": 0.8934,
+    "p05_cov": 0.8953,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.0287,
+    "width_med": 15.9392,
+    "bound": 0.0546,
+    "guaranteed_cov": 0.8454,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   },
+   "aci-0.5": {
+    "mean_cov": 0.9005,
+    "min_cov": 0.8957,
+    "p05_cov": 0.8971,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.2413,
+    "width_med": 13.8024,
+    "bound": 0.0153,
+    "guaranteed_cov": 0.8847,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   }
+  },
+  "farthest_sensor": {
+   "same-window": {
+    "mean_cov": 0.9312,
+    "min_cov": 0.8657
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.9057,
+    "min_cov": 0.8051
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.9275,
+    "min_cov": 0.852
+   },
+   "aci-0.1": {
+    "mean_cov": 0.9039,
+    "min_cov": 0.898
+   },
+   "aci-0.5": {
+    "mean_cov": 0.9013,
+    "min_cov": 0.8994
+   }
+  },
+  "farthest_mean_distance": 6.324,
+  "all_mean_distance": 1.263,
+  "spearman_cov_vs_distance_rolling-sensor": [
+   -0.02,
+   0.7615
+  ],
+  "spearman_cov_vs_distance_aci-0.1": [
+   -0.008,
+   0.9049
+  ]
+ },
+ "pemsbay_traffic": {
+  "n_trials": 4,
+  "n_sensor_cases": 360,
+  "eval_windows": 116,
+  "L": 24,
+  "all_sensors": {
+   "same-window": {
+    "mean_cov": 0.9096,
+    "min_cov": 0.5934,
+    "p05_cov": 0.8067,
+    "share_below_0.80": 0.0472,
+    "share_below_0.85": 0.175,
+    "inf_share": 0.0,
+    "width_med": 20.8214
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8933,
+    "min_cov": 0.5445,
+    "p05_cov": 0.7662,
+    "share_below_0.80": 0.1194,
+    "share_below_0.85": 0.25,
+    "inf_share": 0.0,
+    "width_med": 18.4374
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.9039,
+    "min_cov": 0.5805,
+    "p05_cov": 0.7916,
+    "share_below_0.80": 0.0639,
+    "share_below_0.85": 0.2194,
+    "inf_share": 0.0,
+    "width_med": 20.2576
+   },
+   "aci-0.1": {
+    "mean_cov": 0.9018,
+    "min_cov": 0.8872,
+    "p05_cov": 0.8915,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.0281,
+    "width_med": 19.6251,
+    "bound": 0.0862,
+    "guaranteed_cov": 0.8138,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   },
+   "aci-0.5": {
+    "mean_cov": 0.8998,
+    "min_cov": 0.8922,
+    "p05_cov": 0.8951,
+    "share_below_0.80": 0.0,
+    "share_below_0.85": 0.0,
+    "inf_share": 0.2373,
+    "width_med": 20.0639,
+    "bound": 0.0241,
+    "guaranteed_cov": 0.8759,
+    "bound_holds_all": true,
+    "empty_share": 0.0
+   }
+  },
+  "farthest_sensor": {
+   "same-window": {
+    "mean_cov": 0.905,
+    "min_cov": 0.8455
+   },
+   "rolling-pooled": {
+    "mean_cov": 0.8926,
+    "min_cov": 0.8226
+   },
+   "rolling-sensor": {
+    "mean_cov": 0.9001,
+    "min_cov": 0.8362
+   },
+   "aci-0.1": {
+    "mean_cov": 0.8973,
+    "min_cov": 0.8922
+   },
+   "aci-0.5": {
+    "mean_cov": 0.8991,
+    "min_cov": 0.898
+   }
+  },
+  "farthest_mean_distance": 11.793,
+  "all_mean_distance": 2.047,
+  "spearman_cov_vs_distance_rolling-sensor": [
+   0.002,
+   0.9736
+  ],
+  "spearman_cov_vs_distance_aci-0.1": [
+   0.017,
+   0.7408
+  ]
+ }
+}

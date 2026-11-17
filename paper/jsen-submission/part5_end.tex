@@ -2,22 +2,21 @@
 \section{Limitations}
 \label{sec:limitations}
 \begin{itemize}
-\item \textbf{The guarantee is on average over which sensor is new}, not for a named sensor (the worst
-per-sensor coverage in Table~\ref{tab:legacy} is 0.40 to 0.86), a time step, or a sensor that differs
-systematically from the calibration sensors. Real new sensors are not random draws.
-\item \textbf{Its setting cannot be deployed.} At forecast time no theorem applies; the sensor-level rule with
-rolling recalibration covered 0.853 on Delhi, and the deployable results rest on four networks and, for Delhi,
-six evaluation windows.
-\item \textbf{It is expensive with few calibration sensors}: a finite 90\% interval needs at least 9, and the
-12-station Beijing network cannot support it.
-\item \textbf{The pooled rule is not guaranteed}; its near-nominal same-window average is an observation on
-five networks, with large per-sensor spread.
+\item \textbf{Each guarantee has a narrow scope.} Theorem~\ref{thm:coverage} is an average over which sensor is
+new and needs errors from the evaluated window, so it cannot be run at forecast time. Theorem~\ref{thm:aci} holds
+for each sensor at forecast time but only for its long-run average: it certifies 0.81 to 0.89 per sensor on the
+traffic networks, is weak or vacuous with the 6 to 18 windows of the daily networks, and says nothing about a
+single window. Neither gives coverage conditional on location.
+\item \textbf{Delhi is not covered at forecast time}: 0.855 to 0.877 with six evaluation windows, and no
+procedure here certifies it.
+\item \textbf{Infinite intervals.} Per-sensor ACI issues an infinite interval in 2\% to 8\% of windows
+($\gamma=0.1$), 40\% on the 6-sensor Beijing set, and more with $\gamma=0.5$.
+\item \textbf{Few calibration sensors are expensive}: a finite same-window 90\% interval needs at least 9.
 \item \textbf{The learned forecaster is not the best simple one everywhere.} Seasonal-naive forecasting
 beats OmniST on PeMS-BAY (MAE 3.56 against 4.68, intervals 24\% narrower), persistence ties it on weather
-and PeMSD7-M, and coordinates and attention add no measured accuracy. The training budget was fixed, not
-tuned per variant.
-\item \textbf{Related methods not evaluated}: Generalized HCP, HCP's second-moment variant, sequential
-whitening, and other inductive forecasters under the forecasting task.
+and PeMSD7-M, and coordinates and attention add no measured accuracy. The training budget was fixed.
+\item \textbf{Not evaluated}: Generalized HCP, HCP's second-moment variant, sequential whitening, and other
+inductive forecasters under the forecasting task.
 \item \textbf{Data and history.} Targets include imputed values; traffic positions are reconstructed from
 distance matrices; architecture settings come from earlier Delhi development, so (A3) holds only up to that
 history; a sensor with no history of its own is not handled; the largest network has 325 sensors.
@@ -26,24 +25,20 @@ history; a sensor with no history of its own is not handled; the largest network
 %% ====================================================================
 \section{Conclusion}
 \label{sec:conclusion}
-OmniST forecasts at sensors it never trained on and keeps working when reference sensors are removed.
-The more durable result is about calibration. Conformal intervals at a new sensor need the sensor, not
-the forecast, to be the exchangeable unit. With neighbors drawn from the training network, a new
-sensor's error is a function of its own data and its neighbors alone (Lemma~\ref{lem:locality}), and a
-correction counted in calibration sensors gives expected coverage of at least $1-\alpha$ at a randomly
-drawn new sensor (Theorem~\ref{thm:coverage}). On five real networks the bound held in every finite
-case, at a width cost that falls from several-fold to about 10\% as calibration sensors grow from 10
-to 90. That setting calibrates on the window it evaluates. With calibration restricted to earlier
-windows the guarantee no longer applies, and the sensor-level rule with rolling recalibration reached the
-target on three of four networks but not on Delhi. The usual pooled rule averaged within half a point of
-target in the same-window setting, left some new sensors badly under-covered, and fell short of target
-at forecast time on three of four networks. Our controls say that the ability to forecast at a new sensor comes from sharing
-parameters across sensors, and that coordinates and attention, in our implementation, add no measured
-accuracy. Open problems are a coverage statement that survives calibration restricted to earlier
-windows, coverage conditional on a sensor and on its distance from the network, and a fair comparison
-with hierarchical conformal prediction and with other inductive forecasters. A tighter distribution-free
-statement with few calibration sensors is unlikely: the conformal correction is tight up to a factor of
-order $1/n$~\cite{crc2024}.
+OmniST forecasts at sensors it never trained on and keeps working when reference sensors are removed. The more
+durable result is about calibration. With neighbors drawn from the training network, a new sensor's error is a
+function of its own data and its neighbors alone (Lemma~\ref{lem:locality}). That makes two existing guarantees
+apply to a forecaster on a changing network, with different scope. Counted in calibration sensors, conformal
+calibration covers a randomly drawn new sensor in expectation (Theorem~\ref{thm:coverage}); on five networks it
+held in every finite case, at a width cost that falls from several-fold to about 10\% as calibration sensors
+grow from 10 to 90, but it calibrates on the evaluated window. Run per sensor, adaptive conformal inference covers
+every sensor at forecast time in the long run (Theorem~\ref{thm:aci}); it lifted the worst sensor from 0.58 to
+0.89 on PeMS-BAY, certified 0.81 to 0.85 per sensor on the traffic networks, and covered the farthest sensors as
+well as the rest, at the price of occasional infinite intervals. The usual pooled recipe, by contrast, averages
+near target and leaves individual sensors badly covered. Coordinates and attention, in our implementation, add no
+measured accuracy over a shared per-sensor model. Open problems are a finite-sample guarantee at forecast time
+for short histories, coverage conditional on a sensor's location, and a comparison with Generalized HCP and
+other inductive forecasters.
 
 \section*{Data and Code Availability}
 All datasets are public: Delhi CPCB PM$_{2.5}$ from the E-STGCN repository~\cite{panja2026estgcn};

@@ -39,10 +39,13 @@ network, provided that sensor has its own input window.
    - *Same-window calibration* (the theorem's setting): the bound held in every finite case at a width cost of
      1.1 to 1.6 times the pooled rule with 11 to 89 calibration sensors. The pooled rule has no guarantee; it
      averaged 0.896 to 0.901 at the 0.90 target, but for up to 13% of random new sensors it covered less than 0.80.
-   - *Forecast-time calibration* (errors of earlier windows only; deployable, no theorem): the sensor-level rule
-     with rolling recalibration reached the target on three of four networks (weather 0.971, PeMSD7-M 0.913,
-     PeMS-BAY 0.899) but not Delhi (0.853); the pooled rule fell short on Delhi, weather and PeMS-BAY under every
-     scheme (0.785 to 0.889). The same-window numbers are therefore not deployment results.
+   - *Forecast-time calibration, per sensor* (errors of earlier windows only; deployable): every held-out sensor
+     as the new sensor. Without adaptation the worst sensor is covered 0.53 to 0.81 (pooled rule). Per-sensor
+     adaptive conformal inference (unclipped, Theorem 2: deterministic long-run bound for each individual sensor,
+     checked for all 940 cases) raises the worst sensor to 0.893 / 0.887 on the traffic networks, certified at
+     0.845 / 0.814, at no larger median width, with about 3% of windows infinite. It is weak with short histories:
+     Delhi (6 windows) reaches 0.855 to 0.877. Sensors farthest from the training network fared like the rest
+     (`experiments/D5_per_sensor_guarantee.py`).
    Prior art: treating the sensor as a group is hierarchical conformal prediction (Lee, Barber, Willett;
    arXiv:2306.06342). With equal points per sensor the sensor-level rule is exactly HCP's threshold
    (`tests/test_hcp_equivalence.py`), so the rule is not claimed as new. Generalized HCP (Mallick et al.,
@@ -69,7 +72,8 @@ python3 -m pytest tests                                   # 28 tests: locality l
 python3 experiments/D1_sensor_level_scores.py all         # per-sensor errors, original coordinate constants
 python3 experiments/D1_sensor_level_scores.py all norm    # same splits, coordinates normalized
 python3 experiments/D2_analyse.py                         # same-window theorem check, accuracy -> results/exp_D2_analysis.json
-python3 experiments/D3_deployable.py                      # forecast-time calibration -> results/exp_D3_deployable.json
+python3 experiments/D3_deployable.py                      # static/expanding/rolling at forecast time -> results/exp_D3_deployable.json
+python3 experiments/D5_per_sensor_guarantee.py            # per-sensor ACI, Theorem 2 check, farthest sensors -> results/exp_D5_per_sensor.json
 python3 experiments/D1c_seasonal_naive.py all             # seasonal-naive errors on the same splits -> results/D1c
 python3 experiments/D4_seasonal_comparison.py             # OmniST vs seasonal-naive -> results/exp_D4_seasonal.json
 python3 experiments/P2_coordinate_range.py                # coordinate input ranges (docs/THESIS-COORDINATE-DEFECT.md)

@@ -67,8 +67,10 @@ calibration sensors, in two settings. In the \emph{same-window} setting the cali
 of the window being evaluated; it is the setting of the theorem and a reference, not a deployable
 procedure. In the \emph{forecast-time} setting only errors of earlier windows, and the new sensor's own
 realized errors, may be used: static, expanding, rolling ($L=4$ windows for the daily networks, 24 for
-the 5-minute traffic networks) and ACI ($\gamma=0.1$), evaluated from window $L$ onward. Coverage is the fraction of the new sensor's points inside the interval,
-averaged over random (new sensor, calibration set) draws; width is $2q$. Where $q=\infty$ the
+the 5-minute traffic networks) and per-sensor ACI ($\gamma\in\{0.1,0.5\}$), evaluated from window $L$ onward. In the
+same-window setting coverage is averaged over random (new sensor, calibration set) draws; at forecast time each
+held-out sensor serves once as the new sensor with all others as calibration sensors. Coverage is the fraction of
+the new sensor's points inside the interval; width is $2q$. Where $q=\infty$ the
 interval is vacuous: coverage is 1 and the width is reported as infinite and excluded from width means.
 Point accuracy is the mean absolute error over the sensors of $\mathcal{R}$. All intervals are
 $t$-intervals over splits; differences between methods are paired within a split.

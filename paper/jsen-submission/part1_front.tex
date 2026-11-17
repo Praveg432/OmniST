@@ -75,16 +75,20 @@ This paper makes a design and an evidence contribution built around that observa
 \item \textbf{A forecaster with no dependence on the sensor count}
 (Section~\ref{sec:architecture}): ``topology invariant'' in the sense that the model produces outputs for any
 set of sensors.
-\item \textbf{A coverage result with stated assumptions.} A locality lemma (Lemma~\ref{lem:locality}) shows that
-a new sensor's error depends only on its own data and its nearest training-network neighbors. With it,
-Theorem~\ref{thm:coverage} bounds expected coverage at a randomly drawn new sensor, with a correction counted in
-calibration \emph{sensors}. The statistics are not new: the rule is that of hierarchical conformal
-prediction~\cite{lee2023hcp} and the proof is the conformal risk control argument~\cite{crc2024}. The lemma alone
-does not imply coverage, which the previous version of this work assumed.
-\item \textbf{Evidence in two settings.} On five real networks, from models trained on disjoint sensors, we
-measure the bound where it holds, with calibration errors from the window being evaluated, and where it would be
-used, with calibration restricted to earlier windows (Section~\ref{sec:results}). We report its price, where it
-is vacuous, where it fails at forecast time, and the per-sensor spread that marginal coverage hides.
+\item \textbf{Two coverage guarantees with complementary scope, for intervals at new sensors.} A locality lemma
+(Lemma~\ref{lem:locality}) makes a new sensor's error a function of its own data and its nearest
+training-network neighbors. Theorem~\ref{thm:coverage} then gives finite-sample expected coverage at a randomly
+drawn new sensor, with a correction counted in calibration \emph{sensors}; it needs random assignment and errors
+from the evaluated window. Theorem~\ref{thm:aci} gives what the first cannot: coverage at forecast time for every
+individual sensor, including named, distant and non-randomly chosen ones, in the long run over that sensor's
+windows. Neither argument is new (hierarchical conformal prediction~\cite{lee2023hcp}, conformal risk
+control~\cite{crc2024} and adaptive conformal inference~\cite{gibbs2021aci}); the lemma is what makes them apply to
+a forecaster deployed on a changing network, and the lemma alone does not imply coverage, which the previous
+version of this work assumed.
+\item \textbf{Measured scope and price of each guarantee on five real networks}, from models trained on disjoint
+sensors: where each holds, where it is vacuous, its width cost, and the worst individual sensor
+(Section~\ref{sec:results}). The usual pooled recipe averages near target but leaves the worst sensor at 0.53 to
+0.81 at forecast time; per-sensor ACI raises it to about 0.89 on the traffic networks at no larger median width.
 \item \textbf{What the architecture contributes}, against like-for-like forecasting baselines, seasonal-naive
 forecasting and a coordinate-free shared per-sensor model.
 \end{enumerate}
@@ -227,7 +231,7 @@ Section~\ref{sec:distance} measures how much distance matters on our data.
 the setting in which the theorem holds, and it cannot be run at forecast time: when a forecast for
 window $t$ is issued, the calibration sensors' errors for window $t$ are not yet known. With
 calibration restricted to earlier windows the errors of different windows are not exchangeable and the
-theorem says nothing; Section~\ref{sec:deployable} measures what happens.
+theorem says nothing; Theorem~\ref{thm:aci} (Section~\ref{sec:online-conformal}) covers that case per sensor.
 \emph{(A3) Independence of the model.} $\hat f$ is fitted without $\mathcal{R}$.
 \emph{(A4) Own history.} Every sensor has its input window.
 The bound is on average coverage over the $U$ points of a sensor, not per time step and not per sensor.
@@ -240,18 +244,41 @@ same $\hat f$. The earlier version of this work claimed that no recalibration is
 That is true only for the cached scores of unaffected sensors, not for the validity of a threshold
 calibrated on a different network.
 
-\subsection{Calibration at Forecast Time}
+\subsection{A Guarantee at Forecast Time, for Every Sensor}
 \label{sec:online-conformal}
 Theorem~\ref{thm:coverage} is silent about calibration that uses only errors observed before the
-forecast. For a forecast of window $t$ we consider four ways to form the threshold from the calibration
-sensors' errors of earlier windows only: \emph{static} (windows before a fixed start $t_0$),
-\emph{expanding} (all windows before $t$), \emph{rolling} (the previous $L$ windows), and \emph{ACI}
-(rolling, with the working level updated from the new sensor's own realized miscoverage $e_t$ as
-$\alpha_{t+1}=\mathrm{clip}\big(\alpha_t+\gamma(\alpha-e_t)\big)$, after Adaptive Conformal
-Inference~\cite{gibbs2021aci}). Each is paired with the sensor-level or the pooled correction. None of
-them carries a finite-sample guarantee here: ACI's long-run property is asymptotic and the horizons
-are short, and the non-exchangeable conformal bounds~\cite{barber2023nexcp} would need a drift term
-that we do not estimate. They are measured, and the settings $L$, $\gamma$, $t_0$ were fixed before
-the results were seen.
+forecast. For the forecast of window $t$ we form the threshold from the calibration sensors' errors of
+earlier windows only: \emph{static} (windows before a fixed start $t_0$), \emph{expanding} (all windows
+before $t$), or \emph{rolling} (the previous $L$ windows), with the sensor-level or pooled correction.
+None of these has a guarantee. A guarantee that needs neither exchangeability nor a random choice of
+sensor comes from Adaptive Conformal Inference (ACI)~\cite{gibbs2021aci}, applied separately to each new
+sensor $j$. Let $Q_t(a)$ be the rolling sensor-level threshold computed at working level $a$, with
+$Q_t(a)=+\infty$ when $a(n+1)<1$ and the empty interval when $a\ge 1$. Set $\alpha_{t_0}=\alpha$,
+issue $\hat y\pm Q_t(\alpha_t)$ for window $t$, and update
+\begin{equation}
+\alpha_{t+1}=\alpha_t+\gamma(\alpha-e_t),
+\end{equation}
+where $e_t\in[0,1]$ is the share of sensor $j$'s points of window $t$ outside its interval. Windows
+advance by the horizon, so $e_t$ is known at the origin of window $t+1$.
+
+\begin{theorem}[Per-sensor long-run coverage]
+\label{thm:aci}
+For every sensor $j$, every $T\ge1$ and every sequence of errors,
+$\big|\frac1T\sum_{t=t_0}^{t_0+T-1}e_t-\alpha\big|\le\frac{\max(\alpha,1-\alpha)+\gamma}{\gamma T}$.
+\end{theorem}
+\begin{proof}
+$Q_t$ is non-increasing in $a$, gives $e_t=0$ when $\alpha_t<1/(n+1)$ and $e_t=1$ when $\alpha_t\ge1$. Hence
+$\alpha_t$ rises whenever it is below $1/(n+1)$ and falls whenever it is at least $1$, by at most $\gamma$ per
+step, so $\alpha_t\in[-\gamma,1+\gamma]$. Summing the update,
+$\alpha_{t_0+T}-\alpha=\gamma\sum_t(\alpha-e_t)$, and $|\alpha_{t_0+T}-\alpha|\le\max(\alpha,1-\alpha)+\gamma$.
+\end{proof}
+
+This is Gibbs and Cand\`es' argument~\cite{gibbs2021aci} with fractional errors, and we do not claim it.
+What it gives here is the statement Theorem~\ref{thm:coverage} lacks: it holds at forecast time, for a
+named sensor, for one far from the network, and under drift. Its price is that it is about the long-run
+average over that sensor's own windows, with slack of order $1/(\gamma T)$, so it is informative only
+after enough windows, and some windows receive an infinite interval while $\alpha_t$ is low. An earlier
+draft of this work clipped $\alpha_t$ to $[0.005,0.995]$, which voids the bound; the results here use the
+unclipped update. $L$, $t_0=L$ and $\gamma\in\{0.1,0.5\}$ were fixed before the results were seen.
 
 @@RESULTS@@

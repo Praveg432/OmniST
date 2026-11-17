@@ -1,6 +1,7 @@
 \documentclass[journal,onecolumn]{IEEEtran}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
+\graphicspath{{../results/figures/}{figures/}{./}}
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{url}
@@ -87,6 +88,23 @@ the reference sensors at inference changes MAE by at most 0.6\% and coverage by 
 compares the methods on the windows that have a seasonal-naive forecast; seasonal-naive is the most accurate
 method on PeMS-BAY.
 
+\section{Per-Sensor Forecast-Time Results and the Earlier Protocol}
+Table~\ref{tab:d5full} expands Table~II of the main text (\texttt{experiments/D5\_per\_sensor\_guarantee.py},
+\texttt{results/exp\_D5\_per\_sensor.json}). Theorem~2's bound
+$|\frac1T\sum_t e_t-\alpha|\le(\max(\alpha,1-\alpha)+\gamma)/(\gamma T)$ was checked for every sensor case and held in
+all of them; no window received an empty interval. The farthest-sensor column uses the held-out sensor of each split
+with the largest distance to its nearest training sensor, chosen before any error was looked at.
+Table~\ref{tab:legacyfull} gives the random-split evaluation (experiment C1) summarized in Section~IV-C of the main
+text. Fig.~\ref{fig:sensorlevel} shows the same-window coverage of Table~I against the number of calibration sensors.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\columnwidth]{fig_sensor_level.png}
+\caption{Mean coverage at a random new sensor against the number of calibration sensors, same-window calibration,
+90\% target (dotted). The sensor-level rule stays above target; the pooled rule sits on it on average.}
+\label{fig:sensorlevel}
+\end{figure}
+
 \section{Networks, Splits and Calibration Sizes}
 Table~\ref{tab:setup} lists the networks, the training and held-out sensors per split, the number of splits, the
 number of evaluation windows, the points $U$ per sensor, and the calibration sizes $n$ used.
@@ -119,7 +137,8 @@ python3 paper/make_supplement_tables.py
 python3 paper/assemble_jsen.py
 python3 -m pytest tests
 \end{verbatim}
-The random-split evaluation of Table~III is \texttt{experiments/C1\_rigorous\_inductive\_eval.py}
+The per-sensor forecast-time results (Table~II) come from \texttt{experiments/D5\_per\_sensor\_guarantee.py}. The
+random-split evaluation (Table~\ref{tab:legacyfull}) is \texttt{experiments/C1\_rigorous\_inductive\_eval.py}
 followed by \texttt{C1\_summarise.py}; the distance analysis is \texttt{C2\_region\_holdout\_distance.py}
 and \texttt{C3\_score\_shift\_vs\_distance.py}. Splits are seeded, so a rerun reproduces the stored
 score arrays up to the nondeterminism of the training library.

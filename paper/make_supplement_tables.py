@@ -158,6 +158,50 @@ for key, label in NAMES:
 out[-1] = "\\bottomrule"
 out.append("\\end{tabular}\n\\end{table*}\n")
 
+# ---- S-C1: earlier protocol vs random disjoint splits -------------------------------------------
+out.append("\\begin{table}[htbp]\n\\caption{Coverage over random disjoint sensor splits (experiment C1, target 0.90, pooled "
+           "rule, same-window calibration): mean with 95\\% interval over splits, the same trained models calibrated "
+           "on training sensors, and the worst per-sensor coverage under disjoint calibration.}\n\\label{tab:legacyfull}\n"
+           "\\centering\\small\n\\begin{tabular}{lrccc}\n\\toprule\n\\textbf{Dataset} & \\textbf{Splits} & "
+           "\\textbf{Disjoint calibration} & \\textbf{Training-sensor calibration} & \\textbf{Worst sensor} \\\\\n\\midrule")
+for key, label in NAMES:
+    a = json.load(open(PAPER.parent / "results" / f"exp_C1_{key}.json"))["aggregate"]
+    dc, lg = a["disjoint_calibration"], a["legacy_train_station_calibration"]
+    c = dc["coverage_over_splits"]
+    out.append(f"{label} & {c['n']} & {c['mean']:.3f} [{c['ci95'][0]:.3f}, {c['ci95'][1]:.3f}] & "
+               f"{lg['coverage_over_splits']['mean']:.3f} & {dc['per_station_coverage']['min']:.3f} \\\\")
+out.append("\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+
+# ---- S-D5: per-sensor forecast-time results in full ----------------------------------------------
+d5 = json.load(open(PAPER.parent / "results" / "exp_D5_per_sensor.json"))
+SCH = [("same-window", "Same-window sensor-level$^*$"), ("rolling-pooled", "Rolling, pooled"),
+       ("rolling-sensor", "Rolling, sensor-level"), ("aci-0.1", "Per-sensor ACI, $\\gamma=0.1$"),
+       ("aci-0.5", "Per-sensor ACI, $\\gamma=0.5$")]
+out.append("\\begin{table*}[htbp]\n\\caption{Per-sensor coverage, every held-out sensor of every split as the new sensor "
+           "(calibration: all other held-out sensors). Mean, 5th percentile and worst coverage over sensor cases, share of "
+           "cases below 0.80, share of windows with an infinite interval, median width over sensor cases, Theorem~2's "
+           "certified coverage, and mean coverage of the farthest held-out sensor of each split. $^*$Not deployable "
+           "(calibrates on the evaluated windows); shown for reference.}\n\\label{tab:d5full}\n\\centering\\scriptsize\n"
+           "\\begin{tabular}{llcccccccc}\n\\toprule\n\\textbf{Dataset} & \\textbf{Scheme} & \\textbf{Mean} & \\textbf{5th pct.} & "
+           "\\textbf{Worst} & \\textbf{$<0.80$} & \\textbf{Inf.} & \\textbf{Median width} & \\textbf{Certified} & "
+           "\\textbf{Farthest} \\\\\n\\midrule")
+for key, label in NAMES:
+    r = d5[key]
+    first = True
+    for sk, sl in SCH:
+        a = r["all_sensors"][sk]
+        cert = f"{a['guaranteed_cov']:.3f}" if sk.startswith("aci") and a["guaranteed_cov"] > 0 else ("vacuous" if sk.startswith("aci") else "---")
+        wm = a["width_med"]
+        wtxt = "$\\infty$" if wm == float("inf") or wm > 1e300 else f"{wm:.4g}"
+        lab = f"{label} ($T={r['eval_windows']}$)" if first else ""
+        out.append(f"{lab} & {sl} & {a['mean_cov']:.3f} & {a['p05_cov']:.3f} & {a['min_cov']:.3f} & "
+                   f"{a['share_below_0.80']:.3f} & {a['inf_share']:.2f} & {wtxt} & {cert} & "
+                   f"{r['farthest_sensor'][sk]['mean_cov']:.3f} \\\\")
+        first = False
+    out.append("\\midrule")
+out[-1] = "\\bottomrule"
+out.append("\\end{tabular}\n\\end{table*}\n")
+
 # ---- S4: forecast-time calibration, every n, with widths ----------------------------------------
 d3 = json.load(open(PAPER.parent / "results" / "exp_D3_deployable.json"))
 out.append("\\begin{table*}[htbp]\n\\caption{Forecast-time calibration (target 0.90): mean coverage with 95\\% "

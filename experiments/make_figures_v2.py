@@ -79,21 +79,19 @@ def main():
     a1.tick_params(axis="y", labelsize=11)
     a1.set_title("Same-window calibration\n(theorem's setting)", fontsize=12)
     a1.legend(fontsize=9, loc="upper right", frameon=False, ncol=2, handlelength=1.0, columnspacing=0.6)
-    d3 = json.load(open(os.path.join(RES, "exp_D3_deployable.json")))
-    dep = []
-    for dom, _ in SHOW:
-        n = str(max(int(k) for k in d3[dom]["cells"]))
-        c = d3[dom]["cells"][n]
-        dep.append((c["rolling/crc"]["coverage"][0], c["rolling/pool"]["coverage"][0]))
-    a2.bar(x - w / 2, [v[0] for v in dep], w, color=C_CRC, label="sensor-level")
-    a2.bar(x + w / 2, [v[1] for v in dep], w, color=C_POOL, label="pooled")
+    d5 = json.load(open(os.path.join(RES, "exp_D5_per_sensor.json")))
+    worst = [(d5[dom]["all_sensors"]["aci-0.1"]["min_cov"], d5[dom]["all_sensors"]["rolling-pooled"]["min_cov"])
+             for dom, _ in SHOW]
+    a2.bar(x - w / 2, [v[0] for v in worst], w, color=C_CRC, label="per-sensor ACI")
+    a2.bar(x + w / 2, [v[1] for v in worst], w, color=C_POOL, label="pooled")
     a2.axhline(TARGET, ls="--", color="black", lw=1.2)
     a2.set_xticks(x)
     a2.set_xticklabels([SHORT[k] for k, _ in SHOW], fontsize=10)
-    a2.set_ylim(0.75, 1.045)
-    a2.set_yticks([0.80, 0.90, 1.00])
+    a2.set_ylim(0.5, 1.0)
+    a2.set_yticks([0.6, 0.7, 0.8, 0.9])
     a2.tick_params(axis="y", labelsize=11)
-    a2.set_title("Forecast time\n(rolling calibration)", fontsize=12)
+    a2.legend(fontsize=9, loc="lower right", frameon=False, handlelength=1.0)
+    a2.set_title("Forecast time:\nworst sensor", fontsize=12)
     fig.tight_layout(w_pad=1.2)
     for ext in ("png", "pdf"):
         out = os.path.join(FIGS, f"graphical_abstract_jsen.{ext}")
